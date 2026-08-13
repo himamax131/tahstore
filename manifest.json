@@ -1,0 +1,20 @@
+{
+  "name": "نظام إدارة تمور الطحان",
+  "short_name": "تمور الطحان",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080c14",
+  "theme_color": "#f59e0b",
+  "icons": [
+    {
+      "src": "https://up6.cc/2026/08/178661253901061.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://up6.cc/2026/08/178661253901061.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
