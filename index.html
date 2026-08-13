@@ -2180,30 +2180,91 @@ const ADMIN_EMAILS = [
     "ahmedemad@gmail.com"
 ].map(email => email.trim().toLowerCase());
 
+function setLoginMessage(message, type = "error") {
+    const box = document.getElementById("login-error");
+    if (!box) return;
+    box.textContent = message || "";
+    box.style.color = type === "success" ? "#4ade80" : "#f87171";
+}
+
+function setLoginButtonLoading(loading) {
+    const button = document.querySelector("#login-screen .login-submit");
+    if (!button) return;
+
+    if (loading) {
+        if (!button.dataset.originalHtml) {
+            button.dataset.originalHtml = button.innerHTML;
+        }
+        button.disabled = true;
+        button.innerHTML = '<span>جاري تسجيل الدخول...</span><span class="login-arrow">⌛</span>';
+        button.style.opacity = "0.75";
+        button.style.pointerEvents = "none";
+    } else {
+        button.disabled = false;
+        button.innerHTML = button.dataset.originalHtml || '<span>تسجيل الدخول</span><span class="login-arrow">←</span>';
+        button.style.opacity = "1";
+        button.style.pointerEvents = "auto";
+    }
+}
+
 async function loginUser() {
     const emailInput = document.getElementById("login-email");
     const passwordInput = document.getElementById("login-password");
-    const errorBox = document.getElementById("login-error");
-    const loginButton = document.querySelector("#login-screen button[onclick=\"loginUser()\"]");
 
-    const email = emailInput ? emailInput.value.trim() : "";
-    const password = passwordInput ? passwordInput.value : "";
+    const email = (emailInput?.value || "").trim().toLowerCase();
+    const password = passwordInput?.value || "";
 
-    if (errorBox) errorBox.textContent = "";
+    setLoginMessage("");
 
     if (!email || !password) {
-        if (errorBox) errorBox.textContent = "من فضلك أدخل البريد الإلكتروني وكلمة المرور.";
+        setLoginMessage("من فضلك أدخل البريد الإلكتروني وكلمة المرور.");
         return;
     }
 
+    if (typeof firebase === "undefined" || !firebase.apps || !firebase.apps.length) {
+        setLoginMessage("Firebase لم يتم تحميله. تأكد من اتصال الإنترنت وروابط Firebase في الصفحة.");
+        return;
+    }
+
+    setLoginButtonLoading(true);
+
     try {
-        if (loginButton) {
-            loginButton.disabled = true;
-            loginButton.dataset.originalText = loginButton.textContent;
-            loginButton.textContent = "جاري تسجيل الدخول...";
+        // تسجيل الدخول الحقيقي في Firebase Authentication
+        const result = await auth.signInWithEmailAndPassword(email, password);
+        currentUser = result.user;
+
+        const loggedEmail = (currentUser.email || "").trim().toLowerCase();
+
+        // لا نعتمد على إخفاء الشاشة إلا بعد التأكد من الحساب.
+        if (!ADMIN_EMAILS.includes(loggedEmail)) {
+            await auth.signOut();
+            currentUser = null;
+            isAdmin = false;
+            setLoginMessage("هذا الحساب ليس لديه صلاحية الدخول إلى لوحة الإدارة.");
+            return;
         }
 
-        await auth.signInWithEmailAndPassword(email, password);
+        isAdmin = true;
+
+        // الدخول ناجح. نخفي شاشة الدخول فوراً.
+        const loginScreen = document.getElementById("login-screen");
+        if (loginScreen) loginScreen.style.display = "none";
+
+        setLoginMessage("");
+
+        // تحميل بيانات Firestore بعد الدخول.
+        // لو الـ Rules مانعة القراءة، لن نرجع شاشة الدخول مرة أخرى.
+        try {
+            const loaded = await loadData();
+            if (!loaded) {
+                console.warn("Login succeeded, but Firestore data could not be loaded.");
+                alert("تم تسجيل الدخول بنجاح، لكن Firebase Firestore يمنع قراءة البيانات.\n\nراجع Firestore Rules.");
+            }
+        } catch (firestoreError) {
+            console.error("Firestore after login:", firestoreError);
+            alert("تم تسجيل الدخول بنجاح، لكن حدث خطأ في تحميل بيانات Firebase.\n\n" + (firestoreError.message || firestoreError));
+        }
+
     } catch (error) {
         console.error("Firebase Login Error:", error);
 
@@ -2214,7 +2275,7 @@ async function loginUser() {
                 message = "البريد الإلكتروني غير صحيح.";
                 break;
             case "auth/user-not-found":
-                message = "لا يوجد حساب بهذا البريد الإلكتروني.";
+                message = "لا يوجد حساب بهذا البريد الإلكتروني في Firebase Authentication.";
                 break;
             case "auth/wrong-password":
             case "auth/invalid-credential":
@@ -2224,7 +2285,7 @@ async function loginUser() {
                 message = "تمت محاولات تسجيل دخول كثيرة. حاول مرة أخرى لاحقًا.";
                 break;
             case "auth/user-disabled":
-                message = "هذا الحساب معطل.";
+                message = "هذا الحساب معطل من Firebase Authentication.";
                 break;
             case "auth/network-request-failed":
                 message = "تعذر الاتصال بـ Firebase. تأكد من الإنترنت.";
@@ -2239,18 +2300,15 @@ async function loginUser() {
                 message = error.message || message;
         }
 
-        if (errorBox) errorBox.textContent = message;
+        setLoginMessage(message);
     } finally {
-        if (loginButton) {
-            loginButton.disabled = false;
-            loginButton.textContent = loginButton.dataset.originalText || "🔐 تسجيل الدخول";
-        }
+        setLoginButtonLoading(false);
     }
 }
 
 async function checkAdmin() {
+    // هذه الدالة للتعامل مع الجلسة الموجودة مسبقاً بعد تحديث الصفحة.
     const loginScreen = document.getElementById("login-screen");
-    const errorBox = document.getElementById("login-error");
 
     if (!currentUser) {
         isAdmin = false;
@@ -2260,35 +2318,26 @@ async function checkAdmin() {
 
     const userEmail = (currentUser.email || "").trim().toLowerCase();
 
-    // السماح للحسابين فقط.
     if (!ADMIN_EMAILS.includes(userEmail)) {
         isAdmin = false;
-
-        if (errorBox) {
-            errorBox.textContent = "هذا الحساب ليس لديه صلاحية الدخول إلى لوحة الإدارة.";
-        }
-
+        setLoginMessage("هذا الحساب ليس لديه صلاحية الدخول إلى لوحة الإدارة.");
         await auth.signOut();
         if (loginScreen) loginScreen.style.display = "flex";
         return false;
     }
 
-    // الحساب مصرح له. لا نخفي شاشة الدخول إلا بعد نجاح تحميل Firestore.
     isAdmin = true;
-    const loaded = await loadData();
+    if (loginScreen) loginScreen.style.display = "none";
 
-    if (loaded) {
-        if (loginScreen) loginScreen.style.display = "none";
-        if (errorBox) errorBox.textContent = "";
-        return true;
+    try {
+        await loadData();
+    } catch (error) {
+        console.error("Session Firestore Load Error:", error);
     }
 
-    // تسجيل الدخول إلى Firebase نجح، لكن Firestore رفض الوصول.
-    // نترك شاشة الدخول ظاهرة حتى لا يظهر للمستخدم أن الدخول نجح بينما البيانات غير متاحة.
-    isAdmin = false;
-    if (loginScreen) loginScreen.style.display = "flex";
-    return false;
+    return true;
 }
+
 
 async function logoutUser() {
     try {
