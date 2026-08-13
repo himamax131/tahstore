@@ -3,67 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة متجر التمور المتطور</title>
+    <title>نظام إدارة تمور الطحان</title>
     <style>
-        :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --primary: #d97706; --danger: #ef4444; --border: #334155; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; direction: rtl; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        h2, h3 { color: var(--primary); text-align: center; }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: white; font-size: 14px; box-sizing: border-box; }
-        button { font-weight: bold; cursor: pointer; transition: 0.2s; border: none; background: var(--primary); }
-        button:hover { filter: brightness(1.2); }
-        .target-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; text-align: center; }
-        .stat-box { background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+        :root { 
+            --bg-color: #080c14; 
+            --card-bg: rgba(18, 24, 38, 0.90); 
+            --text-color: #f8fafc; 
+            --primary: #f59e0b; 
+            --primary-light: #fbbf24;
+            --danger: #ef4444; 
+            --border: rgba(255, 255, 255, 0.08); 
+            --success: #22c55e; 
+        }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(rgba(8, 12, 20, 0.88), rgba(8, 12, 20, 0.88)), url('https://up6.cc/2026/08/178661253901061.png') no-repeat center center fixed; 
+            background-size: cover; 
+            color: var(--text-color); 
+            margin: 0; 
+            padding: 0; 
+            direction: rtl; 
+        }
+
+        /* شريط التنقل العلوي الفخم */
+        .game-navbar {
+            background: rgba(10, 14, 23, 0.95);
+            border-bottom: 2px solid rgba(245, 158, 11, 0.2);
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            border: 2px solid #fbbf24;
+        }
+
+        .brand-text h3 {
+            margin: 0;
+            font-size: 15px;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-text span {
+            font-size: 11px;
+            color: var(--primary-light);
+            font-weight: bold;
+        }
+
+        /* جعل أزرار القائمة في المنتصف تماماً */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        .nav-link {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 8px 4px;
+            position: relative;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .nav-link.active {
+            color: #fff;
+        }
+
+        /* الخط السفلي المضيء تحت التبويب النشط */
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e0b, #38bdf8);
+            box-shadow: 0 0 10px #f59e0b;
+        }
+
+        .container { max-width: 850px; margin: 30px auto; padding: 0 15px; }
+
+        /* إخفاء وإظهار الأقسام */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 12px; 
+            padding: 25px; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            backdrop-filter: blur(8px);
+        }
+
+        h2, h3 { color: var(--primary-light); text-align: center; margin-top: 0; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.9); color: white; font-size: 14px; box-sizing: border-box; }
+        input:focus, select:focus { border-color: var(--primary); outline: none; }
+        button { font-weight: bold; cursor: pointer; transition: 0.2s; border: none; background: var(--primary); color: #fff; }
+        button:hover { filter: brightness(1.2); transform: translateY(-1px); }
+        
+        .target-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; text-align: center; margin-bottom: 15px; }
+        .stat-box { background: rgba(15, 23, 42, 0.7); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
+        
+        .progress-container { width: 100%; background: rgba(15, 23, 42, 0.9); border-radius: 10px; height: 20px; border: 1px solid var(--border); overflow: hidden; position: relative; }
+        .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.5s ease-in-out; }
+        .progress-text { text-align: center; font-size: 12px; margin-top: 6px; color: #cbd5e1; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); font-size: 13px; }
+        th { color: var(--primary-light); }
+        .edit-btn { background: #2563eb; padding: 5px 10px; border-radius: 4px; cursor: pointer; color: white; border: none; }
         .delete-btn { background: var(--danger); padding: 5px 10px; border-radius: 4px; cursor: pointer; color: white; border: none; }
+
+        @media (max-width: 900px) {
+            .game-navbar { padding: 10px 15px; flex-direction: column; gap: 12px; }
+            .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- شريط التنقل العلوي مع معلومات المدير في الشعار -->
+    <header class="game-navbar">
+        <div class="nav-brand">
+            <div class="brand-logo">👤</div>
+            <div class="brand-text">
+                <h3>AhmedEmad</h3>
+                <span>مدير فرع مبارك</span>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-link active" onclick="switchTab(0)">المبيعات والتارجت</button>
+            <button class="nav-link" onclick="switchTab(1)">إحصائيات السنة</button>
+            <button class="nav-link" onclick="switchTab(2)">المخزونات والعجز</button>
+        </nav>
+        <div style="font-size: 12px; color: var(--primary-light); font-weight: bold;">🌴 تمور الطحان</div>
+    </header>
+
 <div class="container">
-    <h2>🌴 نظام إدارة متجر التمور</h2>
 
-    <!-- التارجت -->
-    <div class="card">
-        <h3>🎯 إعداد ومتابعة التارجت</h3>
-        <input type="number" id="input-monthly-target" placeholder="التارجت الشهري">
-        <button onclick="setTarget()">تثبيت التارجت</button>
-        <input type="number" id="input-daily-sales" placeholder="مبيعات اليوم">
-        <button onclick="addSales()" style="background:#2563eb;">إضافة مبيعات اليوم</button>
-        <div class="target-grid" style="margin-top:15px;">
-            <div class="stat-box"><span>الشهري</span><strong id="disp-monthly">0</strong></div>
-            <div class="stat-box"><span>المحقق</span><strong id="disp-achieved">0</strong></div>
-            <div class="stat-box"><span>المتبقي</span><strong id="disp-remaining" style="color:#ef4444;">0</strong></div>
+    <!-- القسم الأول: مبيعات والتارجت -->
+    <div class="tab-content active" id="tab-0">
+        <div class="card">
+            <h3>🎯 إعداد ومتابعة التارجت والمبيعات اليومية</h3>
+            <input type="number" id="input-monthly-target" placeholder="التارجت الشهري">
+            <button onclick="setTarget()">تثبيت التارجت</button>
+            
+            <div style="display:flex; gap:10px; align-items:center;">
+                <input type="number" id="input-daily-sales" placeholder="مبيعات اليوم">
+                <div id="current-date-display" style="background:rgba(15, 23, 42, 0.9); padding:12px; border-radius:8px; border:1px solid var(--border); white-space:nowrap; font-size:13px; color:#38bdf8;"></div>
+            </div>
+            <button onclick="addSales()" style="background:#2563eb;">إضافة مبيعات اليوم</button>
+            
+            <div class="target-grid" style="margin-top: 15px;">
+                <div class="stat-box"><span>الشهري</span><br><strong id="disp-monthly">0</strong></div>
+                <div class="stat-box"><span>المحقق</span><br><strong id="disp-achieved">0</strong></div>
+                <div class="stat-box"><span>المتبقي</span><br><strong id="disp-remaining" style="color:#ef4444;">0</strong></div>
+            </div>
+
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div class="progress-text" id="progress-text">نسبة الإنجاز: 0%</div>
         </div>
     </div>
 
-    <!-- المخزون -->
-    <div class="card">
-        <h3>📦 إدارة المخزون والعجز</h3>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="new-item" placeholder="اسم صنف جديد">
-            <button onclick="addItem()" style="width:auto; background:#059669;">إضافة</button>
+    <!-- القسم الثاني: إحصائيات السنة وسجل المبيعات -->
+    <div class="tab-content" id="tab-1">
+        <div class="card">
+            <h3>📅 سجل أيام المبيعات وإحصائيات السنة</h3>
+            <div style="display:flex; gap:5px;">
+                <input type="date" id="sale-date">
+                <input type="number" id="sale-amount" placeholder="قيمة المبيعات">
+                <button onclick="addDailyRecord()" style="width:auto; background:#059669;">تسجيل اليوم</button>
+            </div>
+
+            <h4 style="color:#38bdf8; margin-top:15px; text-align:center;" id="current-month-title">أيام مبيعات الشهر الحالي</h4>
+            <table id="monthly-sales-table"><thead><tr><th>التاريخ</th><th>المبيعات</th><th>تعديل</th></tr></thead><tbody></tbody></table>
+
+            <h4 style="color:var(--primary-light); margin-top:25px; text-align:center;">📊 إحصائيات السنة الكاملة (1 - 12)</h4>
+            <table id="yearly-stats-table"><thead><tr><th>الشهر</th><th>إجمالي المبيعات</th></tr></thead><tbody></tbody></table>
+
+            <div style="margin-top: 20px; background: rgba(15, 23, 42, 0.9); padding: 15px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+                <span style="font-size: 14px; color: #cbd5e1;">إجمالي مبيعات الشهور حتى الآن: </span>
+                <strong id="total-year-to-date" style="font-size: 18px; color: var(--success);">0</strong>
+            </div>
         </div>
-        <select id="item-selector"><option value="">اختر الصنف...</option></select>
-        <div style="display:flex; gap:5px;">
-            <input type="number" id="qty-input" placeholder="الكمية">
-            <select id="unit-selector"><option value="كيلو">كيلو</option><option value="علبة">علبة</option></select>
-        </div>
-        <button onclick="addShortage()">تسجيل العجز</button>
-        <table id="shortage-table"><thead><tr><th>الصنف</th><th>الكمية</th><th>حذف</th></tr></thead><tbody></tbody></table>
     </div>
+
+    <!-- القسم الثالث: المخزونات والعجز -->
+    <div class="tab-content" id="tab-2">
+        <div class="card">
+            <h3>📦 إدارة المخزونات والعجز</h3>
+            <div style="display:flex; gap:5px;">
+                <input type="text" id="new-item" placeholder="اسم صنف جديد">
+                <button onclick="addItem()" style="width:auto; background:#059669;">إضافة</button>
+            </div>
+            <select id="item-selector"><option value="">اختر الصنف...</option></select>
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="qty-input" placeholder="الكمية">
+                <select id="unit-selector"><option value="كيلو">كيلو</option><option value="علبة">علبة</option></select>
+            </div>
+            <button onclick="addShortage()">تسجيل العجز</button>
+            <table id="shortage-table"><thead><tr><th>الصنف</th><th>الكمية</th><th>حذف</th></tr></thead><tbody></tbody></table>
+        </div>
+    </div>
+
 </div>
 
 <script>
     let appData = JSON.parse(localStorage.getItem('store_v_final')) || { 
-        monthlyTarget: 0, achievedSales: 0, items: [], shortages: [] 
+        monthlyTarget: 0, achievedSales: 0, items: [], shortages: [], dailyRecords: [] 
     };
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('sale-date').value = todayStr;
+    
+    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+    document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('ar-EG', options);
 
     function saveData() {
         localStorage.setItem('store_v_final', JSON.stringify(appData));
         render();
+    }
+
+    function switchTab(index) {
+        const buttons = document.querySelectorAll('.nav-link');
+        const contents = document.querySelectorAll('.tab-content');
+        
+        buttons.forEach((btn, i) => {
+            if(i === index) {
+                btn.classList.add('active');
+                contents[i].classList.add('active');
+            } else {
+                btn.classList.remove('active');
+                contents[i].classList.remove('active');
+            }
+        });
     }
 
     function setTarget() {
@@ -72,8 +287,48 @@
     }
 
     function addSales() {
-        appData.achievedSales += parseFloat(document.getElementById('input-daily-sales').value) || 0;
-        saveData();
+        const val = parseFloat(document.getElementById('input-daily-sales').value) || 0;
+        if(val > 0) {
+            appData.achievedSales += val;
+            appData.dailyRecords.unshift({ id: Date.now(), date: todayStr, amount: val });
+            document.getElementById('input-daily-sales').value = '';
+            saveData();
+        }
+    }
+
+    function addDailyRecord() {
+        const date = document.getElementById('sale-date').value;
+        const amount = parseFloat(document.getElementById('sale-amount').value) || 0;
+        if(date && amount > 0) {
+            appData.dailyRecords.unshift({ id: Date.now(), date, amount });
+            const recordMonth = date.substring(0, 7);
+            const currentMonth = todayStr.substring(0, 7);
+            if(recordMonth === currentMonth) {
+                appData.achievedSales += amount;
+            }
+            document.getElementById('sale-amount').value = '';
+            saveData();
+        }
+    }
+
+    function editRecord(id) {
+        const rec = appData.dailyRecords.find(r => r.id === id);
+        if(rec) {
+            const newAmount = prompt("تعديل قيمة المبيعات:", rec.amount);
+            if(newAmount !== null) {
+                const parsedAmount = parseFloat(newAmount);
+                if(!isNaN(parsedAmount)) {
+                    const recordMonth = rec.date.substring(0, 7);
+                    const currentMonth = todayStr.substring(0, 7);
+                    
+                    if(recordMonth === currentMonth) {
+                        appData.achievedSales = appData.achievedSales - rec.amount + parsedAmount;
+                    }
+                    rec.amount = parsedAmount;
+                    saveData();
+                }
+            }
+        }
     }
 
     function addItem() {
@@ -99,6 +354,44 @@
         document.getElementById('disp-monthly').innerText = appData.monthlyTarget;
         document.getElementById('disp-achieved').innerText = appData.achievedSales;
         document.getElementById('disp-remaining').innerText = appData.monthlyTarget - appData.achievedSales;
+
+        let percentage = 0;
+        if (appData.monthlyTarget > 0) {
+            percentage = Math.min((appData.achievedSales / appData.monthlyTarget) * 100, 100);
+        }
+        document.getElementById('progress-bar').style.width = percentage + "%";
+        document.getElementById('progress-text').innerText = "نسبة الإنجاز: " + percentage.toFixed(1) + "%";
+
+        const currentMonthPrefix = todayStr.substring(0, 7);
+        document.getElementById('current-month-title').innerText = `أيام مبيعات شهر: ${currentMonthPrefix}`;
+        
+        const monthlyTable = document.querySelector('#monthly-sales-table tbody');
+        monthlyTable.innerHTML = '';
+        
+        const currentMonthRecords = appData.dailyRecords.filter(r => r.date.startsWith(currentMonthPrefix));
+        currentMonthRecords.forEach(r => {
+            monthlyTable.innerHTML += `<tr><td>${r.date}</td><td>${r.amount}</td>
+            <td><button class="edit-btn" onclick="editRecord(${r.id})">تعديل</button></td></tr>`;
+        });
+
+        const yearlyTable = document.querySelector('#yearly-stats-table tbody');
+        yearlyTable.innerHTML = '';
+        const currentYear = new Date().getFullYear();
+        const monthNames = ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+        
+        let totalYearSales = 0;
+
+        for(let m = 1; m <= 12; m++) {
+            let monthPrefix = `${currentYear}-${m < 10 ? '0' + m : m}`;
+            let totalMonthSales = appData.dailyRecords
+                .filter(r => r.date.startsWith(monthPrefix))
+                .reduce((sum, r) => sum + r.amount, 0);
+            
+            totalYearSales += totalMonthSales;
+            yearlyTable.innerHTML += `<tr><td>${monthNames[m-1]} (${currentYear})</td><td><strong>${totalMonthSales}</strong></td></tr>`;
+        }
+
+        document.getElementById('total-year-to-date').innerText = totalYearSales;
 
         const sel = document.getElementById('item-selector');
         sel.innerHTML = '<option value="">اختر الصنف...</option>';
