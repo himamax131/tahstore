@@ -882,8 +882,9 @@
     <div class="login-card">
         <div class="login-glow"></div>
 
-        <div class="login-logo">🌴</div>
-
+<div class="login-logo">
+    <img src="https://up6.cc/2026/08/178662434144331.jpg" alt="تمور الطحان">
+</div>
         <h2 class="login-title">تمور الطحان</h2>
         <div class="login-subtitle">نظام إدارة فرع مبارك</div>
 
@@ -2207,8 +2208,10 @@ function togglePassword() {
 // =========================
 // LOGIN / ADMIN AUTHENTICATION
 // =========================
-const ADMIN_EMAIL = "himamax31@gmail.com";
-
+const ADMIN_EMAILS = [
+    "himamax31@gmail.com",
+    "ahmedemad@gmail.com"
+];
 async function loginUser() {
     const emailInput = document.getElementById("login-email");
     const passwordInput = document.getElementById("login-password");
@@ -2281,20 +2284,28 @@ async function checkAdmin() {
         return;
     }
 
-    if (currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-        isAdmin = true;
-        if (loginScreen) loginScreen.style.display = "none";
+   const userEmail = currentUser.email
+    ? currentUser.email.toLowerCase()
+    : "";
 
-        await loadData();
-    } else {
-        isAdmin = false;
+if (ADMIN_EMAILS.includes(userEmail)) {
+    isAdmin = true;
 
-        if (errorBox) {
-            errorBox.textContent = "هذا الحساب ليس لديه صلاحية الدخول إلى لوحة الإدارة.";
-        }
-
-        await auth.signOut();
+    if (loginScreen) {
+        loginScreen.style.display = "none";
     }
+
+    await loadData();
+
+} else {
+    isAdmin = false;
+
+    if (errorBox) {
+        errorBox.textContent =
+            "هذا الحساب ليس لديه صلاحية الدخول إلى لوحة الإدارة.";
+    }
+
+    await auth.signOut();
 }
 
 async function logoutUser() {
