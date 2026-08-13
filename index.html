@@ -518,10 +518,25 @@ const storeRef = db.collection("store").doc("store_v_final_v4");
     const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
     document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', options);
 
-    function saveData() {
-        localStorage.setItem('store_v_final_v4', JSON.stringify(appData));
+   async function saveData() {
+    try {
+        localStorage.setItem(
+            'store_v_final_v4',
+            JSON.stringify(appData)
+        );
+
+        await storeRef.set({
+            ...appData,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
         render();
+
+    } catch (error) {
+        console.error("Firestore Save Error:", error);
+        alert("حدث خطأ أثناء حفظ البيانات في قاعدة البيانات");
     }
+}
 
     function switchTab(index) {
         const buttons = document.querySelectorAll('.nav-link');
