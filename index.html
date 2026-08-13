@@ -25,7 +25,6 @@
             direction: rtl; 
         }
 
-        /* شريط التنقل العلوي المتجاوب للهاتف */
         .game-navbar {
             background: rgba(10, 14, 23, 0.98);
             border-bottom: 2px solid rgba(245, 158, 11, 0.2);
@@ -72,22 +71,24 @@
             font-weight: bold;
         }
 
-        /* أزرار القائمة في المنتصف ومتناسقة للهواتف */
         .nav-links {
             display: flex;
-            gap: 8px;
+            gap: 3px;
             align-items: center;
             margin: 0 auto;
+            overflow-x: auto;
+            max-width: 100%;
+            padding-bottom: 2px;
         }
 
         .nav-link {
             background: none;
             border: none;
             color: #94a3b8;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: bold;
             cursor: pointer;
-            padding: 6px 8px;
+            padding: 5px 4px;
             position: relative;
             transition: 0.3s;
             white-space: nowrap;
@@ -165,8 +166,47 @@
         .edit-btn { background: #2563eb; padding: 4px 8px; border-radius: 4px; color: white; border: none; font-size: 11px; }
         .delete-btn { background: var(--danger); padding: 4px 8px; border-radius: 4px; color: white; border: none; font-size: 11px; }
 
-        /* صفوف الإدخال المجاورة لتناسب الشاشات الصغيرة */
         .flex-row { display: flex; gap: 6px; align-items: center; }
+
+        .sales-card {
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            margin-bottom: 10px;
+        }
+        .sales-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+        }
+        .sales-name {
+            font-weight: bold;
+            color: var(--primary-light);
+            font-size: 13px;
+        }
+        
+        /* شارة الجزاءات الديناميكية (أخضر تدرج للأحمر) */
+        .penalty-badge {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .penalty-list {
+            margin: 0;
+            padding-right: 15px;
+            font-size: 11px;
+            color: #cbd5e1;
+        }
+        .penalty-list li {
+            margin-bottom: 3px;
+        }
         
         @media (max-width: 600px) {
             .game-navbar { padding: 8px 10px; }
@@ -174,8 +214,8 @@
             .brand-logo { width: 32px; height: 32px; font-size: 14px; }
             .brand-text h3 { font-size: 11px; }
             .brand-text span { font-size: 9px; }
-            .nav-links { gap: 4px; }
-            .nav-link { font-size: 11px; padding: 4px 5px; }
+            .nav-links { gap: 2px; }
+            .nav-link { font-size: 9px; padding: 4px 3px; }
             .card { padding: 12px; }
             .hide-on-mobile { display: none; }
         }
@@ -183,21 +223,23 @@
 </head>
 <body>
 
-    <!-- شريط التنقل العلوي المتجاوب -->
     <header class="game-navbar">
         <div class="nav-brand">
             <div class="brand-logo">👤</div>
             <div class="brand-text">
+  <div class="hide-on-mobile" style="font-size: 13px; color: var(--primary-light); font-weight: bold;">تمور الطحان 🌴</div>
                 <h3>AhmedEmad</h3>
-                <span>فرع مبارك</span>
+               <div class="hide-on-mobile" style="font-size: 11px; color: var(--primary-light); font-weight: bold;">فرع مبارك</div>
             </div>
         </div>
         <nav class="nav-links">
             <button class="nav-link active" onclick="switchTab(0)">المبيعات</button>
             <button class="nav-link" onclick="switchTab(1)">الإحصائيات</button>
             <button class="nav-link" onclick="switchTab(2)">المخزونات</button>
+            <button class="nav-link" onclick="switchTab(3)">الجرد والعجوزات</button>
+            <button class="nav-link" onclick="switchTab(4)">فريق السيلز</button>
         </nav>
-        <div class="hide-on-mobile" style="font-size: 11px; color: var(--primary-light); font-weight: bold;">🌴 تمور الطحان</div>
+   
     </header>
 
 <div class="container">
@@ -210,10 +252,10 @@
             <button onclick="setTarget()">تثبيت التارجت</button>
             
             <div class="flex-row">
-                <input type="number" id="input-daily-sales" placeholder="مبيعات اليوم">
-                <div id="current-date-display" style="background:rgba(15, 23, 42, 0.9); padding:10px 8px; border-radius:8px; border:1px solid var(--border); white-space:nowrap; font-size:11px; color:#38bdf8;"></div>
+                <input type="number" id="input-daily-sales" placeholder="مبيعات اليوم / الشهر">
+                <div id="current-date-display" style="background:rgba(15, 23, 42, 0.9); padding:10px 8px; border-radius:8px; border:1px solid var(--border); white-space:nowrap; font-size:11px; color:#38bdf8; direction: ltr;"></div>
             </div>
-            <button onclick="addSales()" style="background:#2563eb;">إضافة مبيعات اليوم</button>
+            <button onclick="addSales()" style="background:#2563eb;">إضافة المبيعات</button>
             
             <div class="target-grid" style="margin-top: 12px;">
                 <div class="stat-box"><span>الشهري</span><br><strong id="disp-monthly">0</strong></div>
@@ -228,21 +270,18 @@
         </div>
     </div>
 
-    <!-- القسم الثاني: إحصائيات السنة وسجل المبيعات -->
+    <!-- القسم الثاني: إحصائيات السنة وسجل المبيعات الشهرية -->
     <div class="tab-content" id="tab-1">
         <div class="card">
-            <h3>📅 سجل المبيعات وإحصائيات السنة</h3>
+            <h3>📅 سجل المبيعات الشهرية</h3>
             <div class="flex-row">
-                <input type="date" id="sale-date" style="flex: 1.2;">
+                <input type="month" id="sale-month" style="flex: 1.2; direction: ltr;">
                 <input type="number" id="sale-amount" placeholder="المبلغ" style="flex: 1;">
-                <button onclick="addDailyRecord()" style="width:auto; background:#059669; padding: 10px 12px;">تسجيل</button>
+                <button onclick="addMonthlyRecord()" style="width:auto; background:#059669; padding: 10px 12px;">تسجيل / تحديث</button>
             </div>
 
-            <h4 style="color:#38bdf8; margin-top:12px; text-align:center; font-size: 13px;" id="current-month-title">أيام المبيعات</h4>
-            <table id="monthly-sales-table"><thead><tr><th>التاريخ</th><th>المبلغ</th><th>تعديل</th></tr></thead><tbody></tbody></table>
-
-            <h4 style="color:var(--primary-light); margin-top:20px; text-align:center; font-size: 13px;">📊 إحصائيات الشهور</h4>
-            <table id="yearly-stats-table"><thead><tr><th>الشهر</th><th>الإجمالي</th></tr></thead><tbody></tbody></table>
+            <h4 style="color:#38bdf8; margin-top:12px; text-align:center; font-size: 13px;">مبيعات الشهور المسجلة</h4>
+            <table id="monthly-sales-table"><thead><tr><th>الشهر</th><th>المبلغ الإجمالي</th><th>تعديل</th></tr></thead><tbody></tbody></table>
 
             <div style="margin-top: 15px; background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
                 <span style="font-size: 12px; color: #cbd5e1;">إجمالي مبيعات السنة: </span>
@@ -251,32 +290,83 @@
         </div>
     </div>
 
-    <!-- القسم الثالث: المخزونات والعجز -->
+    <!-- القسم الثالث: الأصناف والمخزونات -->
     <div class="tab-content" id="tab-2">
         <div class="card">
-            <h3>📦 إدارة المخزونات والعجز</h3>
+            <h3>📦 إدارة الأصناف وقائمة المخزون</h3>
             <div class="flex-row">
                 <input type="text" id="new-item" placeholder="اسم صنف جديد (مع السعر)">
-                <button onclick="addItem()" style="width:auto; background:#059669; padding: 10px 15px;">إضافة</button>
+                <button onclick="addItem()" style="width:auto; background:#059669; padding: 10px 15px;">إضافة صنف</button>
             </div>
-            <select id="item-selector"><option value="">اختر الصنف والسعر...</option></select>
+            <h4 style="color:var(--primary-light); margin-top:15px; text-align:center; font-size: 13px;">قائمة الأصناف المسجلة</h4>
+            
+            <div style="overflow-x: auto;">
+                <table id="items-list-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">م</th>
+                            <th style="text-align: right; padding-right: 10px;">اسم الصنف</th>
+                            <th style="width: 25%;">السعر</th>
+                            <th style="width: 12%;">إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- القسم الرابع: الجرد والعجوزات -->
+    <div class="tab-content" id="tab-3">
+        <div class="card">
+            <h3>📋 قسم الجرد وتسجيل العجوزات</h3>
+            <div class="flex-row" style="margin-bottom: 8px;">
+                <label style="font-size: 12px; white-space: nowrap; color: var(--primary-light);">تاريخ الجرد:</label>
+                <input type="date" id="inventory-date" style="direction: ltr;">
+            </div>
+            <select id="inventory-item-selector"><option value="">اختر الصنف...</option></select>
             <div class="flex-row">
-                <input type="number" id="qty-input" placeholder="الكمية">
-                <select id="unit-selector" style="width: 100px;"><option value="كيلو">كيلو</option><option value="علبة">علبة</option><option value="باكت">باكت</option><option value="قطعة">قطعة</option></select>
+                <input type="number" id="inventory-qty-input" placeholder="الكمية العجز/المفقود">
+                <select id="inventory-unit-selector" style="width: 100px;"><option value="كيلو">كيلو</option><option value="علبة">علبة</option><option value="باكت">باكت</option><option value="قطعة">قطعة</option></select>
             </div>
-            <button onclick="addShortage()">تسجيل العجز</button>
-            <table id="shortage-table"><thead><tr><th>الصنف</th><th>الكمية</th><th>حذف</th></tr></thead><tbody></tbody></table>
+            <button onclick="addInventoryShortage()" style="background:#059669;">تسجيل عجز الجرد</button>
+            
+            <h4 style="color:#38bdf8; margin-top:15px; text-align:center; font-size: 13px;">سجل عجوزات الجرد</h4>
+            <table id="inventory-shortage-table"><thead><tr><th>تاريخ الجرد</th><th>الصنف</th><th>الكمية</th><th>حذف</th></tr></thead><tbody></tbody></table>
+        </div>
+    </div>
+
+    <!-- القسم الخامس: فريق السيلز والجزاءات -->
+    <div class="tab-content" id="tab-4">
+        <div class="card">
+            <h3>👥 فريق السيلز ومتابعة الجزاءات</h3>
+            
+            <div style="background: rgba(15, 23, 42, 0.9); padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+                <h4 style="color: #38bdf8; margin: 0 0 8px 0; font-size: 12px; text-align: center;">إضافة جزاء / مخالفة جديدة</h4>
+                <select id="penalty-sales-select">
+                    <option value="">اختر موظف السيلز...</option>
+                    <option value="محمود حسن">محمود حسن</option>
+                    <option value="إسلام عادل">إسلام عادل</option>
+                    <option value="كريم أحمد">كريم أحمد</option>
+                    <option value="محمد ربيع">محمد ربيع</option>
+                    <option value="عبدالرحمن علي">عبدالرحمن علي</option>
+                </select>
+                <input type="text" id="penalty-reason" placeholder="سبب الجزاء والمخالفة (مثال: التأخير عن الميعاد)">
+                <button onclick="addSalesPenalty()" style="background:#2563eb; margin-top: 4px;">تسجيل الجزاء</button>
+            </div>
+
+            <h4 style="color:var(--primary-light); margin-bottom: 10px; text-align: center; font-size: 13px;">سجل جزاءات الموظفين</h4>
+            <div id="sales-team-container"></div>
         </div>
     </div>
 
 </div>
 
 <script>
-    let appData = JSON.parse(localStorage.getItem('store_v_final')) || { 
+    let appData = JSON.parse(localStorage.getItem('store_v_final_v4')) || { 
         monthlyTarget: 0, 
         achievedSales: 0, 
         items: [
-            // قائمة أصناف تمور الطحان المحدثة مع الأسعار من المنيو
             "رطب سكري درجة أولى (245 ج.م / 120 ج.م)",
             "سكري مفتل (335 ج.م / 175 ج.م)",
             "تمر مجدول مصري (750 ج.م / 380 ج.م)",
@@ -392,18 +482,27 @@
             "إيليت عيون المها 400 جرام (160 ج.م)",
             "إيليت معمول مشكل (جوز هند - هيل - سمسم - حبة البركة) 400 جرام (155 ج.م)"
         ], 
-        shortages: [], 
-        dailyRecords: [] 
+        inventoryShortages: [], 
+        monthlyRecords: [],
+        salesTeam: [
+            { name: "محمود حسن", penalties: [] },
+            { name: "إسلام عادل", penalties: [] },
+            { name: "كريم أحمد", penalties: [] },
+            { name: "محمد ربيع", penalties: [] },
+            { name: "عبدالرحمن علي", penalties: [] }
+        ]
     };
 
     const todayStr = new Date().toISOString().split('T')[0];
-    document.getElementById('sale-date').value = todayStr;
+    const currentMonthStr = todayStr.substring(0, 7);
+    document.getElementById('sale-month').value = currentMonthStr;
+    document.getElementById('inventory-date').value = todayStr;
     
-    const options = { month: 'numeric', day: 'numeric', weekday: 'short' };
-    document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('ar-EG', options);
+    const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
+    document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', options);
 
     function saveData() {
-        localStorage.setItem('store_v_final', JSON.stringify(appData));
+        localStorage.setItem('store_v_final_v4', JSON.stringify(appData));
         render();
     }
 
@@ -430,42 +529,51 @@
     function addSales() {
         const val = parseFloat(document.getElementById('input-daily-sales').value) || 0;
         if(val > 0) {
-            appData.achievedSales += val;
-            appData.dailyRecords.unshift({ id: Date.now(), date: todayStr, amount: val });
+            let existingRecord = appData.monthlyRecords.find(r => r.month === currentMonthStr);
+            if(existingRecord) {
+                existingRecord.amount += val;
+            } else {
+                appData.monthlyRecords.unshift({ month: currentMonthStr, amount: val });
+            }
+            
+            updateAchievedSalesFromMonthly();
             document.getElementById('input-daily-sales').value = '';
             saveData();
         }
     }
 
-    function addDailyRecord() {
-        const date = document.getElementById('sale-date').value;
+    function addMonthlyRecord() {
+        const monthVal = document.getElementById('sale-month').value;
         const amount = parseFloat(document.getElementById('sale-amount').value) || 0;
-        if(date && amount > 0) {
-            appData.dailyRecords.unshift({ id: Date.now(), date, amount });
-            const recordMonth = date.substring(0, 7);
-            const currentMonth = todayStr.substring(0, 7);
-            if(recordMonth === currentMonth) {
-                appData.achievedSales += amount;
+        
+        if(monthVal && amount > 0) {
+            let existingRecord = appData.monthlyRecords.find(r => r.month === monthVal);
+            if(existingRecord) {
+                existingRecord.amount += amount;
+            } else {
+                appData.monthlyRecords.unshift({ month: monthVal, amount: amount });
             }
+            
+            updateAchievedSalesFromMonthly();
             document.getElementById('sale-amount').value = '';
             saveData();
         }
     }
 
-    function editRecord(id) {
-        const rec = appData.dailyRecords.find(r => r.id === id);
+    function updateAchievedSalesFromMonthly() {
+        let currentRec = appData.monthlyRecords.find(r => r.month === currentMonthStr);
+        appData.achievedSales = currentRec ? currentRec.amount : 0;
+    }
+
+    function editMonthlyRecord(month) {
+        const rec = appData.monthlyRecords.find(r => r.month === month);
         if(rec) {
-            const newAmount = prompt("تعديل قيمة المبيعات:", rec.amount);
+            const newAmount = prompt(`تعديل إجمالي مبيعات شهر (${month}):`, rec.amount);
             if(newAmount !== null) {
                 const parsedAmount = parseFloat(newAmount);
                 if(!isNaN(parsedAmount)) {
-                    const recordMonth = rec.date.substring(0, 7);
-                    const currentMonth = todayStr.substring(0, 7);
-                    
-                    if(recordMonth === currentMonth) {
-                        appData.achievedSales = appData.achievedSales - rec.amount + parsedAmount;
-                    }
                     rec.amount = parsedAmount;
+                    updateAchievedSalesFromMonthly();
                     saveData();
                 }
             }
@@ -481,22 +589,56 @@
         }
     }
 
-    function addShortage() {
-        const item = document.getElementById('item-selector').value;
-        const qty = document.getElementById('qty-input').value;
-        const unit = document.getElementById('unit-selector').value;
-        if(item && qty) {
-            appData.shortages.unshift({ id: Date.now(), item, qty: `${qty} ${unit}` });
+    function deleteItem(index) {
+        appData.items.splice(index, 1);
+        saveData();
+    }
+
+    function addInventoryShortage() {
+        const invDate = document.getElementById('inventory-date').value;
+        const item = document.getElementById('inventory-item-selector').value;
+        const qty = document.getElementById('inventory-qty-input').value;
+        const unit = document.getElementById('inventory-unit-selector').value;
+        
+        if(invDate && item && qty) {
+            appData.inventoryShortages.unshift({ id: Date.now(), date: invDate, item, qty: `${qty} ${unit}` });
+            document.getElementById('inventory-qty-input').value = '';
             saveData();
         }
     }
 
-    function deleteShortage(id) {
-        appData.shortages = appData.shortages.filter(s => s.id !== id);
+    function deleteInventoryShortage(id) {
+        appData.inventoryShortages = appData.inventoryShortages.filter(s => s.id !== id);
         saveData();
     }
 
+    function addSalesPenalty() {
+        const memberName = document.getElementById('penalty-sales-select').value;
+        const reason = document.getElementById('penalty-reason').value;
+
+        if(memberName && reason) {
+            const member = appData.salesTeam.find(m => m.name === memberName);
+            if(member) {
+                member.penalties.push({ id: Date.now(), reason });
+                document.getElementById('penalty-reason').value = '';
+                saveData();
+            }
+        } else {
+            alert("الرجاء اختيار الموظف وكتابة سبب الجزاء");
+        }
+    }
+
+    function deletePenalty(memberName, penaltyId) {
+        const member = appData.salesTeam.find(m => m.name === memberName);
+        if(member) {
+            member.penalties = member.penalties.filter(p => p.id !== penaltyId);
+            saveData();
+        }
+    }
+
     function render() {
+        updateAchievedSalesFromMonthly();
+
         document.getElementById('disp-monthly').innerText = appData.monthlyTarget;
         document.getElementById('disp-achieved').innerText = appData.achievedSales;
         document.getElementById('disp-remaining').innerText = appData.monthlyTarget - appData.achievedSales;
@@ -508,46 +650,119 @@
         document.getElementById('progress-bar').style.width = percentage + "%";
         document.getElementById('progress-text').innerText = "نسبة الإنجاز: " + percentage.toFixed(1) + "%";
 
-        const currentMonthPrefix = todayStr.substring(0, 7);
-        document.getElementById('current-month-title').innerText = `أيام مبيعات شهر: ${currentMonthPrefix}`;
-        
         const monthlyTable = document.querySelector('#monthly-sales-table tbody');
         monthlyTable.innerHTML = '';
         
-        const currentMonthRecords = appData.dailyRecords.filter(r => r.date.startsWith(currentMonthPrefix));
-        currentMonthRecords.forEach(r => {
-            monthlyTable.innerHTML += `<tr><td>${r.date}</td><td>${r.amount}</td>
-            <td><button class="edit-btn" onclick="editRecord(${r.id})">تعديل</button></td></tr>`;
+        let totalYearSales = 0;
+        const currentYear = new Date().getFullYear().toString();
+
+        appData.monthlyRecords.forEach(r => {
+            if(r.month.startsWith(currentYear)) {
+                totalYearSales += r.amount;
+            }
+            monthlyTable.innerHTML += `<tr>
+                <td style="direction:ltr; font-weight:bold; color:var(--primary-light);">${r.month}</td>
+                <td style="color:var(--success); font-weight:bold;">${r.amount} EGP</td>
+                <td><button class="edit-btn" onclick="editMonthlyRecord('${r.month}')">تعديل</button></td>
+            </tr>`;
         });
 
-        const yearlyTable = document.querySelector('#yearly-stats-table tbody');
-        yearlyTable.innerHTML = '';
-        const currentYear = new Date().getFullYear();
-        const monthNames = ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        
-        let totalYearSales = 0;
-
-        for(let m = 1; m <= 12; m++) {
-            let monthPrefix = `${currentYear}-${m < 10 ? '0' + m : m}`;
-            let totalMonthSales = appData.dailyRecords
-                .filter(r => r.date.startsWith(monthPrefix))
-                .reduce((sum, r) => sum + r.amount, 0);
-            
-            totalYearSales += totalMonthSales;
-            yearlyTable.innerHTML += `<tr><td>${monthNames[m-1]}</td><td><strong>${totalMonthSales}</strong></td></tr>`;
+        if(monthlyTable.innerHTML === '') {
+            monthlyTable.innerHTML = `<tr><td colspan="3" style="color:#94a3b8;">لا توجد مبيعات شهرية مسجلة حتى الآن</td></tr>`;
         }
 
-        document.getElementById('total-year-to-date').innerText = totalYearSales;
+        document.getElementById('total-year-to-date').innerText = totalYearSales + " EGP";
 
-        const sel = document.getElementById('item-selector');
-        sel.innerHTML = '<option value="">اختر الصنف والسعر...</option>';
-        appData.items.forEach(i => sel.innerHTML += `<option value="${i}">${i}</option>`);
+        const itemsListTable = document.querySelector('#items-list-table tbody');
+        itemsListTable.innerHTML = '';
+        
+        appData.items.forEach((item, index) => {
+            let namePart = item;
+            let pricePart = "غير محدد";
+            
+            const lastOpenBracket = item.lastIndexOf('(');
+            if (lastOpenBracket !== -1 && item.endsWith(')')) {
+                namePart = item.substring(0, lastOpenBracket).trim();
+                pricePart = item.substring(lastOpenBracket + 1, item.length - 1).trim();
+            }
 
-        const table = document.querySelector('#shortage-table tbody');
-        table.innerHTML = '';
-        appData.shortages.forEach(s => {
-            table.innerHTML += `<tr><td>${s.item}</td><td>${s.qty}</td>
-            <td><button class="delete-btn" onclick="deleteShortage(${s.id})">حذف</button></td></tr>`;
+            itemsListTable.innerHTML += `
+                <tr>
+                    <td style="color: #94a3b8; font-weight: bold;">${index + 1}</td>
+                    <td style="text-align: right; padding-right: 10px; color: #fff; font-weight: 500;">${namePart}</td>
+                    <td style="color: var(--primary-light); font-weight: bold; direction: ltr;">${pricePart}</td>
+                    <td><button class="delete-btn" onclick="deleteItem(${index})">حذف</button></td>
+                </tr>
+            `;
+        });
+
+        const invSel = document.getElementById('inventory-item-selector');
+        invSel.innerHTML = '<option value="">اختر الصنف...</option>';
+        appData.items.forEach(i => invSel.innerHTML += `<option value="${i}">${i}</option>`);
+
+        const invTable = document.querySelector('#inventory-shortage-table tbody');
+        invTable.innerHTML = '';
+        appData.inventoryShortages.forEach(s => {
+            invTable.innerHTML += `<tr><td style="direction:ltr;">${s.date}</td><td>${s.item}</td><td>${s.qty}</td>
+            <td><button class="delete-btn" onclick="deleteInventoryShortage(${s.id})">حذف</button></td></tr>`;
+        });
+
+        const salesTeamContainer = document.getElementById('sales-team-container');
+        salesTeamContainer.innerHTML = '';
+        
+        if(!appData.salesTeam) {
+            appData.salesTeam = [
+                { name: "محمود حسن", penalties: [] },
+                { name: "إسلام عادل", penalties: [] },
+                { name: "كريم أحمد", penalties: [] },
+                { name: "محمد ربيع", penalties: [] },
+                { name: "عبدالرحمن علي", penalties: [] }
+            ];
+        }
+
+        appData.salesTeam.forEach(member => {
+            let penaltiesHTML = '';
+            const count = member.penalties.length;
+
+            // تحديد لون الشارة ديناميكياً بناءً على عدد الجزاءات
+            let badgeBg, badgeBorder, badgeColor;
+            if (count === 0) {
+                badgeBg = 'rgba(34, 197, 94, 0.15)';
+                badgeBorder = 'rgba(34, 197, 94, 0.4)';
+                badgeColor = '#4ade80'; // أخضر
+            } else if (count <= 2) {
+                badgeBg = 'rgba(234, 179, 8, 0.15)';
+                badgeBorder = 'rgba(234, 179, 8, 0.4)';
+                badgeColor = '#facc15'; // أصفر مائل للبرتقالي
+            } else if (count <= 4) {
+                badgeBg = 'rgba(249, 115, 22, 0.2)';
+                badgeBorder = 'rgba(249, 115, 22, 0.5)';
+                badgeColor = '#fb923c'; // برتقالي غامق
+            } else {
+                badgeBg = 'rgba(239, 68, 68, 0.25)';
+                badgeBorder = 'rgba(239, 68, 68, 0.6)';
+                badgeColor = '#fca5a5'; // أحمر غامق
+            }
+
+            if(count > 0) {
+                penaltiesHTML = `<ul class="penalty-list">`;
+                member.penalties.forEach(p => {
+                    penaltiesHTML += `<li>${p.reason} <button onclick="deletePenalty('${member.name}', ${p.id})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:10px; padding:0 4px;">[حذف]</button></li>`;
+                });
+                penaltiesHTML += `</ul>`;
+            } else {
+                penaltiesHTML = `<div style="font-size:11px; color:#22c55e; margin-top:3px;">لا توجد جزاءات مسجلة</div>`;
+            }
+
+            salesTeamContainer.innerHTML += `
+                <div class="sales-card">
+                    <div class="sales-header">
+                        <span class="sales-name">👤 ${member.name}</span>
+                        <span class="penalty-badge" style="background:${badgeBg}; border-color:${badgeBorder}; color:${badgeColor};">عدد الجزاءات: ${count}</span>
+                    </div>
+                    ${penaltiesHTML}
+                </div>
+            `;
         });
     }
 
