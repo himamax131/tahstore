@@ -222,7 +222,83 @@
     </style>
 </head>
 <body>
+<div id="login-screen" style="
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:#080c14;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    direction:rtl;
+">
 
+    <div style="
+        width:90%;
+        max-width:380px;
+        background:rgba(18,24,38,.98);
+        border:1px solid rgba(245,158,11,.3);
+        border-radius:15px;
+        padding:25px;
+        box-shadow:0 10px 40px rgba(0,0,0,.7);
+        text-align:center;
+    ">
+
+        <div style="
+            width:65px;
+            height:65px;
+            margin:0 auto 15px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#f59e0b,#d97706);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:30px;
+        ">🌴</div>
+
+        <h2 style="color:#fbbf24;margin-bottom:5px;">
+            تمور الطحان
+        </h2>
+
+        <div style="
+            color:#94a3b8;
+            font-size:12px;
+            margin-bottom:20px;
+        ">
+            نظام إدارة فرع مبارك
+        </div>
+
+        <input
+            type="email"
+            id="login-email"
+            placeholder="البريد الإلكتروني"
+        >
+
+        <input
+            type="password"
+            id="login-password"
+            placeholder="كلمة المرور"
+        >
+
+        <button
+            onclick="loginUser()"
+            style="background:#f59e0b;"
+        >
+            🔐 تسجيل الدخول
+        </button>
+
+        <div
+            id="login-error"
+            style="
+                color:#ef4444;
+                font-size:12px;
+                margin-top:10px;
+                min-height:18px;
+            "
+        ></div>
+
+    </div>
+</div>
     <header class="game-navbar">
         <div class="nav-brand">
             <div class="brand-logo">👤</div>
@@ -239,7 +315,18 @@
             <button class="nav-link" onclick="switchTab(3)">الجرد والعجوزات</button>
             <button class="nav-link" onclick="switchTab(4)">فريق السيلز</button>
         </nav>
-   
+   <button
+    onclick="logoutUser()"
+    style="
+        width:auto;
+        margin:0;
+        padding:7px 12px;
+        background:#ef4444;
+        font-size:11px;
+    "
+>
+    خروج
+</button>
     </header>
 
 <div class="container">
@@ -362,6 +449,7 @@
 
 </div>
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
 
 <script>
@@ -377,10 +465,15 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+const auth = firebase.auth();
 const db = firebase.firestore();
+
 const storeRef = db.collection("store").doc("store_v_final_v4");
 
-    let appData = JSON.parse(localStorage.getItem('store_v_final_v4')) || { 
+let currentUser = null;
+let isAdmin = false;
+
+    let appData = { 
         monthlyTarget: 0, 
         achievedSales: 0, 
         items: [
@@ -518,26 +611,79 @@ const storeRef = db.collection("store").doc("store_v_final_v4");
     const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
     document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', options);
 
-   async function saveData() {
-    try {
-        localStorage.setItem(
-            'store_v_final_v4',
-            JSON.stringify(appData)
-        );
+  async function saveData() {
 
-        await storeRef.set({
-            ...appData,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+    if (!currentUser || !isAdmin) {
+        alert("ليس لديك صلاحية لتعديل البيانات.");
+        return;
+    }
+
+    try {
+
+        await storeRef.set(appData);
 
         render();
 
     } catch (error) {
+
         console.error("Firestore Save Error:", error);
-        alert("حدث خطأ أثناء حفظ البيانات في قاعدة البيانات");
+
+        alert(
+            "حدث خطأ أثناء حفظ البيانات:\n" +
+            error.message
+        );
+
     }
 }
 
+
+async function loadData() {
+
+    try {
+
+        const doc = await storeRef.get();
+
+        if (doc.exists) {
+
+            appData = doc.data();
+
+            if (!appData.inventoryShortages)
+                appData.inventoryShortages = [];
+
+            if (!appData.monthlyRecords)
+                appData.monthlyRecords = [];
+
+            if (!appData.salesTeam) {
+
+                appData.salesTeam = [
+                    { name: "محمود حسن", penalties: [] },
+                    { name: "إسلام عادل", penalties: [] },
+                    { name: "كريم أحمد", penalties: [] },
+                    { name: "محمد ربيع", penalties: [] },
+                    { name: "عبدالرحمن علي", penalties: [] }
+                ];
+
+            }
+
+        } else {
+
+            // أول مرة فقط
+            await storeRef.set(appData);
+
+        }
+
+        render();
+
+    } catch (error) {
+
+        console.error("Firestore Load Error:", error);
+
+        alert(
+            "تعذر تحميل البيانات من Firebase:\n" +
+            error.message
+        );
+    }
+}
     function switchTab(index) {
         const buttons = document.querySelectorAll('.nav-link');
         const contents = document.querySelectorAll('.tab-content');
@@ -798,8 +944,23 @@ const storeRef = db.collection("store").doc("store_v_final_v4");
         });
     }
 
-    window.onload = render;
-   
+auth.onAuthStateChanged(async function(user) {
+
+    if (user) {
+
+        currentUser = user;
+
+        await checkAdmin();
+
+    } else {
+
+        currentUser = null;
+        isAdmin = false;
+
+        document.getElementById("login-screen").style.display = "flex";
+    }
+
+});   
 </script>
 </body>
 </html>
