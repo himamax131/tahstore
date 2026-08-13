@@ -1,194 +1,456 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
+
+\<meta charset="UTF-8">
+
+ <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة تمور الطحان</title>
-    <style>
-        :root { 
-            --bg-color: #080c14; 
-            --card-bg: rgba(18, 24, 38, 0.92); 
-            --text-color: #f8fafc; 
-            --primary: #f59e0b; 
-            --primary-light: #fbbf24;
-            --danger: #ef4444; 
-            --border: rgba(255, 255, 255, 0.08); 
-            --success: #22c55e; 
-        }
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(rgba(8, 12, 20, 0.88), rgba(8, 12, 20, 0.88)), url('https://up6.cc/2026/08/178661253901061.png') no-repeat center center fixed; 
-            background-size: cover; 
-            color: var(--text-color); 
-            margin: 0; 
-            padding: 0; 
-            direction: rtl; 
-        }
 
-        .game-navbar {
-            background: rgba(10, 14, 23, 0.98);
-            border-bottom: 2px solid rgba(245, 158, 11, 0.2);
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
+    <meta name="theme-color" content="#080c14">
 
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    <meta name="mobile-web-app-capable" content="yes">
 
-        .brand-logo {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
-            border: 2px solid #fbbf24;
-            flex-shrink: 0;
-        }
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
-        .brand-text h3 {
-            margin: 0;
-            font-size: 13px;
-            color: #fff;
-        }
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-        .brand-text span {
-            font-size: 10px;
-            color: var(--primary-light);
-            font-weight: bold;
-        }
+    <link rel="manifest" href="manifest.json">
+\<title>نظام إدارة تمور الطحان\</title>
 
-        .nav-links {
-            display: flex;
-            gap: 3px;
-            align-items: center;
-            margin: 0 auto;
-            overflow-x: auto;
-            max-width: 100%;
-            padding-bottom: 2px;
-        }
+\<style>
 
-        .nav-link {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 5px 4px;
-            position: relative;
-            transition: 0.3s;
-            white-space: nowrap;
-        }
+    \:root {&#x20;
 
-        .nav-link:hover, .nav-link.active {
-            color: #fff;
-        }
+        \--bg-color: #080c14;&#x20;
 
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, #f59e0b, #38bdf8);
-            box-shadow: 0 0 8px #f59e0b;
-        }
+        \--card-bg: rgba(18, 24, 38, 0.92);&#x20;
 
-        .container { 
-            max-width: 850px; 
-            margin: 15px auto; 
-            padding: 0 10px; 
-            box-sizing: border-box;
-        }
+        \--text-color: #f8fafc;&#x20;
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        \--primary: #f59e0b;&#x20;
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        \--primary-light: #fbbf24;
 
-        .card { 
-            background: var(--card-bg); 
-            border-radius: 10px; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            border: 1px solid var(--border); 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
-            backdrop-filter: blur(8px);
-        }
+        \--danger: #ef4444;&#x20;
 
-        h2, h3 { color: var(--primary-light); text-align: center; margin-top: 0; font-size: 16px; }
-        
-        input, select, button { 
-            width: 100%; 
-            padding: 10px; 
-            margin: 6px 0; 
-            border-radius: 8px; 
-            border: 1px solid var(--border); 
-            background: rgba(15, 23, 42, 0.9); 
-            color: white; 
-            font-size: 13px; 
-            box-sizing: border-box; 
-        }
-        input:focus, select:focus { border-color: var(--primary); outline: none; }
-        button { font-weight: bold; cursor: pointer; transition: 0.2s; border: none; background: var(--primary); color: #fff; }
-        button:hover { filter: brightness(1.2); }
-        
-        .target-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; margin-bottom: 12px; }
-        .stat-box { background: rgba(15, 23, 42, 0.7); padding: 8px 4px; border-radius: 6px; border: 1px solid var(--border); font-size: 12px; }
-        .stat-box strong { font-size: 13px; }
-        
-        .progress-container { width: 100%; background: rgba(15, 23, 42, 0.9); border-radius: 8px; height: 16px; border: 1px solid var(--border); overflow: hidden; position: relative; }
-        .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.4s ease-in-out; }
-        .progress-text { text-align: center; font-size: 11px; margin-top: 4px; color: #cbd5e1; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 8px 5px; text-align: center; border-bottom: 1px solid var(--border); font-size: 12px; }
-        th { color: var(--primary-light); }
-        
-        .edit-btn { background: #2563eb; padding: 4px 8px; border-radius: 4px; color: white; border: none; font-size: 11px; }
-        .delete-btn { background: var(--danger); padding: 4px 8px; border-radius: 4px; color: white; border: none; font-size: 11px; }
+        \--border: rgba(255, 255, 255, 0.08);&#x20;
 
-        .flex-row { display: flex; gap: 6px; align-items: center; }
+        \--success: #22c55e;&#x20;
 
-        .sales-card {
-            background: rgba(15, 23, 42, 0.85);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            padding: 10px 12px;
-            margin-bottom: 10px;
-        }
-        .sales-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 6px;
-            margin-bottom: 6px;
-        }
-        .sales-name {
-            font-weight: bold;
-            color: var(--primary-light);
-            font-size: 13px;
-        }
-        /* =========================
+    }
+
+    body {&#x20;
+
+        font-family: 'Segoe UI', sans-serif;&#x20;
+
+        background: linear-gradient(rgba(8, 12, 20, 0.88), rgba(8, 12, 20, 0.88)), url('[https://up6.cc/2026/08/178661253901061.png](https://up6.cc/2026/08/178661253901061.png)') no-repeat center center fixed;&#x20;
+
+        background-size: cover;&#x20;
+
+        color: var(--text-color);&#x20;
+
+        margin: 0;&#x20;
+
+        padding: 0;&#x20;
+
+        direction: rtl;&#x20;
+
+    }
+
+
+
+    .game-navbar {
+
+        background: rgba(10, 14, 23, 0.98);
+
+        border-bottom: 2px solid rgba(245, 158, 11, 0.2);
+
+        padding: 10px 15px;
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+
+        position: sticky;
+
+        top: 0;
+
+        z-index: 1000;
+
+        backdrop-filter: blur(10px);
+
+    }
+
+
+
+    .nav-brand {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+    }
+
+
+
+    .brand-logo {
+
+        width: 38px;
+
+        height: 38px;
+
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+
+        border-radius: 50%;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-size: 18px;
+
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+
+        border: 2px solid #fbbf24;
+
+        flex-shrink: 0;
+
+    }
+
+
+
+    .brand-text h3 {
+
+        margin: 0;
+
+        font-size: 13px;
+
+        color: #fff;
+
+    }
+
+
+
+    .brand-text span {
+
+        font-size: 10px;
+
+        color: var(--primary-light);
+
+        font-weight: bold;
+
+    }
+
+
+
+    .nav-links {
+
+        display: flex;
+
+        gap: 3px;
+
+        align-items: center;
+
+        margin: 0 auto;
+
+        overflow-x: auto;
+
+        max-width: 100%;
+
+        padding-bottom: 2px;
+
+    }
+
+
+
+    .nav-link {
+
+        background: none;
+
+        border: none;
+
+        color: #94a3b8;
+
+        font-size: 10px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+        padding: 5px 4px;
+
+        position: relative;
+
+        transition: 0.3s;
+
+        white-space: nowrap;
+
+    }
+
+
+
+    .nav-link\:hover, .nav-link.active {
+
+        color: #fff;
+
+    }
+
+
+
+    .nav-link.active::after {
+
+        content: '';
+
+        position: absolute;
+
+        bottom: -6px;
+
+        left: 0;
+
+        width: 100%;
+
+        height: 2px;
+
+        background: linear-gradient(90deg, #f59e0b, #38bdf8);
+
+        box-shadow: 0 0 8px #f59e0b;
+
+    }
+
+
+
+    .container {&#x20;
+
+        max-width: 850px;&#x20;
+
+        margin: 15px auto;&#x20;
+
+        padding: 0 10px;&#x20;
+
+        box-sizing: border-box;
+
+    }
+
+
+
+    .tab-content { display: none; }
+
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+
+
+    @keyframes fadeIn {
+
+        from { opacity: 0; transform: translateY(5px); }
+
+        to { opacity: 1; transform: translateY(0); }
+
+    }
+
+
+
+    .card {&#x20;
+
+        background: var(--card-bg);&#x20;
+
+        border-radius: 10px;&#x20;
+
+        padding: 15px;&#x20;
+
+        margin-bottom: 15px;&#x20;
+
+        border: 1px solid var(--border);&#x20;
+
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);&#x20;
+
+        backdrop-filter: blur(8px);
+
+    }
+
+
+
+    h2, h3 { color: var(--primary-light); text-align: center; margin-top: 0; font-size: 16px; }
+
+   &#x20;
+
+    input, select, button {&#x20;
+
+        width: 100%;&#x20;
+
+        padding: 10px;&#x20;
+
+        margin: 6px 0;&#x20;
+
+        border-radius: 8px;&#x20;
+
+        border: 1px solid var(--border);&#x20;
+
+        background: rgba(15, 23, 42, 0.9);&#x20;
+
+        color: white;&#x20;
+
+        font-size: 13px;&#x20;
+
+        box-sizing: border-box;&#x20;
+
+    }
+
+    input\:focus, select\:focus { border-color: var(--primary); outline: none; }
+
+    button { font-weight: bold; cursor: pointer; transition: 0.2s; border: none; background: var(--primary); color: #fff; }
+
+    button\:hover { filter: brightness(1.2); }
+
+   &#x20;
+
+    .target-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; margin-bottom: 12px; }
+
+    .stat-box { background: rgba(15, 23, 42, 0.7); padding: 8px 4px; border-radius: 6px; border: 1px solid var(--border); font-size: 12px; }
+
+    .stat-box strong { font-size: 13px; }
+
+   &#x20;
+
+    .progress-container { width: 100%; background: rgba(15, 23, 42, 0.9); border-radius: 8px; height: 16px; border: 1px solid var(--border); overflow: hidden; position: relative; }
+
+    .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.4s ease-in-out; }
+
+    .progress-text { text-align: center; font-size: 11px; margin-top: 4px; color: #cbd5e1; }
+
+   &#x20;
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+
+    th, td { padding: 8px 5px; text-align: center; border-bottom: 1px solid var(--border); font-size: 12px; }
+
+    th { color: var(--primary-light); }
+
+   &#x20;
+
+    .edit-btn { background: #2563eb; padding: 4px 8px; border-radius: 4px; color: white; border: none; font-size: 11px; }
+
+    .delete-btn { background: var(--danger); padding: 4px 8px; border-radius: 4px; color: white; border: none; font-size: 11px; }
+
+
+
+    .flex-row { display: flex; gap: 6px; align-items: center; }
+
+
+
+    .sales-card {
+
+        background: rgba(15, 23, 42, 0.85);
+
+        border-radius: 8px;
+
+        border: 1px solid var(--border);
+
+        padding: 10px 12px;
+
+        margin-bottom: 10px;
+
+    }
+
+    .sales-header {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        border-bottom: 1px solid var(--border);
+
+        padding-bottom: 6px;
+
+        margin-bottom: 6px;
+
+    }
+
+    .sales-name {
+
+        font-weight: bold;
+
+        color: var(--primary-light);
+
+        font-size: 13px;
+
+    }
+
+   &#x20;
+
+    /\* شارة الجزاءات الديناميكية (أخضر تدرج للأحمر) \*/
+
+    .penalty-badge {
+
+        padding: 2px 10px;
+
+        border-radius: 12px;
+
+        font-size: 11px;
+
+        font-weight: bold;
+
+        border: 1px solid rgba(255, 255, 255, 0.15);
+
+    }
+
+
+
+    .penalty-list {
+
+        margin: 0;
+
+        padding-right: 15px;
+
+        font-size: 11px;
+
+        color: #cbd5e1;
+
+    }
+
+    .penalty-list li {
+
+        margin-bottom: 3px;
+
+    }
+
+   &#x20;
+
+    @media (max-width: 600px) {
+
+        .game-navbar { padding: 8px 10px; }
+
+        .nav-brand { gap: 6px; }
+
+        .brand-logo { width: 32px; height: 32px; font-size: 14px; }
+
+        .brand-text h3 { font-size: 11px; }
+
+        .brand-text span { font-size: 9px; }
+
+        .nav-links { gap: 2px; }
+
+        .nav-link { font-size: 9px; padding: 4px 3px; }
+
+        .card { padding: 12px; }
+
+        .hide-on-mobile { display: none; }
+
+    }
+/* =========================
    LOGIN ANIMATION
 ========================= */
 
@@ -307,12 +569,8 @@
     }
 }
 
-/* تأثير زر الدخول */
 #login-screen button {
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        filter .2s ease;
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
 }
 
 #login-screen button:hover {
@@ -325,781 +583,1477 @@
     transform: scale(.97);
 }
 
-/* تأثير الحقول */
 #login-screen input {
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        transform .2s ease;
+    transition: border-color .2s ease, box-shadow .2s ease;
 }
 
 #login-screen input:focus {
     border-color: #f59e0b;
     box-shadow: 0 0 15px rgba(245,158,11,.15);
 }
-        /* شارة الجزاءات الديناميكية (أخضر تدرج للأحمر) */
-        .penalty-badge {
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
+\</style>
 
-        .penalty-list {
-            margin: 0;
-            padding-right: 15px;
-            font-size: 11px;
-            color: #cbd5e1;
-        }
-        .penalty-list li {
-            margin-bottom: 3px;
-        }
-        
-        @media (max-width: 600px) {
-            .game-navbar { padding: 8px 10px; }
-            .nav-brand { gap: 6px; }
-            .brand-logo { width: 32px; height: 32px; font-size: 14px; }
-            .brand-text h3 { font-size: 11px; }
-            .brand-text span { font-size: 9px; }
-            .nav-links { gap: 2px; }
-            .nav-link { font-size: 9px; padding: 4px 3px; }
-            .card { padding: 12px; }
-            .hide-on-mobile { display: none; }
-        }
-    </style>
+
 </head>
+
 <body>
 
+<div id="login-screen" style="
 
-    <div style="
-        width:90%;
-        max-width:380px;
-        background:rgba(18,24,38,.98);
-        border:1px solid rgba(245,158,11,.3);
-        border-radius:15px;
-        padding:25px;
-        box-shadow:0 10px 40px rgba(0,0,0,.7);
-        text-align:center;
+position\:fixed;
+
+inset:0;
+
+z-index:99999;
+
+background:#080c14;
+
+display\:flex;
+
+align-items\:center;
+
+justify-content\:center;
+
+direction\:rtl;
+
+
+">
+
+\<div style="
+
+    width:90%;
+
+    max-width:380px;
+
+    background\:rgba(18,24,38,.98);
+
+    border:1px solid rgba(245,158,11,.3);
+
+    border-radius:15px;
+
+    padding:25px;
+
+    box-shadow:0 10px 40px rgba(0,0,0,.7);
+
+    text-align\:center;
+
+">
+
+
+
+    \<div style="
+
+        width:65px;
+
+        height:65px;
+
+        margin:0 auto 15px;
+
+        border-radius:50%;
+
+        background\:linear-gradient(135deg,#f59e0b,#d97706);
+
+        display\:flex;
+
+        align-items\:center;
+
+        justify-content\:center;
+
+        font-size:30px;
+
+    ">🌴\</div>
+
+
+
+    \<h2 style="color:#fbbf24;margin-bottom:5px;">
+
+        تمور الطحان
+
+    \</h2>
+
+
+
+    \<div style="
+
+        color:#94a3b8;
+
+        font-size:12px;
+
+        margin-bottom:20px;
+
     ">
 
-        <div style="
-            width:65px;
-            height:65px;
-            margin:0 auto 15px;
-            border-radius:50%;
-            background:linear-gradient(135deg,#f59e0b,#d97706);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:30px;
-        ">🌴</div>
+        نظام إدارة فرع مبارك
 
-        <h2 style="color:#fbbf24;margin-bottom:5px;">
-            تمور الطحان
-        </h2>
+    \</div>
 
-        <div style="
-            color:#94a3b8;
+
+
+    \<input
+
+        type="email"
+
+        id="login-email"
+
+        placeholder="البريد الإلكتروني"
+
+    \>
+
+
+
+    \<input
+
+        type="password"
+
+        id="login-password"
+
+        placeholder="كلمة المرور"
+
+    \>
+
+
+
+    \<button
+
+        onclick="loginUser()"
+
+        style="background:#f59e0b;"
+
+    \>
+
+        🔐 تسجيل الدخول
+
+    \</button>
+
+
+
+    \<div
+
+        id="login-error"
+
+        style="
+
+            color:#ef4444;
+
             font-size:12px;
-            margin-bottom:20px;
-        ">
-            نظام إدارة فرع مبارك
-        </div>
 
-        <input
-            type="email"
-            id="login-email"
-            placeholder="البريد الإلكتروني"
-        >
+            margin-top:10px;
 
-        <input
-            type="password"
-            id="login-password"
-            placeholder="كلمة المرور"
-        >
+            min-height:18px;
 
-        <button
-            onclick="loginUser()"
-            style="background:#f59e0b;"
-        >
-            🔐 تسجيل الدخول
-        </button>
+        "
 
-        <div
-            id="login-error"
-            style="
-                color:#ef4444;
-                font-size:12px;
-                margin-top:10px;
-                min-height:18px;
-            "
-        ></div>
+    \>\</div>
 
-    </div>
+
+
+\</div>
+
+
 </div>
-    <header class="game-navbar">
-        <div class="nav-brand">
-            <div class="brand-logo">👤</div>
-            <div class="brand-text">
-  <div class="hide-on-mobile" style="font-size: 13px; color: var(--primary-light); font-weight: bold;">تمور الطحان 🌴</div>
-                <h3>AhmedEmad</h3>
-               <div class="hide-on-mobile" style="font-size: 11px; color: var(--primary-light); font-weight: bold;">فرع مبارك</div>
-            </div>
-        </div>
-        <nav class="nav-links">
-            <button class="nav-link active" onclick="switchTab(0)">المبيعات</button>
-            <button class="nav-link" onclick="switchTab(1)">الإحصائيات</button>
-            <button class="nav-link" onclick="switchTab(2)">المخزونات</button>
-            <button class="nav-link" onclick="switchTab(3)">الجرد والعجوزات</button>
-            <button class="nav-link" onclick="switchTab(4)">فريق السيلز</button>
-        </nav>
-   <button
-    onclick="logoutUser()"
-    style="
-        width:auto;
-        margin:0;
-        padding:7px 12px;
-        background:#ef4444;
-        font-size:11px;
-    "
+
+\<header class="game-navbar">
+
+    \<div class="nav-brand">
+
+        \<div class="brand-logo">👤\</div>
+
+        \<div class="brand-text">
+
+
+<div class="hide-on-mobile" style="font-size: 13px; color: var(--primary-light); font-weight: bold;">تمور الطحان 🌴</div>
+
+            \<h3>AhmedEmad\</h3>
+
+           \<div class="hide-on-mobile" style="font-size: 11px; color: var(--primary-light); font-weight: bold;">فرع مبارك\</div>
+
+        \</div>
+
+    \</div>
+
+    \<nav class="nav-links">
+
+        \<button class="nav-link active" onclick="switchTab(0)">المبيعات\</button>
+
+        \<button class="nav-link" onclick="switchTab(1)">الإحصائيات\</button>
+
+        \<button class="nav-link" onclick="switchTab(2)">المخزونات\</button>
+
+        \<button class="nav-link" onclick="switchTab(3)">الجرد والعجوزات\</button>
+
+        \<button class="nav-link" onclick="switchTab(4)">فريق السيلز\</button>
+
+    \</nav>
+
+
+<button
+
+onclick="logoutUser()"
+
+style="
+
+    width\:auto;
+
+    margin:0;
+
+    padding:7px 12px;
+
+    background:#ef4444;
+
+    font-size:11px;
+
+"
+
+
 >
-    خروج
+
+خروج
+
+
 </button>
-    </header>
+
+\</header>
+
 
 <div class="container">
 
-    <!-- القسم الأول: مبيعات والتارجت -->
-    <div class="tab-content active" id="tab-0">
-        <div class="card">
-            <h3>🎯 متابعة التارجت والمبيعات</h3>
-            <input type="number" id="input-monthly-target" placeholder="التارجت الشهري">
-            <button onclick="setTarget()">تثبيت التارجت</button>
-            
-            <div class="flex-row">
-                <input type="number" id="input-daily-sales" placeholder="مبيعات اليوم / الشهر">
-                <div id="current-date-display" style="background:rgba(15, 23, 42, 0.9); padding:10px 8px; border-radius:8px; border:1px solid var(--border); white-space:nowrap; font-size:11px; color:#38bdf8; direction: ltr;"></div>
-            </div>
-            <button onclick="addSales()" style="background:#2563eb;">إضافة المبيعات</button>
-            
-            <div class="target-grid" style="margin-top: 12px;">
-                <div class="stat-box"><span>الشهري</span><br><strong id="disp-monthly">0</strong></div>
-                <div class="stat-box"><span>المحقق</span><br><strong id="disp-achieved">0</strong></div>
-                <div class="stat-box"><span>المتبقي</span><br><strong id="disp-remaining" style="color:#ef4444;">0</strong></div>
-            </div>
+\<!-- القسم الأول: مبيعات والتارجت -->
 
-            <div class="progress-container">
-                <div id="progress-bar" class="progress-bar"></div>
-            </div>
-            <div class="progress-text" id="progress-text">نسبة الإنجاز: 0%</div>
-        </div>
-    </div>
+\<div class="tab-content active" id="tab-0">
 
-    <!-- القسم الثاني: إحصائيات السنة وسجل المبيعات الشهرية -->
-    <div class="tab-content" id="tab-1">
-        <div class="card">
-            <h3>📅 سجل المبيعات الشهرية</h3>
-            <div class="flex-row">
-                <input type="month" id="sale-month" style="flex: 1.2; direction: ltr;">
-                <input type="number" id="sale-amount" placeholder="المبلغ" style="flex: 1;">
-                <button onclick="addMonthlyRecord()" style="width:auto; background:#059669; padding: 10px 12px;">تسجيل / تحديث</button>
-            </div>
+    \<div class="card">
 
-            <h4 style="color:#38bdf8; margin-top:12px; text-align:center; font-size: 13px;">مبيعات الشهور المسجلة</h4>
-            <table id="monthly-sales-table"><thead><tr><th>الشهر</th><th>المبلغ الإجمالي</th><th>تعديل</th></tr></thead><tbody></tbody></table>
+        \<h3>🎯 متابعة التارجت والمبيعات\</h3>
 
-            <div style="margin-top: 15px; background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
-                <span style="font-size: 12px; color: #cbd5e1;">إجمالي مبيعات السنة: </span>
-                <strong id="total-year-to-date" style="font-size: 15px; color: var(--success);">0</strong>
-            </div>
-        </div>
-    </div>
+        \<input type="number" id="input-monthly-target" placeholder="التارجت الشهري">
 
-    <!-- القسم الثالث: الأصناف والمخزونات -->
-    <div class="tab-content" id="tab-2">
-        <div class="card">
-            <h3>📦 إدارة الأصناف وقائمة المخزون</h3>
-            <div class="flex-row">
-                <input type="text" id="new-item" placeholder="اسم صنف جديد (مع السعر)">
-                <button onclick="addItem()" style="width:auto; background:#059669; padding: 10px 15px;">إضافة صنف</button>
-            </div>
-            <h4 style="color:var(--primary-light); margin-top:15px; text-align:center; font-size: 13px;">قائمة الأصناف المسجلة</h4>
-            
-            <div style="overflow-x: auto;">
-                <table id="items-list-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 8%;">م</th>
-                            <th style="text-align: right; padding-right: 10px;">اسم الصنف</th>
-                            <th style="width: 25%;">السعر</th>
-                            <th style="width: 12%;">إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+        \<button onclick="setTarget()">تثبيت التارجت\</button>
 
-    <!-- القسم الرابع: الجرد والعجوزات -->
-    <div class="tab-content" id="tab-3">
-        <div class="card">
-            <h3>📋 قسم الجرد وتسجيل العجوزات</h3>
-            <div class="flex-row" style="margin-bottom: 8px;">
-                <label style="font-size: 12px; white-space: nowrap; color: var(--primary-light);">تاريخ الجرد:</label>
-                <input type="date" id="inventory-date" style="direction: ltr;">
-            </div>
-            <select id="inventory-item-selector"><option value="">اختر الصنف...</option></select>
-            <div class="flex-row">
-                <input type="number" id="inventory-qty-input" placeholder="الكمية العجز/المفقود">
-                <select id="inventory-unit-selector" style="width: 100px;"><option value="كيلو">كيلو</option><option value="علبة">علبة</option><option value="باكت">باكت</option><option value="قطعة">قطعة</option></select>
-            </div>
-            <button onclick="addInventoryShortage()" style="background:#059669;">تسجيل عجز الجرد</button>
-            
-            <h4 style="color:#38bdf8; margin-top:15px; text-align:center; font-size: 13px;">سجل عجوزات الجرد</h4>
-            <table id="inventory-shortage-table"><thead><tr><th>تاريخ الجرد</th><th>الصنف</th><th>الكمية</th><th>حذف</th></tr></thead><tbody></tbody></table>
-        </div>
-    </div>
+       &#x20;
 
-    <!-- القسم الخامس: فريق السيلز والجزاءات -->
-    <div class="tab-content" id="tab-4">
-        <div class="card">
-            <h3>👥 فريق السيلز ومتابعة الجزاءات</h3>
-            
-            <div style="background: rgba(15, 23, 42, 0.9); padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
-                <h4 style="color: #38bdf8; margin: 0 0 8px 0; font-size: 12px; text-align: center;">إضافة جزاء / مخالفة جديدة</h4>
-                <select id="penalty-sales-select">
-                    <option value="">اختر موظف السيلز...</option>
-                    <option value="محمود حسن">محمود حسن</option>
-                    <option value="إسلام عادل">إسلام عادل</option>
-                    <option value="كريم أحمد">كريم أحمد</option>
-                    <option value="محمد ربيع">محمد ربيع</option>
-                    <option value="عبدالرحمن علي">عبدالرحمن علي</option>
-                </select>
-                <input type="text" id="penalty-reason" placeholder="سبب الجزاء والمخالفة (مثال: التأخير عن الميعاد)">
-                <button onclick="addSalesPenalty()" style="background:#2563eb; margin-top: 4px;">تسجيل الجزاء</button>
-            </div>
+        \<div class="flex-row">
 
-            <h4 style="color:var(--primary-light); margin-bottom: 10px; text-align: center; font-size: 13px;">سجل جزاءات الموظفين</h4>
-            <div id="sales-team-container"></div>
-        </div>
-    </div>
+            \<input type="number" id="input-daily-sales" placeholder="مبيعات اليوم / الشهر">
+
+            \<div id="current-date-display" style="background\:rgba(15, 23, 42, 0.9); padding:10px 8px; border-radius:8px; border:1px solid var(--border); white-space\:nowrap; font-size:11px; color:#38bdf8; direction: ltr;">\</div>
+
+        \</div>
+
+        \<button onclick="addSales()" style="background:#2563eb;">إضافة المبيعات\</button>
+
+       &#x20;
+
+        \<div class="target-grid" style="margin-top: 12px;">
+
+            \<div class="stat-box">\<span>الشهري\</span>\<br>\<strong id="disp-monthly">0\</strong>\</div>
+
+            \<div class="stat-box">\<span>المحقق\</span>\<br>\<strong id="disp-achieved">0\</strong>\</div>
+
+            \<div class="stat-box">\<span>المتبقي\</span>\<br>\<strong id="disp-remaining" style="color:#ef4444;">0\</strong>\</div>
+
+        \</div>
+
+
+
+        \<div class="progress-container">
+
+            \<div id="progress-bar" class="progress-bar">\</div>
+
+        \</div>
+
+        \<div class="progress-text" id="progress-text">نسبة الإنجاز: 0%\</div>
+
+    \</div>
+
+\</div>
+
+
+
+\<!-- القسم الثاني: إحصائيات السنة وسجل المبيعات الشهرية -->
+
+\<div class="tab-content" id="tab-1">
+
+    \<div class="card">
+
+        \<h3>📅 سجل المبيعات الشهرية\</h3>
+
+        \<div class="flex-row">
+
+            \<input type="month" id="sale-month" style="flex: 1.2; direction: ltr;">
+
+            \<input type="number" id="sale-amount" placeholder="المبلغ" style="flex: 1;">
+
+            \<button onclick="addMonthlyRecord()" style="width\:auto; background:#059669; padding: 10px 12px;">تسجيل / تحديث\</button>
+
+        \</div>
+
+
+
+        \<h4 style="color:#38bdf8; margin-top:12px; text-align\:center; font-size: 13px;">مبيعات الشهور المسجلة\</h4>
+
+        \<table id="monthly-sales-table">\<thead>\<tr>\<th>الشهر\</th>\<th>المبلغ الإجمالي\</th>\<th>تعديل\</th>\</tr>\</thead>\<tbody>\</tbody>\</table>
+
+
+
+        \<div style="margin-top: 15px; background: rgba(15, 23, 42, 0.9); padding: 12px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+
+            \<span style="font-size: 12px; color: #cbd5e1;">إجمالي مبيعات السنة: \</span>
+
+            \<strong id="total-year-to-date" style="font-size: 15px; color: var(--success);">0\</strong>
+
+        \</div>
+
+    \</div>
+
+\</div>
+
+
+
+\<!-- القسم الثالث: الأصناف والمخزونات -->
+
+\<div class="tab-content" id="tab-2">
+
+    \<div class="card">
+
+        \<h3>📦 إدارة الأصناف وقائمة المخزون\</h3>
+
+        \<div class="flex-row">
+
+            \<input type="text" id="new-item" placeholder="اسم صنف جديد (مع السعر)">
+
+            \<button onclick="addItem()" style="width\:auto; background:#059669; padding: 10px 15px;">إضافة صنف\</button>
+
+        \</div>
+
+        \<h4 style="color\:var(--primary-light); margin-top:15px; text-align\:center; font-size: 13px;">قائمة الأصناف المسجلة\</h4>
+
+       &#x20;
+
+        \<div style="overflow-x: auto;">
+
+            \<table id="items-list-table">
+
+                \<thead>
+
+                    \<tr>
+
+                        \<th style="width: 8%;">م\</th>
+
+                        \<th style="text-align: right; padding-right: 10px;">اسم الصنف\</th>
+
+                        \<th style="width: 25%;">السعر\</th>
+
+                        \<th style="width: 12%;">إجراء\</th>
+
+                    \</tr>
+
+                \</thead>
+
+                \<tbody>\</tbody>
+
+            \</table>
+
+        \</div>
+
+    \</div>
+
+\</div>
+
+
+
+\<!-- القسم الرابع: الجرد والعجوزات -->
+
+\<div class="tab-content" id="tab-3">
+
+    \<div class="card">
+
+        \<h3>📋 قسم الجرد وتسجيل العجوزات\</h3>
+
+        \<div class="flex-row" style="margin-bottom: 8px;">
+
+            \<label style="font-size: 12px; white-space: nowrap; color: var(--primary-light);">تاريخ الجرد:\</label>
+
+            \<input type="date" id="inventory-date" style="direction: ltr;">
+
+        \</div>
+
+        \<select id="inventory-item-selector">\<option value="">اختر الصنف...\</option>\</select>
+
+        \<div class="flex-row">
+
+            \<input type="number" id="inventory-qty-input" placeholder="الكمية العجز/المفقود">
+
+            \<select id="inventory-unit-selector" style="width: 100px;">\<option value="كيلو">كيلو\</option>\<option value="علبة">علبة\</option>\<option value="باكت">باكت\</option>\<option value="قطعة">قطعة\</option>\</select>
+
+        \</div>
+
+        \<button onclick="addInventoryShortage()" style="background:#059669;">تسجيل عجز الجرد\</button>
+
+       &#x20;
+
+        \<h4 style="color:#38bdf8; margin-top:15px; text-align\:center; font-size: 13px;">سجل عجوزات الجرد\</h4>
+
+        \<table id="inventory-shortage-table">\<thead>\<tr>\<th>تاريخ الجرد\</th>\<th>الصنف\</th>\<th>الكمية\</th>\<th>حذف\</th>\</tr>\</thead>\<tbody>\</tbody>\</table>
+
+    \</div>
+
+\</div>
+
+
+
+\<!-- القسم الخامس: فريق السيلز والجزاءات -->
+
+\<div class="tab-content" id="tab-4">
+
+    \<div class="card">
+
+        \<h3>👥 فريق السيلز ومتابعة الجزاءات\</h3>
+
+       &#x20;
+
+        \<div style="background: rgba(15, 23, 42, 0.9); padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+
+            \<h4 style="color: #38bdf8; margin: 0 0 8px 0; font-size: 12px; text-align: center;">إضافة جزاء / مخالفة جديدة\</h4>
+
+            \<select id="penalty-sales-select">
+
+                \<option value="">اختر موظف السيلز...\</option>
+
+                \<option value="محمود حسن">محمود حسن\</option>
+
+                \<option value="إسلام عادل">إسلام عادل\</option>
+
+                \<option value="كريم أحمد">كريم أحمد\</option>
+
+                \<option value="محمد ربيع">محمد ربيع\</option>
+
+                \<option value="عبدالرحمن علي">عبدالرحمن علي\</option>
+
+            \</select>
+
+            \<input type="text" id="penalty-reason" placeholder="سبب الجزاء والمخالفة (مثال: التأخير عن الميعاد)">
+
+            \<button onclick="addSalesPenalty()" style="background:#2563eb; margin-top: 4px;">تسجيل الجزاء\</button>
+
+        \</div>
+
+
+
+        \<h4 style="color\:var(--primary-light); margin-bottom: 10px; text-align: center; font-size: 13px;">سجل جزاءات الموظفين\</h4>
+
+        \<div id="sales-team-container">\</div>
+
+    \</div>
+
+\</div>
+
 
 </div>
+
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
 
 <script>
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBoGxX4SvH6dqvS1_D07GmHliTlrfaJTw8",
-  authDomain: "store-754c5.firebaseapp.com",
-  projectId: "store-754c5",
-  storageBucket: "store-754c5.firebasestorage.app",
-  messagingSenderId: "392118549414",
-  appId: "1:392118549414:web:5abc5e61f041518f8ced67",
-  measurementId: "G-WRW47QYCJ4"
+
+apiKey: "AIzaSyBoGxX4SvH6dqvS1_D07GmHliTlrfaJTw8",
+
+authDomain: "store-754c5.firebaseapp.com",
+
+projectId: "store-754c5",
+
+storageBucket: "store-754c5.firebasestorage.app",
+
+messagingSenderId: "392118549414",
+
+appId: "1:392118549414:web:5abc5e61f041518f8ced67",
+
+measurementId: "G-WRW47QYCJ4"
+
 };
 
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
+
 const db = firebase.firestore();
 
 const storeRef = db.collection("store").doc("store_v_final_v4");
 
 let currentUser = null;
+
 let isAdmin = false;
 
-    let appData = { 
-        monthlyTarget: 0, 
-        achievedSales: 0, 
-        items: [
-            "رطب سكري درجة أولى (245 ج.م / 120 ج.م)",
-            "سكري مفتل (335 ج.م / 175 ج.م)",
-            "تمر مجدول مصري (750 ج.م / 380 ج.م)",
-            "تمر صقعي (340 ج.م / 170 ج.م)",
-            "تمر نبتة على (225 ج.م / 125 ج.م)",
-            "عجوة المدينة (920 ج.م / 470 ج.م)",
-            "تمر مبروم (495 ج.م)",
-            "تمر صفاوي (720 ج.م)",
-            "تمر خضري (250 ج.م)",
-            "تمر روتانا (170 ج.م)",
-            "تمر برحي (120 ج.م)",
-            "تمر سكري فاكيوم 800 جرام (235 ج.م)",
-            "تمر زهدي عراقي فاكيوم 800 جرام (105 ج.م)",
-            "عبوة مجدول 3 تمرات 18 باكت 300 جرام (504 ج.م)",
-            "عجينة سعودي خلاص فاكيوم 1 كيلو (175 ج.م)",
-            "تمر خلاص فاكيوم 1 كيلو (190 ج.م)",
-            "فاكيوم مجدول 600 جرام (110 ج.م)",
-            "فاكيوم برحي 800 جرام (110 ج.م)",
-            "تمر مصري (مغلف بالقطعة) 200 جرام (45 ج.م)",
-            "تمر مصري بريميوم 700 جرام (100 ج.م)",
-            "تمر مصري 1 كيلو (130 ج.م)",
-            "تمر مصري 2 كيلو VIP (250 ج.م)",
-            "تمر مصري بريميوم 1800 جرام (225 ج.م)",
-            "تمر مصري 5 كيلو (520 ج.م)",
-            "تمر سيوي 5 كيلو (400 ج.م)",
-            "تمر الوادي الجديد فاكيوم 600 جرام (85 ج.م)",
-            "عبوة 3 تمرات 18 قطعة (90 ج.م)",
-            "تمر باللوز (420 ج.م / 210 ج.م)",
-            "تمر بالشيكولاتة البني أو البيضاء (420 ج.م / 210 ج.م)",
-            "تمر بالشيكولاتة البني أو البيضاء محشو لوز (420 ج.م / 210 ج.م)",
-            "تمر بالشيكولاتة بنى محشو قهوة وكراميل (380 ج.م / 190 ج.م)",
-            "تمر بالشيكولاتة الدارك محشو لوز (420 ج.م / 210 ج.م)",
-            "تمر شيكولاتة ميكس الفواكه محشو لوز (420 ج.م / 210 ج.م)",
-            "تمر مغلف محشو لوز لوتس - اوريو - اسبريسو (420 ج.م / 210 ج.م)",
-            "علبة 3 تمرات لوز 12 عبوة (180 ج.م)",
-            "باكيت 3 تمرات سبريسو 12 عبوة (192 ج.م)",
-            "اسطوانية تمر باللوز والشيكولاتة البنى 150 جرام (95 ج.م)",
-            "اسطوانية تمر باللوز والشيكولاتة البيضاء 150 جرام (95 ج.م)",
-            "اسطوانية تمر باللوز والشيكولاتة الدارك 150 جرام (95 ج.م)",
-            "اسطوانية تمر باللوز و كريمة الاوريو 150 جرام (95 ج.م)",
-            "اسطوانية تمر باللوز و كريمة اللوتس 150 جرام (95 ج.م)",
-            "عبوة 3 تمرات لوز وشيكولاتة دارك 12 باكت (192 ج.م)",
-            "تمر حشو لوز 400 جرام (190 ج.م)",
-            "تمر حشو كاجو 400 جرام (205 ج.م)",
-            "كيس تمر باللوز والشيكولاتة بيستاشيو 180 جرام (135 ج.م)",
-            "تمر بالشيكولاتة الدارك محشو لوز 90 جرام (75 ج.م)",
-            "تمر بشيكولاتة المانجو واللوز 90 جرام (75 ج.م)",
-            "تمر بشيكولاتة الموز واللوز 90 جرام (75 ج.م)",
-            "تمر بشيكولاتة التوت واللوز 90 جرام (75 ج.م)",
-            "تمر بشيكولاتة الفراولة واللوز 90 جرام (75 ج.م)",
-            "تمر ميكس بشيكولاتة الفواكه واللوز 180 جرام (135 ج.م)",
-            "تمر ميكس شيكولاتة بني وبيضاء 180 جرام (110 ج.م)",
-            "تمر باللوز والشيكولاتة البني 200 جرام (130 ج.م)",
-            "تمر ميكس شيكولاتة بنى وبيضاء باللوز 200 جرام (130 ج.م)",
-            "تمر ميكس بشيكولاتة الفواكه والبندق 170 جرام (135 ج.م)",
-            "تمر ميكس شيكولاتة بني وبيضاء بندق 170 جرام (135 ج.م)",
-            "تمر باللوز والشيكولاتة ميكس برتقال وليمون 180 جرام (135 ج.م)",
-            "تمر باللوز والشيكولاتة ميكس لوتس واوريو 180 جرام (135 ج.م)",
-            "تمر باللوز والشيكولاتة الدارك 180 جرام (135 ج.م)",
-            "كيس تمر بجوزهند 180 جرام (135 ج.م)",
-            "باكيت 3 تمرات بالفواكه 12 قطعة (192 ج.م)",
-            "كيس تمرية حشو طحينة و سمسم 200 جرام (50 ج.م)",
-            "عبوة لانش بوكس ( ميكس تمر بالفواكة الطبيعية) 450 جرام (230 ج.م)",
-            "عبوة سياحى ميكس تمور بالشيكولاتة والمكسرات والدارك 450 جرام (230 ج.م)",
-            "تمر باللوز شيكولاتة توت 75 جرام (100 ج.م)",
-            "تمر باللوز شيكولاتة مانجو 75 جرام (100 ج.م)",
-            "تمر باللوز شيكولاتة فراولة 75 جرام (100 ج.م)",
-            "تمر باللوز شيكولاتة موز 75 جرام (100 ج.م)",
-            "تمر بشيكولاتة الاسيبريسو محشو لوز 75 جرام (100 ج.م)",
-            "تمر بشيكولاتة البرتقال محشو لوز 75 جرام (100 ج.م)",
-            "فانوس ميكس فواكه 200 جرام (115 ج.م)",
-            "فانوس ميكس شيكولاته 200 جرام (115 ج.م)",
-            "دبس تمر مصري سكويز 250 جرام (50 ج.م)",
-            "دبس تمر مصري 350 جرام (55 ج.م)",
-            "دبس تمر مصري سكويز 500 جرام (75 ج.م)",
-            "مربى البلح 450 جرام (75 ج.م)",
-            "زيت زيتون إكسترا فيرجين 250 جرام (245 ج.م)",
-            "طحينة 200 جرام (75 ج.م)",
-            "سبريد زبدة لوز 200 جرام (250 ج.م)",
-            "سبريد زبدة كاجو 200 جرام (180 ج.م)",
-            "معمول وأصابع معمول 300 جرام (70 ج.م)",
-            "أصابع معمول سعودي شيكولاتة 200 جرام (70 ج.م)",
-            "أصابع معمول سعودي كراميل 200 جرام (70 ج.م)",
-            "أصابع معمول سعودي جوز هند 200 جرام (70 ج.م)",
-            "أصابع معمول سعودي كابتشينو 200 جرام (70 ج.م)",
-            "علبة معمول تمر سادة 12 قطعة (72 ج.م)",
-            "علبة معمول تمر والزعفران 12 قطعة (72 ج.م)",
-            "علبة معمول تمر بالقرفة 12 قطعة (72 ج.م)",
-            "علبة معمول بالشيكولاتة البني 12 قطعة (96 ج.م)",
-            "علبة معمول بالشيكولاتة البيضاء 12 قطعة (96 ج.م)",
-            "بسكوت التمر 12 قطعة (60 ج.م)",
-            "عسل نحل زهور البرسيم الحجازي 520 جرام (125 ج.م)",
-            "عسل زهرة الموالح 520 جرام (150 ج.م)",
-            "عسل نحل حبة البركة 520 جرام (150 ج.م)",
-            "عسل نحل زهور البردقوش 520 جرام (150 ج.م)",
-            "عسل نحل زهور المورينجا 350 جرام (175 ج.م)",
-            "عسل نحل غذاء الملكات 250 جرام (160 ج.م)",
-            "عسل نحل بحبوب اللقاح 250 جرام (100 ج.م)",
-            "عسل نحل السدر الجبلي 500 جرام (520 ج.م)",
-            "عسل نحل برسيم دبدوب 260 جرام (85 ج.م)",
-            "عسل نحل برسيم دبدوب 520 جرام (130 ج.م)",
-            "علبة هدايا خشب 2 عبوة (سدر جبلي + صخراوي) (1050 ج.م)",
-            "إيليت داتس (700 ج.م)",
-            "إيليت تارت (700 ج.م)",
-            "إيليت تمر بالمكسرات (370 ج.م)",
-            "إيليت معمول سادة 400 جرام (135 ج.م)",
-            "إيليت معمول فستق 400 جرام (205 ج.م)",
-            "إيليت معمول قهوة 400 جرام (145 ج.م)",
-            "إيليت معمول قرفة 400 جرام (160 ج.م)",
-            "إيليت كروكاند 400 جرام (205 ج.م)",
-            "إيليت كليجا 400 جرام (205 ج.م)",
-            "إيليت بسكويت التمر 400 جرام (140 ج.م)",
-            "إيليت عيون المها 400 جرام (160 ج.م)",
-            "إيليت معمول مشكل (جوز هند - هيل - سمسم - حبة البركة) 400 جرام (155 ج.م)"
-        ], 
-        inventoryShortages: [], 
-        monthlyRecords: [],
-        salesTeam: [
-            { name: "محمود حسن", penalties: [] },
-            { name: "إسلام عادل", penalties: [] },
-            { name: "كريم أحمد", penalties: [] },
-            { name: "محمد ربيع", penalties: [] },
-            { name: "عبدالرحمن علي", penalties: [] }
-        ]
-    };
+let appData = {&#x20;
 
-    const todayStr = new Date().toISOString().split('T')[0];
-    const currentMonthStr = todayStr.substring(0, 7);
-    document.getElementById('sale-month').value = currentMonthStr;
-    document.getElementById('inventory-date').value = todayStr;
-    
-    const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
-    document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', options);
+    monthlyTarget: 0,&#x20;
 
-  async function saveData() {
+    achievedSales: 0,&#x20;
 
-    if (!currentUser || !isAdmin) {
-        alert("ليس لديك صلاحية لتعديل البيانات.");
-        return;
-    }
+    items: [
 
-    try {
+        "رطب سكري درجة أولى (245 ج.م / 120 ج.م)",
 
-        await storeRef.set(appData);
+        "سكري مفتل (335 ج.م / 175 ج.م)",
 
-        render();
+        "تمر مجدول مصري (750 ج.م / 380 ج.م)",
 
-    } catch (error) {
+        "تمر صقعي (340 ج.م / 170 ج.م)",
 
-        console.error("Firestore Save Error:", error);
+        "تمر نبتة على (225 ج.م / 125 ج.م)",
 
-        alert(
-            "حدث خطأ أثناء حفظ البيانات:\n" +
-            error.message
-        );
+        "عجوة المدينة (920 ج.م / 470 ج.م)",
 
-    }
+        "تمر مبروم (495 ج.م)",
+
+        "تمر صفاوي (720 ج.م)",
+
+        "تمر خضري (250 ج.م)",
+
+        "تمر روتانا (170 ج.م)",
+
+        "تمر برحي (120 ج.م)",
+
+        "تمر سكري فاكيوم 800 جرام (235 ج.م)",
+
+        "تمر زهدي عراقي فاكيوم 800 جرام (105 ج.م)",
+
+        "عبوة مجدول 3 تمرات 18 باكت 300 جرام (504 ج.م)",
+
+        "عجينة سعودي خلاص فاكيوم 1 كيلو (175 ج.م)",
+
+        "تمر خلاص فاكيوم 1 كيلو (190 ج.م)",
+
+        "فاكيوم مجدول 600 جرام (110 ج.م)",
+
+        "فاكيوم برحي 800 جرام (110 ج.م)",
+
+        "تمر مصري (مغلف بالقطعة) 200 جرام (45 ج.م)",
+
+        "تمر مصري بريميوم 700 جرام (100 ج.م)",
+
+        "تمر مصري 1 كيلو (130 ج.م)",
+
+        "تمر مصري 2 كيلو VIP (250 ج.م)",
+
+        "تمر مصري بريميوم 1800 جرام (225 ج.م)",
+
+        "تمر مصري 5 كيلو (520 ج.م)",
+
+        "تمر سيوي 5 كيلو (400 ج.م)",
+
+        "تمر الوادي الجديد فاكيوم 600 جرام (85 ج.م)",
+
+        "عبوة 3 تمرات 18 قطعة (90 ج.م)",
+
+        "تمر باللوز (420 ج.م / 210 ج.م)",
+
+        "تمر بالشيكولاتة البني أو البيضاء (420 ج.م / 210 ج.م)",
+
+        "تمر بالشيكولاتة البني أو البيضاء محشو لوز (420 ج.م / 210 ج.م)",
+
+        "تمر بالشيكولاتة بنى محشو قهوة وكراميل (380 ج.م / 190 ج.م)",
+
+        "تمر بالشيكولاتة الدارك محشو لوز (420 ج.م / 210 ج.م)",
+
+        "تمر شيكولاتة ميكس الفواكه محشو لوز (420 ج.م / 210 ج.م)",
+
+        "تمر مغلف محشو لوز لوتس - اوريو - اسبريسو (420 ج.م / 210 ج.م)",
+
+        "علبة 3 تمرات لوز 12 عبوة (180 ج.م)",
+
+        "باكيت 3 تمرات سبريسو 12 عبوة (192 ج.م)",
+
+        "اسطوانية تمر باللوز والشيكولاتة البنى 150 جرام (95 ج.م)",
+
+        "اسطوانية تمر باللوز والشيكولاتة البيضاء 150 جرام (95 ج.م)",
+
+        "اسطوانية تمر باللوز والشيكولاتة الدارك 150 جرام (95 ج.م)",
+
+        "اسطوانية تمر باللوز و كريمة الاوريو 150 جرام (95 ج.م)",
+
+        "اسطوانية تمر باللوز و كريمة اللوتس 150 جرام (95 ج.م)",
+
+        "عبوة 3 تمرات لوز وشيكولاتة دارك 12 باكت (192 ج.م)",
+
+        "تمر حشو لوز 400 جرام (190 ج.م)",
+
+        "تمر حشو كاجو 400 جرام (205 ج.م)",
+
+        "كيس تمر باللوز والشيكولاتة بيستاشيو 180 جرام (135 ج.م)",
+
+        "تمر بالشيكولاتة الدارك محشو لوز 90 جرام (75 ج.م)",
+
+        "تمر بشيكولاتة المانجو واللوز 90 جرام (75 ج.م)",
+
+        "تمر بشيكولاتة الموز واللوز 90 جرام (75 ج.م)",
+
+        "تمر بشيكولاتة التوت واللوز 90 جرام (75 ج.م)",
+
+        "تمر بشيكولاتة الفراولة واللوز 90 جرام (75 ج.م)",
+
+        "تمر ميكس بشيكولاتة الفواكه واللوز 180 جرام (135 ج.م)",
+
+        "تمر ميكس شيكولاتة بني وبيضاء 180 جرام (110 ج.م)",
+
+        "تمر باللوز والشيكولاتة البني 200 جرام (130 ج.م)",
+
+        "تمر ميكس شيكولاتة بنى وبيضاء باللوز 200 جرام (130 ج.م)",
+
+        "تمر ميكس بشيكولاتة الفواكه والبندق 170 جرام (135 ج.م)",
+
+        "تمر ميكس شيكولاتة بني وبيضاء بندق 170 جرام (135 ج.م)",
+
+        "تمر باللوز والشيكولاتة ميكس برتقال وليمون 180 جرام (135 ج.م)",
+
+        "تمر باللوز والشيكولاتة ميكس لوتس واوريو 180 جرام (135 ج.م)",
+
+        "تمر باللوز والشيكولاتة الدارك 180 جرام (135 ج.م)",
+
+        "كيس تمر بجوزهند 180 جرام (135 ج.م)",
+
+        "باكيت 3 تمرات بالفواكه 12 قطعة (192 ج.م)",
+
+        "كيس تمرية حشو طحينة و سمسم 200 جرام (50 ج.م)",
+
+        "عبوة لانش بوكس ( ميكس تمر بالفواكة الطبيعية) 450 جرام (230 ج.م)",
+
+        "عبوة سياحى ميكس تمور بالشيكولاتة والمكسرات والدارك 450 جرام (230 ج.م)",
+
+        "تمر باللوز شيكولاتة توت 75 جرام (100 ج.م)",
+
+        "تمر باللوز شيكولاتة مانجو 75 جرام (100 ج.م)",
+
+        "تمر باللوز شيكولاتة فراولة 75 جرام (100 ج.م)",
+
+        "تمر باللوز شيكولاتة موز 75 جرام (100 ج.م)",
+
+        "تمر بشيكولاتة الاسيبريسو محشو لوز 75 جرام (100 ج.م)",
+
+        "تمر بشيكولاتة البرتقال محشو لوز 75 جرام (100 ج.م)",
+
+        "فانوس ميكس فواكه 200 جرام (115 ج.م)",
+
+        "فانوس ميكس شيكولاته 200 جرام (115 ج.م)",
+
+        "دبس تمر مصري سكويز 250 جرام (50 ج.م)",
+
+        "دبس تمر مصري 350 جرام (55 ج.م)",
+
+        "دبس تمر مصري سكويز 500 جرام (75 ج.م)",
+
+        "مربى البلح 450 جرام (75 ج.م)",
+
+        "زيت زيتون إكسترا فيرجين 250 جرام (245 ج.م)",
+
+        "طحينة 200 جرام (75 ج.م)",
+
+        "سبريد زبدة لوز 200 جرام (250 ج.م)",
+
+        "سبريد زبدة كاجو 200 جرام (180 ج.م)",
+
+        "معمول وأصابع معمول 300 جرام (70 ج.م)",
+
+        "أصابع معمول سعودي شيكولاتة 200 جرام (70 ج.م)",
+
+        "أصابع معمول سعودي كراميل 200 جرام (70 ج.م)",
+
+        "أصابع معمول سعودي جوز هند 200 جرام (70 ج.م)",
+
+        "أصابع معمول سعودي كابتشينو 200 جرام (70 ج.م)",
+
+        "علبة معمول تمر سادة 12 قطعة (72 ج.م)",
+
+        "علبة معمول تمر والزعفران 12 قطعة (72 ج.م)",
+
+        "علبة معمول تمر بالقرفة 12 قطعة (72 ج.م)",
+
+        "علبة معمول بالشيكولاتة البني 12 قطعة (96 ج.م)",
+
+        "علبة معمول بالشيكولاتة البيضاء 12 قطعة (96 ج.م)",
+
+        "بسكوت التمر 12 قطعة (60 ج.م)",
+
+        "عسل نحل زهور البرسيم الحجازي 520 جرام (125 ج.م)",
+
+        "عسل زهرة الموالح 520 جرام (150 ج.م)",
+
+        "عسل نحل حبة البركة 520 جرام (150 ج.م)",
+
+        "عسل نحل زهور البردقوش 520 جرام (150 ج.م)",
+
+        "عسل نحل زهور المورينجا 350 جرام (175 ج.م)",
+
+        "عسل نحل غذاء الملكات 250 جرام (160 ج.م)",
+
+        "عسل نحل بحبوب اللقاح 250 جرام (100 ج.م)",
+
+        "عسل نحل السدر الجبلي 500 جرام (520 ج.م)",
+
+        "عسل نحل برسيم دبدوب 260 جرام (85 ج.م)",
+
+        "عسل نحل برسيم دبدوب 520 جرام (130 ج.م)",
+
+        "علبة هدايا خشب 2 عبوة (سدر جبلي + صخراوي) (1050 ج.م)",
+
+        "إيليت داتس (700 ج.م)",
+
+        "إيليت تارت (700 ج.م)",
+
+        "إيليت تمر بالمكسرات (370 ج.م)",
+
+        "إيليت معمول سادة 400 جرام (135 ج.م)",
+
+        "إيليت معمول فستق 400 جرام (205 ج.م)",
+
+        "إيليت معمول قهوة 400 جرام (145 ج.م)",
+
+        "إيليت معمول قرفة 400 جرام (160 ج.م)",
+
+        "إيليت كروكاند 400 جرام (205 ج.م)",
+
+        "إيليت كليجا 400 جرام (205 ج.م)",
+
+        "إيليت بسكويت التمر 400 جرام (140 ج.م)",
+
+        "إيليت عيون المها 400 جرام (160 ج.م)",
+
+        "إيليت معمول مشكل (جوز هند - هيل - سمسم - حبة البركة) 400 جرام (155 ج.م)"
+
+    ],&#x20;
+
+    inventoryShortages: [],&#x20;
+
+    monthlyRecords: [],
+
+    salesTeam: [
+
+        { name: "محمود حسن", penalties: [] },
+
+        { name: "إسلام عادل", penalties: [] },
+
+        { name: "كريم أحمد", penalties: [] },
+
+        { name: "محمد ربيع", penalties: [] },
+
+        { name: "عبدالرحمن علي", penalties: [] }
+
+    ]
+
+};
+
+
+
+const todayStr = new Date().toISOString().split('T')[0];
+
+const currentMonthStr = todayStr.substring(0, 7);
+
+document.getElementById('sale-month').value = currentMonthStr;
+
+document.getElementById('inventory-date').value = todayStr;
+
+
+const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
+
+document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', options);
+
+
+async function saveData() {
+
+if (!currentUser || !isAdmin) {
+
+    alert("ليس لديك صلاحية لتعديل البيانات.");
+
+    return;
+
 }
 
+
+
+try {
+
+
+
+    await storeRef.set(appData);
+
+
+
+    render();
+
+
+
+} catch (error) {
+
+
+
+    console.error("Firestore Save Error:", error);
+
+
+
+    alert(
+
+        "حدث خطأ أثناء حفظ البيانات:\n" +
+
+        error.message
+
+    );
+
+
+
+}
+
+
+}
 
 async function loadData() {
 
-    try {
+try {
 
-        const doc = await storeRef.get();
 
-        if (doc.exists) {
 
-            appData = doc.data();
+    const doc = await storeRef.get();
 
-            if (!appData.inventoryShortages)
-                appData.inventoryShortages = [];
 
-            if (!appData.monthlyRecords)
-                appData.monthlyRecords = [];
 
-            if (!appData.salesTeam) {
+    if (doc.exists) {
 
-                appData.salesTeam = [
-                    { name: "محمود حسن", penalties: [] },
-                    { name: "إسلام عادل", penalties: [] },
-                    { name: "كريم أحمد", penalties: [] },
-                    { name: "محمد ربيع", penalties: [] },
-                    { name: "عبدالرحمن علي", penalties: [] }
-                ];
 
-            }
 
-        } else {
+        appData = doc.data();
 
-            // أول مرة فقط
-            await storeRef.set(appData);
 
-        }
 
-        render();
+        if (!appData.inventoryShortages)
 
-    } catch (error) {
+            appData.inventoryShortages = [];
 
-        console.error("Firestore Load Error:", error);
 
-        alert(
-            "تعذر تحميل البيانات من Firebase:\n" +
-            error.message
-        );
-    }
-}
-    function switchTab(index) {
-        const buttons = document.querySelectorAll('.nav-link');
-        const contents = document.querySelectorAll('.tab-content');
-        
-        buttons.forEach((btn, i) => {
-            if(i === index) {
-                btn.classList.add('active');
-                contents[i].classList.add('active');
-            } else {
-                btn.classList.remove('active');
-                contents[i].classList.remove('active');
-            }
-        });
-    }
 
-    function setTarget() {
-        appData.monthlyTarget = parseFloat(document.getElementById('input-monthly-target').value) || 0;
-        saveData();
-    }
+        if (!appData.monthlyRecords)
 
-    function addSales() {
-        const val = parseFloat(document.getElementById('input-daily-sales').value) || 0;
-        if(val > 0) {
-            let existingRecord = appData.monthlyRecords.find(r => r.month === currentMonthStr);
-            if(existingRecord) {
-                existingRecord.amount += val;
-            } else {
-                appData.monthlyRecords.unshift({ month: currentMonthStr, amount: val });
-            }
-            
-            updateAchievedSalesFromMonthly();
-            document.getElementById('input-daily-sales').value = '';
-            saveData();
-        }
-    }
+            appData.monthlyRecords = [];
 
-    function addMonthlyRecord() {
-        const monthVal = document.getElementById('sale-month').value;
-        const amount = parseFloat(document.getElementById('sale-amount').value) || 0;
-        
-        if(monthVal && amount > 0) {
-            let existingRecord = appData.monthlyRecords.find(r => r.month === monthVal);
-            if(existingRecord) {
-                existingRecord.amount += amount;
-            } else {
-                appData.monthlyRecords.unshift({ month: monthVal, amount: amount });
-            }
-            
-            updateAchievedSalesFromMonthly();
-            document.getElementById('sale-amount').value = '';
-            saveData();
-        }
-    }
 
-    function updateAchievedSalesFromMonthly() {
-        let currentRec = appData.monthlyRecords.find(r => r.month === currentMonthStr);
-        appData.achievedSales = currentRec ? currentRec.amount : 0;
-    }
 
-    function editMonthlyRecord(month) {
-        const rec = appData.monthlyRecords.find(r => r.month === month);
-        if(rec) {
-            const newAmount = prompt(`تعديل إجمالي مبيعات شهر (${month}):`, rec.amount);
-            if(newAmount !== null) {
-                const parsedAmount = parseFloat(newAmount);
-                if(!isNaN(parsedAmount)) {
-                    rec.amount = parsedAmount;
-                    updateAchievedSalesFromMonthly();
-                    saveData();
-                }
-            }
-        }
-    }
+        if (!appData.salesTeam) {
 
-    function addItem() {
-        const val = document.getElementById('new-item').value;
-        if(val) { 
-            appData.items.push(val); 
-            saveData(); 
-            document.getElementById('new-item').value = ''; 
-        }
-    }
 
-    function deleteItem(index) {
-        appData.items.splice(index, 1);
-        saveData();
-    }
 
-    function addInventoryShortage() {
-        const invDate = document.getElementById('inventory-date').value;
-        const item = document.getElementById('inventory-item-selector').value;
-        const qty = document.getElementById('inventory-qty-input').value;
-        const unit = document.getElementById('inventory-unit-selector').value;
-        
-        if(invDate && item && qty) {
-            appData.inventoryShortages.unshift({ id: Date.now(), date: invDate, item, qty: `${qty} ${unit}` });
-            document.getElementById('inventory-qty-input').value = '';
-            saveData();
-        }
-    }
-
-    function deleteInventoryShortage(id) {
-        appData.inventoryShortages = appData.inventoryShortages.filter(s => s.id !== id);
-        saveData();
-    }
-
-    function addSalesPenalty() {
-        const memberName = document.getElementById('penalty-sales-select').value;
-        const reason = document.getElementById('penalty-reason').value;
-
-        if(memberName && reason) {
-            const member = appData.salesTeam.find(m => m.name === memberName);
-            if(member) {
-                member.penalties.push({ id: Date.now(), reason });
-                document.getElementById('penalty-reason').value = '';
-                saveData();
-            }
-        } else {
-            alert("الرجاء اختيار الموظف وكتابة سبب الجزاء");
-        }
-    }
-
-    function deletePenalty(memberName, penaltyId) {
-        const member = appData.salesTeam.find(m => m.name === memberName);
-        if(member) {
-            member.penalties = member.penalties.filter(p => p.id !== penaltyId);
-            saveData();
-        }
-    }
-
-    function render() {
-        updateAchievedSalesFromMonthly();
-
-        document.getElementById('disp-monthly').innerText = appData.monthlyTarget;
-        document.getElementById('disp-achieved').innerText = appData.achievedSales;
-        document.getElementById('disp-remaining').innerText = appData.monthlyTarget - appData.achievedSales;
-
-        let percentage = 0;
-        if (appData.monthlyTarget > 0) {
-            percentage = Math.min((appData.achievedSales / appData.monthlyTarget) * 100, 100);
-        }
-        document.getElementById('progress-bar').style.width = percentage + "%";
-        document.getElementById('progress-text').innerText = "نسبة الإنجاز: " + percentage.toFixed(1) + "%";
-
-        const monthlyTable = document.querySelector('#monthly-sales-table tbody');
-        monthlyTable.innerHTML = '';
-        
-        let totalYearSales = 0;
-        const currentYear = new Date().getFullYear().toString();
-
-        appData.monthlyRecords.forEach(r => {
-            if(r.month.startsWith(currentYear)) {
-                totalYearSales += r.amount;
-            }
-            monthlyTable.innerHTML += `<tr>
-                <td style="direction:ltr; font-weight:bold; color:var(--primary-light);">${r.month}</td>
-                <td style="color:var(--success); font-weight:bold;">${r.amount} EGP</td>
-                <td><button class="edit-btn" onclick="editMonthlyRecord('${r.month}')">تعديل</button></td>
-            </tr>`;
-        });
-
-        if(monthlyTable.innerHTML === '') {
-            monthlyTable.innerHTML = `<tr><td colspan="3" style="color:#94a3b8;">لا توجد مبيعات شهرية مسجلة حتى الآن</td></tr>`;
-        }
-
-        document.getElementById('total-year-to-date').innerText = totalYearSales + " EGP";
-
-        const itemsListTable = document.querySelector('#items-list-table tbody');
-        itemsListTable.innerHTML = '';
-        
-        appData.items.forEach((item, index) => {
-            let namePart = item;
-            let pricePart = "غير محدد";
-            
-            const lastOpenBracket = item.lastIndexOf('(');
-            if (lastOpenBracket !== -1 && item.endsWith(')')) {
-                namePart = item.substring(0, lastOpenBracket).trim();
-                pricePart = item.substring(lastOpenBracket + 1, item.length - 1).trim();
-            }
-
-            itemsListTable.innerHTML += `
-                <tr>
-                    <td style="color: #94a3b8; font-weight: bold;">${index + 1}</td>
-                    <td style="text-align: right; padding-right: 10px; color: #fff; font-weight: 500;">${namePart}</td>
-                    <td style="color: var(--primary-light); font-weight: bold; direction: ltr;">${pricePart}</td>
-                    <td><button class="delete-btn" onclick="deleteItem(${index})">حذف</button></td>
-                </tr>
-            `;
-        });
-
-        const invSel = document.getElementById('inventory-item-selector');
-        invSel.innerHTML = '<option value="">اختر الصنف...</option>';
-        appData.items.forEach(i => invSel.innerHTML += `<option value="${i}">${i}</option>`);
-
-        const invTable = document.querySelector('#inventory-shortage-table tbody');
-        invTable.innerHTML = '';
-        appData.inventoryShortages.forEach(s => {
-            invTable.innerHTML += `<tr><td style="direction:ltr;">${s.date}</td><td>${s.item}</td><td>${s.qty}</td>
-            <td><button class="delete-btn" onclick="deleteInventoryShortage(${s.id})">حذف</button></td></tr>`;
-        });
-
-        const salesTeamContainer = document.getElementById('sales-team-container');
-        salesTeamContainer.innerHTML = '';
-        
-        if(!appData.salesTeam) {
             appData.salesTeam = [
+
                 { name: "محمود حسن", penalties: [] },
+
                 { name: "إسلام عادل", penalties: [] },
+
                 { name: "كريم أحمد", penalties: [] },
+
                 { name: "محمد ربيع", penalties: [] },
+
                 { name: "عبدالرحمن علي", penalties: [] }
+
             ];
+
+
+
         }
 
-        appData.salesTeam.forEach(member => {
-            let penaltiesHTML = '';
-            const count = member.penalties.length;
 
-            // تحديد لون الشارة ديناميكياً بناءً على عدد الجزاءات
-            let badgeBg, badgeBorder, badgeColor;
-            if (count === 0) {
-                badgeBg = 'rgba(34, 197, 94, 0.15)';
-                badgeBorder = 'rgba(34, 197, 94, 0.4)';
-                badgeColor = '#4ade80'; // أخضر
-            } else if (count <= 2) {
-                badgeBg = 'rgba(234, 179, 8, 0.15)';
-                badgeBorder = 'rgba(234, 179, 8, 0.4)';
-                badgeColor = '#facc15'; // أصفر مائل للبرتقالي
-            } else if (count <= 4) {
-                badgeBg = 'rgba(249, 115, 22, 0.2)';
-                badgeBorder = 'rgba(249, 115, 22, 0.5)';
-                badgeColor = '#fb923c'; // برتقالي غامق
-            } else {
-                badgeBg = 'rgba(239, 68, 68, 0.25)';
-                badgeBorder = 'rgba(239, 68, 68, 0.6)';
-                badgeColor = '#fca5a5'; // أحمر غامق
-            }
-
-            if(count > 0) {
-                penaltiesHTML = `<ul class="penalty-list">`;
-                member.penalties.forEach(p => {
-                    penaltiesHTML += `<li>${p.reason} <button onclick="deletePenalty('${member.name}', ${p.id})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:10px; padding:0 4px;">[حذف]</button></li>`;
-                });
-                penaltiesHTML += `</ul>`;
-            } else {
-                penaltiesHTML = `<div style="font-size:11px; color:#22c55e; margin-top:3px;">لا توجد جزاءات مسجلة</div>`;
-            }
-
-            salesTeamContainer.innerHTML += `
-                <div class="sales-card">
-                    <div class="sales-header">
-                        <span class="sales-name">👤 ${member.name}</span>
-                        <span class="penalty-badge" style="background:${badgeBg}; border-color:${badgeBorder}; color:${badgeColor};">عدد الجزاءات: ${count}</span>
-                    </div>
-                    ${penaltiesHTML}
-                </div>
-            `;
-        });
-    }
-
-auth.onAuthStateChanged(async function(user) {
-
-    if (user) {
-
-        currentUser = user;
-
-        await checkAdmin();
 
     } else {
 
-        currentUser = null;
-        isAdmin = false;
 
-        document.getElementById("login-screen").style.display = "flex";
+
+        // أول مرة فقط
+
+        await storeRef.set(appData);
+
+
+
     }
 
-});   
+
+
+    render();
+
+
+
+} catch (error) {
+
+
+
+    console.error("Firestore Load Error:", error);
+
+
+
+    alert(
+
+        "تعذر تحميل البيانات من Firebase:\n" +
+
+        error.message
+
+    );
+
+}
+
+
+}
+
+function switchTab(index) {
+
+    const buttons = document.querySelectorAll('.nav-link');
+
+    const contents = document.querySelectorAll('.tab-content');
+
+   &#x20;
+
+    buttons.forEach((btn, i) => {
+
+        if(i === index) {
+
+            btn.classList.add('active');
+
+            contents[i].classList.add('active');
+
+        } else {
+
+            btn.classList.remove('active');
+
+            contents[i].classList.remove('active');
+
+        }
+
+    });
+
+}
+
+
+
+function setTarget() {
+
+    appData.monthlyTarget = parseFloat(document.getElementById('input-monthly-target').value) || 0;
+
+    saveData();
+
+}
+
+
+
+function addSales() {
+
+    const val = parseFloat(document.getElementById('input-daily-sales').value) || 0;
+
+    if(val > 0) {
+
+        let existingRecord = appData.monthlyRecords.find(r => r.month === currentMonthStr);
+
+        if(existingRecord) {
+
+            existingRecord.amount += val;
+
+        } else {
+
+            appData.monthlyRecords.unshift({ month: currentMonthStr, amount: val });
+
+        }
+
+       &#x20;
+
+        updateAchievedSalesFromMonthly();
+
+        document.getElementById('input-daily-sales').value = '';
+
+        saveData();
+
+    }
+
+}
+
+
+
+function addMonthlyRecord() {
+
+    const monthVal = document.getElementById('sale-month').value;
+
+    const amount = parseFloat(document.getElementById('sale-amount').value) || 0;
+
+   &#x20;
+
+    if(monthVal && amount > 0) {
+
+        let existingRecord = appData.monthlyRecords.find(r => r.month === monthVal);
+
+        if(existingRecord) {
+
+            existingRecord.amount += amount;
+
+        } else {
+
+            appData.monthlyRecords.unshift({ month: monthVal, amount: amount });
+
+        }
+
+       &#x20;
+
+        updateAchievedSalesFromMonthly();
+
+        document.getElementById('sale-amount').value = '';
+
+        saveData();
+
+    }
+
+}
+
+
+
+function updateAchievedSalesFromMonthly() {
+
+    let currentRec = appData.monthlyRecords.find(r => r.month === currentMonthStr);
+
+    appData.achievedSales = currentRec ? currentRec.amount : 0;
+
+}
+
+
+
+function editMonthlyRecord(month) {
+
+    const rec = appData.monthlyRecords.find(r => r.month === month);
+
+    if(rec) {
+
+        const newAmount = prompt(\`تعديل إجمالي مبيعات شهر (${month}):\`, rec.amount);
+
+        if(newAmount !== null) {
+
+            const parsedAmount = parseFloat(newAmount);
+
+            if(!isNaN(parsedAmount)) {
+
+                rec.amount = parsedAmount;
+
+                updateAchievedSalesFromMonthly();
+
+                saveData();
+
+            }
+
+        }
+
+    }
+
+}
+
+
+
+function addItem() {
+
+    const val = document.getElementById('new-item').value;
+
+    if(val) {&#x20;
+
+        appData.items.push(val);&#x20;
+
+        saveData();&#x20;
+
+        document.getElementById('new-item').value = '';&#x20;
+
+    }
+
+}
+
+
+
+function deleteItem(index) {
+
+    appData.items.splice(index, 1);
+
+    saveData();
+
+}
+
+
+
+function addInventoryShortage() {
+
+    const invDate = document.getElementById('inventory-date').value;
+
+    const item = document.getElementById('inventory-item-selector').value;
+
+    const qty = document.getElementById('inventory-qty-input').value;
+
+    const unit = document.getElementById('inventory-unit-selector').value;
+
+   &#x20;
+
+    if(invDate && item && qty) {
+
+        appData.inventoryShortages.unshift({ id: Date.now(), date: invDate, item, qty: \`${qty} ${unit}\` });
+
+        document.getElementById('inventory-qty-input').value = '';
+
+        saveData();
+
+    }
+
+}
+
+
+
+function deleteInventoryShortage(id) {
+
+    appData.inventoryShortages = appData.inventoryShortages.filter(s => s.id !== id);
+
+    saveData();
+
+}
+
+
+
+function addSalesPenalty() {
+
+    const memberName = document.getElementById('penalty-sales-select').value;
+
+    const reason = document.getElementById('penalty-reason').value;
+
+
+
+    if(memberName && reason) {
+
+        const member = appData.salesTeam.find(m => m.name === memberName);
+
+        if(member) {
+
+            member.penalties.push({ id: Date.now(), reason });
+
+            document.getElementById('penalty-reason').value = '';
+
+            saveData();
+
+        }
+
+    } else {
+
+        alert("الرجاء اختيار الموظف وكتابة سبب الجزاء");
+
+    }
+
+}
+
+
+
+function deletePenalty(memberName, penaltyId) {
+
+    const member = appData.salesTeam.find(m => m.name === memberName);
+
+    if(member) {
+
+        member.penalties = member.penalties.filter(p => p.id !== penaltyId);
+
+        saveData();
+
+    }
+
+}
+
+
+
+function render() {
+
+    updateAchievedSalesFromMonthly();
+
+
+
+    document.getElementById('disp-monthly').innerText = appData.monthlyTarget;
+
+    document.getElementById('disp-achieved').innerText = appData.achievedSales;
+
+    document.getElementById('disp-remaining').innerText = appData.monthlyTarget - appData.achievedSales;
+
+
+
+    let percentage = 0;
+
+    if (appData.monthlyTarget > 0) {
+
+        percentage = Math.min((appData.achievedSales / appData.monthlyTarget) \* 100, 100);
+
+    }
+
+    document.getElementById('progress-bar').style.width = percentage + "%";
+
+    document.getElementById('progress-text').innerText = "نسبة الإنجاز: " + percentage.toFixed(1) + "%";
+
+
+
+    const monthlyTable = document.querySelector('#monthly-sales-table tbody');
+
+    monthlyTable.innerHTML = '';
+
+   &#x20;
+
+    let totalYearSales = 0;
+
+    const currentYear = new Date().getFullYear().toString();
+
+
+
+    appData.monthlyRecords.forEach(r => {
+
+        if(r.month.startsWith(currentYear)) {
+
+            totalYearSales += r.amount;
+
+        }
+
+        monthlyTable.innerHTML += \`\<tr>
+
+            \<td style="direction\:ltr; font-weight\:bold; color\:var(--primary-light);">${r.month}\</td>
+
+            \<td style="color\:var(--success); font-weight\:bold;">${r.amount} EGP\</td>
+
+            \<td>\<button class="edit-btn" onclick="editMonthlyRecord('${r.month}')">تعديل\</button>\</td>
+
+        \</tr>\`;
+
+    });
+
+
+
+    if(monthlyTable.innerHTML === '') {
+
+        monthlyTable.innerHTML = \`\<tr>\<td colspan="3" style="color:#94a3b8;">لا توجد مبيعات شهرية مسجلة حتى الآن\</td>\</tr>\`;
+
+    }
+
+
+
+    document.getElementById('total-year-to-date').innerText = totalYearSales + " EGP";
+
+
+
+    const itemsListTable = document.querySelector('#items-list-table tbody');
+
+    itemsListTable.innerHTML = '';
+
+   &#x20;
+
+    appData.items.forEach((item, index) => {
+
+        let namePart = item;
+
+        let pricePart = "غير محدد";
+
+       &#x20;
+
+        const lastOpenBracket = item.lastIndexOf('(');
+
+        if (lastOpenBracket !== -1 && item.endsWith(')')) {
+
+            namePart = item.substring(0, lastOpenBracket).trim();
+
+            pricePart = item.substring(lastOpenBracket + 1, item.length - 1).trim();
+
+        }
+
+
+
+        itemsListTable.innerHTML += \`
+
+            \<tr>
+
+                \<td style="color: #94a3b8; font-weight: bold;">${index + 1}\</td>
+
+                \<td style="text-align: right; padding-right: 10px; color: #fff; font-weight: 500;">${namePart}\</td>
+
+                \<td style="color: var(--primary-light); font-weight: bold; direction: ltr;">${pricePart}\</td>
+
+                \<td>\<button class="delete-btn" onclick="deleteItem(${index})">حذف\</button>\</td>
+
+            \</tr>
+
+        \`;
+
+    });
+
+
+
+    const invSel = document.getElementById('inventory-item-selector');
+
+    invSel.innerHTML = '\<option value="">اختر الصنف...\</option>';
+
+    appData.items.forEach(i => invSel.innerHTML += \`\<option value="${i}">${i}\</option>\`);
+
+
+
+    const invTable = document.querySelector('#inventory-shortage-table tbody');
+
+    invTable.innerHTML = '';
+
+    appData.inventoryShortages.forEach(s => {
+
+        invTable.innerHTML += \`\<tr>\<td style="direction\:ltr;">${s.date}\</td>\<td>${s.item}\</td>\<td>${s.qty}\</td>
+
+        \<td>\<button class="delete-btn" onclick="deleteInventoryShortage(${s.id})">حذف\</button>\</td>\</tr>\`;
+
+    });
+
+
+
+    const salesTeamContainer = document.getElementById('sales-team-container');
+
+    salesTeamContainer.innerHTML = '';
+
+   &#x20;
+
+    if(!appData.salesTeam) {
+
+        appData.salesTeam = [
+
+            { name: "محمود حسن", penalties: [] },
+
+            { name: "إسلام عادل", penalties: [] },
+
+            { name: "كريم أحمد", penalties: [] },
+
+            { name: "محمد ربيع", penalties: [] },
+
+            { name: "عبدالرحمن علي", penalties: [] }
+
+        ];
+
+    }
+
+
+
+    appData.salesTeam.forEach(member => {
+
+        let penaltiesHTML = '';
+
+        const count = member.penalties.length;
+
+
+
+        // تحديد لون الشارة ديناميكياً بناءً على عدد الجزاءات
+
+        let badgeBg, badgeBorder, badgeColor;
+
+        if (count === 0) {
+
+            badgeBg = 'rgba(34, 197, 94, 0.15)';
+
+            badgeBorder = 'rgba(34, 197, 94, 0.4)';
+
+            badgeColor = '#4ade80'; // أخضر
+
+        } else if (count <= 2) {
+
+            badgeBg = 'rgba(234, 179, 8, 0.15)';
+
+            badgeBorder = 'rgba(234, 179, 8, 0.4)';
+
+            badgeColor = '#facc15'; // أصفر مائل للبرتقالي
+
+        } else if (count <= 4) {
+
+            badgeBg = 'rgba(249, 115, 22, 0.2)';
+
+            badgeBorder = 'rgba(249, 115, 22, 0.5)';
+
+            badgeColor = '#fb923c'; // برتقالي غامق
+
+        } else {
+
+            badgeBg = 'rgba(239, 68, 68, 0.25)';
+
+            badgeBorder = 'rgba(239, 68, 68, 0.6)';
+
+            badgeColor = '#fca5a5'; // أحمر غامق
+
+        }
+
+
+
+        if(count > 0) {
+
+            penaltiesHTML = \`\<ul class="penalty-list">\`;
+
+            member.penalties.forEach(p => {
+
+                penaltiesHTML += \`\<li>${p.reason} \<button onclick="deletePenalty('${member.name}', ${p.id})" style="background\:none; border\:none; color:#ef4444; cursor\:pointer; font-size:10px; padding:0 4px;">[حذف]\</button>\</li>\`;
+
+            });
+
+            penaltiesHTML += \`\</ul>\`;
+
+        } else {
+
+            penaltiesHTML = \`\<div style="font-size:11px; color:#22c55e; margin-top:3px;">لا توجد جزاءات مسجلة\</div>\`;
+
+        }
+
+
+
+        salesTeamContainer.innerHTML += \`
+
+            \<div class="sales-card">
+
+                \<div class="sales-header">
+
+                    \<span class="sales-name">👤 ${member.name}\</span>
+
+                    \<span class="penalty-badge" style="background:${badgeBg}; border-color:${badgeBorder}; color:${badgeColor};">عدد الجزاءات: ${count}\</span>
+
+                \</div>
+
+                ${penaltiesHTML}
+
+            \</div>
+
+        \`;
+
+    });
+
+}
+
+
+auth.onAuthStateChanged(async function(user) {
+
+if (user) {
+
+
+
+    currentUser = user;
+
+
+
+    await checkAdmin();
+
+
+
+} else {
+
+
+
+    currentUser = null;
+
+    isAdmin = false;
+
+
+
+    document.getElementById("login-screen").style.display = "flex";
+
+}
+
+
+});
+
 </script>
+
 </body>
+
 </html>
