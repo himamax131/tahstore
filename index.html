@@ -2203,6 +2203,129 @@ function togglePassword() {
     }
 }
 
+
+// =========================
+// LOGIN / ADMIN AUTHENTICATION
+// =========================
+const ADMIN_EMAIL = "himamax31@gmail.com";
+
+async function loginUser() {
+    const emailInput = document.getElementById("login-email");
+    const passwordInput = document.getElementById("login-password");
+    const errorBox = document.getElementById("login-error");
+    const loginButton = document.querySelector("#login-screen button[onclick=\"loginUser()\"]");
+
+    const email = emailInput ? emailInput.value.trim() : "";
+    const password = passwordInput ? passwordInput.value : "";
+
+    if (errorBox) errorBox.textContent = "";
+
+    if (!email || !password) {
+        if (errorBox) errorBox.textContent = "من فضلك أدخل البريد الإلكتروني وكلمة المرور.";
+        return;
+    }
+
+    try {
+        if (loginButton) {
+            loginButton.disabled = true;
+            loginButton.dataset.originalText = loginButton.textContent;
+            loginButton.textContent = "جاري تسجيل الدخول...";
+        }
+
+        await auth.signInWithEmailAndPassword(email, password);
+    } catch (error) {
+        console.error("Firebase Login Error:", error);
+
+        let message = "تعذر تسجيل الدخول. تأكد من البريد الإلكتروني وكلمة المرور.";
+
+        switch (error.code) {
+            case "auth/invalid-email":
+                message = "البريد الإلكتروني غير صحيح.";
+                break;
+            case "auth/user-not-found":
+                message = "لا يوجد حساب بهذا البريد الإلكتروني.";
+                break;
+            case "auth/wrong-password":
+            case "auth/invalid-credential":
+                message = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+                break;
+            case "auth/too-many-requests":
+                message = "تمت محاولات تسجيل دخول كثيرة. حاول مرة أخرى لاحقًا.";
+                break;
+            case "auth/user-disabled":
+                message = "هذا الحساب معطل.";
+                break;
+            case "auth/network-request-failed":
+                message = "تعذر الاتصال بـ Firebase. تأكد من الإنترنت.";
+                break;
+            default:
+                message = error.message || message;
+        }
+
+        if (errorBox) errorBox.textContent = message;
+    } finally {
+        if (loginButton) {
+            loginButton.disabled = false;
+            loginButton.textContent = loginButton.dataset.originalText || "🔐 تسجيل الدخول";
+        }
+    }
+}
+
+async function checkAdmin() {
+    const loginScreen = document.getElementById("login-screen");
+    const errorBox = document.getElementById("login-error");
+
+    if (!currentUser) {
+        isAdmin = false;
+        if (loginScreen) loginScreen.style.display = "flex";
+        return;
+    }
+
+    if (currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+        isAdmin = true;
+        if (loginScreen) loginScreen.style.display = "none";
+
+        await loadData();
+    } else {
+        isAdmin = false;
+
+        if (errorBox) {
+            errorBox.textContent = "هذا الحساب ليس لديه صلاحية الدخول إلى لوحة الإدارة.";
+        }
+
+        await auth.signOut();
+    }
+}
+
+async function logoutUser() {
+    try {
+        await auth.signOut();
+        currentUser = null;
+        isAdmin = false;
+
+        const loginScreen = document.getElementById("login-screen");
+        const errorBox = document.getElementById("login-error");
+        const passwordInput = document.getElementById("login-password");
+
+        if (loginScreen) loginScreen.style.display = "flex";
+        if (errorBox) errorBox.textContent = "";
+        if (passwordInput) passwordInput.value = "";
+    } catch (error) {
+        console.error("Firebase Logout Error:", error);
+        alert("حدث خطأ أثناء تسجيل الخروج:\n" + error.message);
+    }
+}
+
+// تسجيل الدخول عند الضغط على Enter
+["login-email", "login-password"].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+        input.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") loginUser();
+        });
+    }
+});
+
 auth.onAuthStateChanged(async function(user) {
 
 if (user) {
