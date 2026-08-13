@@ -361,8 +361,25 @@
     </div>
 
 </div>
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
 
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBoGxX4SvH6dqvS1_D07GmHliTlrfaJTw8",
+  authDomain: "store-754c5.firebaseapp.com",
+  projectId: "store-754c5",
+  storageBucket: "store-754c5.firebasestorage.app",
+  messagingSenderId: "392118549414",
+  appId: "1:392118549414:web:5abc5e61f041518f8ced67",
+  measurementId: "G-WRW47QYCJ4"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+const storeRef = db.collection("store").doc("store_v_final_v4");
+
     let appData = JSON.parse(localStorage.getItem('store_v_final_v4')) || { 
         monthlyTarget: 0, 
         achievedSales: 0, 
@@ -767,34 +784,7 @@
     }
 
     window.onload = render;
-    <!-- إضافة مكتبة Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
-  // إعدادات مشروعك (هتلاقيها في إعدادات Firebase Project Settings)
-  const firebaseConfig = {
-    apiKey: "AIzaSy...",
-    authDomain: "tahstore-xxxx.firebaseapp.com",
-    databaseURL: "https://tahstore-xxxx-default-rtdb.firebaseio.com",
-    projectId: "tahstore-xxxx"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // لقراءة البيانات وتحديث الشاشة (مثلاً رصيد المبيعات)
-  const dataRef = ref(db, 'sales/total');
-  onValue(dataRef, (snapshot) => {
-    const data = snapshot.val();
-    document.getElementById('totalSales').innerText = data; // تحديث الرقم في الموقع
-  });
-
-  // لكتابة البيانات (لما تسجل عملية بيع جديدة)
-  function updateSales(newValue) {
-    set(ref(db, 'sales/total'), newValue);
-  }
-</script>
+   
 </script>
 </body>
 </html>
