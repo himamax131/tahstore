@@ -188,7 +188,155 @@
             color: var(--primary-light);
             font-size: 13px;
         }
-        
+        /* =========================
+   LOGIN ANIMATION
+========================= */
+
+#login-screen {
+    animation: loginScreenIn 0.7s ease forwards;
+}
+
+#login-screen > div {
+    animation: loginCardIn 0.8s cubic-bezier(.17,.67,.32,1.25) forwards;
+    transform: translateY(30px) scale(.92);
+    opacity: 0;
+}
+
+#login-screen > div > div:first-child {
+    animation: logoPulse 2s ease-in-out infinite;
+}
+
+#login-screen h2 {
+    animation: titleIn 0.8s ease .2s forwards;
+    opacity: 0;
+}
+
+#login-screen input {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: inputIn 0.5s ease forwards;
+}
+
+#login-screen input:nth-of-type(1) {
+    animation-delay: .35s;
+}
+
+#login-screen input:nth-of-type(2) {
+    animation-delay: .45s;
+}
+
+#login-screen button {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: buttonIn 0.6s ease .55s forwards;
+}
+
+@keyframes loginScreenIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes loginCardIn {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(.90);
+    }
+
+    70% {
+        transform: translateY(-5px) scale(1.02);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes logoPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(245,158,11,0);
+    }
+
+    50% {
+        transform: scale(1.08);
+        box-shadow:
+            0 0 20px rgba(245,158,11,.35),
+            0 0 40px rgba(245,158,11,.12);
+    }
+}
+
+@keyframes titleIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes inputIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes buttonIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تأثير زر الدخول */
+#login-screen button {
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+#login-screen button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(245,158,11,.3);
+    filter: brightness(1.08);
+}
+
+#login-screen button:active {
+    transform: scale(.97);
+}
+
+/* تأثير الحقول */
+#login-screen input {
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+#login-screen input:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 15px rgba(245,158,11,.15);
+}
         /* شارة الجزاءات الديناميكية (أخضر تدرج للأحمر) */
         .penalty-badge {
             padding: 2px 10px;
@@ -222,16 +370,7 @@
     </style>
 </head>
 <body>
-<div id="login-screen" style="
-    position:fixed;
-    inset:0;
-    z-index:99999;
-    background:#080c14;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    direction:rtl;
-">
+
 
     <div style="
         width:90%;
