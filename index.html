@@ -3,99 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة متجر التمور</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --primary: #d97706;
-            --primary-hover: #b45309;
-            --border: #334155;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 15px;
-            direction: rtl;
-        }
-        .container { max-width: 800px; margin: 0 auto; }
-        h2, h3 { color: #f59e0b; text-align: center; }
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-        }
-        .target-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            text-align: center;
-        }
-        .stat-box {
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-        .stat-box span { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 5px; }
-        .stat-box strong { font-size: 16px; color: #f8fafc; }
-        form { display: flex; flex-direction: column; gap: 10px; }
-        input, select {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: #0f172a;
-            color: white;
-            font-size: 14px;
-        }
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .checkbox-container input { width: 18px; height: 18px; accent-color: #d97706; }
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button:hover { background: var(--primary-hover); }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-        th, td { padding: 10px; text-align: right; border-bottom: 1px solid var(--border); }
-        th { background: #0f172a; color: #f59e0b; }
-        .vip-badge { color: #fbbf24; font-weight: bold; text-shadow: 0 0 5px rgba(251, 191, 36, 0.4); }
-        .normal-badge { color: #94a3b8; }
-        .delete-btn {
-            background: #ef4444;
-            padding: 4px 8px;
-            font-size: 11px;
-            border-radius: 4px;
-            cursor: pointer;
-            border: none;
-            color: white;
-        }
-        .delete-btn:hover { background: #dc2626; }
-    </style>
-</head>
-<body>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة متجر التمور المتطور</title>
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --primary: #d97706; --danger: #ef4444; --border: #334155; }
@@ -106,10 +13,11 @@
         input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: white; font-size: 14px; box-sizing: border-box; }
         button { font-weight: bold; cursor: pointer; transition: 0.2s; border: none; background: var(--primary); }
         button:hover { filter: brightness(1.2); }
-        .grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; }
+        .target-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; text-align: center; }
+        .stat-box { background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); }
-        .del-btn { background: var(--danger); padding: 5px 10px; border-radius: 4px; cursor: pointer; color: white; border: none; }
+        th, td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .delete-btn { background: var(--danger); padding: 5px 10px; border-radius: 4px; cursor: pointer; color: white; border: none; }
     </style>
 </head>
 <body>
@@ -117,374 +25,94 @@
 <div class="container">
     <h2>🌴 نظام إدارة متجر التمور</h2>
 
-    <!-- قسم إضافة الأصناف -->
+    <!-- التارجت -->
     <div class="card">
-        <h3>➕ إضافة أصناف التمور</h3>
-        <input type="text" id="item-input" placeholder="اسم الصنف (مثلاً: تمر سكري)">
-        <button onclick="addNewItem()">إضافة الصنف للقائمة</button>
-    </div>
-
-    <!-- قسم تسجيل العجز -->
-    <div class="card">
-        <h3>⚖️ تسجيل عجز أصناف</h3>
-        <select id="item-selector"><option value="">اختر الصنف من القائمة...</option></select>
-        <div class="grid-3">
-            <input type="number" id="qty-input" placeholder="الكمية">
-            <select id="unit-selector">
-                <option value="كيلو">كيلو</option>
-                <option value="علبة">علبة</option>
-                <option value="حبة">حبة</option>
-                <option value="جنيه">جنيه</option>
-            </select>
-            <button onclick="addShortage()" style="background: var(--danger);">تسجيل</button>
+        <h3>🎯 إعداد ومتابعة التارجت</h3>
+        <input type="number" id="input-monthly-target" placeholder="التارجت الشهري">
+        <button onclick="setTarget()">تثبيت التارجت</button>
+        <input type="number" id="input-daily-sales" placeholder="مبيعات اليوم">
+        <button onclick="addSales()" style="background:#2563eb;">إضافة مبيعات اليوم</button>
+        <div class="target-grid" style="margin-top:15px;">
+            <div class="stat-box"><span>الشهري</span><strong id="disp-monthly">0</strong></div>
+            <div class="stat-box"><span>المحقق</span><strong id="disp-achieved">0</strong></div>
+            <div class="stat-box"><span>المتبقي</span><strong id="disp-remaining" style="color:#ef4444;">0</strong></div>
         </div>
     </div>
 
-    <!-- جدول العجوزات -->
+    <!-- المخزون -->
     <div class="card">
-        <h3>📋 سجل العجوزات</h3>
-        <table>
-            <thead><tr><th>الصنف</th><th>الكمية</th><th>الوحدة</th><th>إجراء</th></tr></thead>
-            <tbody id="shortage-table"></tbody>
-        </table>
+        <h3>📦 إدارة المخزون والعجز</h3>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="new-item" placeholder="اسم صنف جديد">
+            <button onclick="addItem()" style="width:auto; background:#059669;">إضافة</button>
+        </div>
+        <select id="item-selector"><option value="">اختر الصنف...</option></select>
+        <div style="display:flex; gap:5px;">
+            <input type="number" id="qty-input" placeholder="الكمية">
+            <select id="unit-selector"><option value="كيلو">كيلو</option><option value="علبة">علبة</option></select>
+        </div>
+        <button onclick="addShortage()">تسجيل العجز</button>
+        <table id="shortage-table"><thead><tr><th>الصنف</th><th>الكمية</th><th>حذف</th></tr></thead><tbody></tbody></table>
     </div>
 </div>
 
 <script>
-    let appData = JSON.parse(localStorage.getItem('store_v_final')) || { items: [], shortages: [] };
+    let appData = JSON.parse(localStorage.getItem('store_v_final')) || { 
+        monthlyTarget: 0, achievedSales: 0, items: [], shortages: [] 
+    };
 
     function saveData() {
         localStorage.setItem('store_v_final', JSON.stringify(appData));
         render();
     }
 
-    function addNewItem() {
-        const val = document.getElementById('item-input').value.trim();
-        if(val) { appData.items.push(val); saveData(); document.getElementById('item-input').value = ''; }
+    function setTarget() {
+        appData.monthlyTarget = parseFloat(document.getElementById('input-monthly-target').value) || 0;
+        saveData();
+    }
+
+    function addSales() {
+        appData.achievedSales += parseFloat(document.getElementById('input-daily-sales').value) || 0;
+        saveData();
+    }
+
+    function addItem() {
+        const val = document.getElementById('new-item').value;
+        if(val) { appData.items.push(val); saveData(); document.getElementById('new-item').value = ''; }
     }
 
     function addShortage() {
         const item = document.getElementById('item-selector').value;
         const qty = document.getElementById('qty-input').value;
-        const unit = document.getElementById('unit-selector').value;
         if(item && qty) {
-            appData.shortages.unshift({ id: Date.now(), item, qty, unit });
+            appData.shortages.unshift({ id: Date.now(), item, qty });
             saveData();
-            document.getElementById('qty-input').value = '';
         }
     }
 
-    function deleteItem(id) {
+    function deleteShortage(id) {
         appData.shortages = appData.shortages.filter(s => s.id !== id);
         saveData();
     }
 
     function render() {
-        // تحديث القائمة المنسدلة
-        const selector = document.getElementById('item-selector');
-        selector.innerHTML = '<option value="">اختر الصنف...</option>';
-        appData.items.forEach(i => selector.innerHTML += `<option value="${i}">${i}</option>`);
+        document.getElementById('disp-monthly').innerText = appData.monthlyTarget;
+        document.getElementById('disp-achieved').innerText = appData.achievedSales;
+        document.getElementById('disp-remaining').innerText = appData.monthlyTarget - appData.achievedSales;
 
-        // تحديث الجدول
-        const table = document.getElementById('shortage-table');
+        const sel = document.getElementById('item-selector');
+        sel.innerHTML = '<option value="">اختر الصنف...</option>';
+        appData.items.forEach(i => sel.innerHTML += `<option value="${i}">${i}</option>`);
+
+        const table = document.querySelector('#shortage-table tbody');
         table.innerHTML = '';
         appData.shortages.forEach(s => {
-            table.innerHTML += `<tr>
-                <td>${s.item}</td><td>${s.qty}</td><td>${s.unit}</td>
-                <td><button class="del-btn" onclick="deleteItem(${s.id})">حذف</button></td>
-            </tr>`;
+            table.innerHTML += `<tr><td>${s.item}</td><td>${s.qty}</td>
+            <td><button class="delete-btn" onclick="deleteShortage(${s.id})">حذف</button></td></tr>`;
         });
     }
 
     window.onload = render;
 </script>
-</body>
-</html>
-    <div class="container">
-        <h2>🌴 نظام إدارة متجر التمور</h2>
-
-        <div class="card">
-            <h3>🎯 إعداد ومتابعة التارجت</h3>
-            <form id="target-config-form" style="margin-bottom: 15px;">
-                <input type="number" id="input-monthly-target" placeholder="أدخل التارجت الشهري الجديد" required>
-                <button type="submit">تثبيت التارجت الشهري</button>
-            </form>
-
-            <form id="daily-sales-form" style="margin-bottom: 15px;">
-                <input type="number" id="input-daily-sales" placeholder="مبيعات اليوم (المبلغ المحقق اليوم)" required>
-                <button type="submit" style="background: #2563eb;">إضافة مبيعات اليوم</button>
-            </form>
-
-            <div class="target-grid">
-                <div class="stat-box">
-                    <span>التارجت الشهري الثابت</span>
-                    <strong id="disp-monthly">0 ج.م</strong>
-                </div>
-                <div class="stat-box">
-                    <span>إجمالي المحقق حتي الآن</span>
-                    <strong id="disp-achieved">0 ج.م</strong>
-                </div>
-                <div class="stat-box">
-                    <span>التارجت اليومي المقترح</span>
-                    <strong id="disp-daily">0 ج.م</strong>
-                </div>
-                <div class="stat-box">
-                    <span>المتبقي من التارجت (مبلغ)</span>
-                    <strong id="disp-remaining-amount" style="color: #ef4444;">0 ج.م</strong>
-                </div>
-                <div class="stat-box" style="grid-column: span 2;">
-                    <span>المتبقي (نسبة مئوية)</span>
-                    <strong id="disp-remaining-percent" style="color: #f59e0b;">0%</strong>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>⚖️ العجوزات والزيادات المالية</h3>
-            <form id="cash-form">
-                <select id="cash-type">
-                    <option value="زيادة">زيادة في النقدية (+)</option>
-                    <option value="عجز">عجز في النقدية (-)</option>
-                </select>
-                <input type="number" id="cash-amount" placeholder="المبلغ بالجنية" required>
-                <input type="text" id="cash-notes" placeholder="السبب (مثلاً: فروق تسليم، مصروفات...)">
-                <button type="submit">تسجيل الحركة</button>
-            </form>
-            <table style="margin-top: 15px;">
-                <thead>
-                    <tr>
-                        <th>النوع</th>
-                        <th>المبلغ</th>
-                        <th>السبب</th>
-                        <th>إجراء</th>
-                    </tr>
-                </thead>
-                <tbody id="cash-table"></tbody>
-            </table>
-        </div>
-<!-- القسم الجديد: إدارة الأصناف وتسجيل العجز -->
-<div class="card">
-    <h3>📦 إدارة المخزون وتسجيل العجز</h3>
-    <!-- إضافة صنف -->
-    <div style="display:flex; gap:5px; margin-bottom:10px;">
-        <input type="text" id="new-item" placeholder="اسم صنف جديد (تمر سكري..)" style="flex:1;">
-        <button onclick="addItem()" style="background:#059669;">إضافة</button>
-    </div>
-    <!-- تسجيل عجز -->
-    <div class="target-grid" style="grid-template-columns: 2fr 1fr 1fr;">
-        <select id="item-selector"><option value="">اختر الصنف...</option></select>
-        <input type="number" id="qty-input" placeholder="الكمية">
-        <select id="unit-selector">
-            <option value="كيلو">كيلو</option><option value="علبة">علبة</option>
-            <option value="حبة">حبة</option><option value="جنيه">جنيه</option>
-        </select>
-    </div>
-    <button onclick="addShortage()" style="width:100%; margin-top:10px; background:var(--primary);">تسجيل العجز</button>
-    
-    <table style="margin-top: 15px;">
-        <thead><tr><th>الصنف</th><th>الكمية</th><th>الوحدة</th><th>حذف</th></tr></thead>
-        <tbody id="shortage-table"></tbody>
-    </table>
-</div>
-        <div class="card">
-            <h3>👥 إضافة عميل جديد</h3>
-            <form id="customer-form">
-                <input type="text" id="cust-name" placeholder="اسم العميل" required>
-                <input type="text" id="cust-phone" placeholder="رقم الهاتف" required>
-                <label class="checkbox-container">
-                    <input type="checkbox" id="cust-vip"> تفعيل تصنيف VIP (لون ذهبي ✨)
-                </label>
-                <button type="submit">تسجيل العميل وعرضه فوراً</button>
-            </form>
-
-            <h4 style="margin-top: 20px; color: #f59e0b;">قائمة العملاء المسجلين:</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>اسم العميل</th>
-                        <th>رقم الهاتف</th>
-                        <th>التصنيف</th>
-                        <th>إجراء</th>
-                    </tr>
-                </thead>
-                <tbody id="customers-table"></tbody>
-            </table>
-        </div>
-
-        <div class="card">
-            <h3>📝 مراجعات اليوم والجزاءات</h3>
-            <form id="review-form">
-                <input type="text" id="review-title" placeholder="عنوان المراجعة أو المخالفة / الجزاء" required>
-                <select id="review-type">
-                    <option value="ملاحظة إيجابية">مراجعة إيجابية / ملاحظة</option>
-                    <option value="جزاء / خصم">جزاء أو خصم</option>
-                </select>
-                <input type="text" id="review-details" placeholder="التفاصيل والأسباب">
-                <button type="submit">حفظ السجل اليومي</button>
-            </form>
-            <table style="margin-top: 15px;">
-                <thead>
-                    <tr>
-                        <th>النوع</th>
-                        <th>العنوان / المخالفة</th>
-                        <th>التفاصيل</th>
-                        <th>إجراء</th>
-                    </tr>
-                </thead>
-                <tbody id="review-table"></tbody>
-            </table>
-        </div>
-
-    </div>
-
-    <script>
-        let appData = JSON.parse(localStorage.getItem('store_data_v3')) || {
-            monthlyTarget: 0,
-            achievedSales: 0,
-            customers: [],
-            cashFlow: [],
-            reviews: []
-        };
-
-        function saveData() {
-            localStorage.setItem('store_data_v3', JSON.stringify(appData));
-            renderAll();
-        }
-
-        document.getElementById('target-config-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const val = parseFloat(document.getElementById('input-monthly-target').value);
-            if(!isNaN(val)) {
-                appData.monthlyTarget = val;
-                saveData();
-                document.getElementById('input-monthly-target').value = '';
-            }
-        });
-
-        document.getElementById('daily-sales-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const val = parseFloat(document.getElementById('input-daily-sales').value);
-            if(!isNaN(val)) {
-                appData.achievedSales += val;
-                saveData();
-                document.getElementById('input-daily-sales').value = '';
-            }
-        });
-
-        document.getElementById('customer-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const isVip = document.getElementById('cust-vip').checked;
-
-            appData.customers.unshift({ id: Date.now(), name, phone, isVip });
-            saveData();
-
-            document.getElementById('cust-name').value = '';
-            document.getElementById('cust-phone').value = '';
-            document.getElementById('cust-vip').checked = false;
-        });
-
-        document.getElementById('cash-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const type = document.getElementById('cash-type').value;
-            const amount = document.getElementById('cash-amount').value;
-            const notes = document.getElementById('cash-notes').value;
-
-            appData.cashFlow.unshift({ id: Date.now(), type, amount, notes });
-            saveData();
-
-            document.getElementById('cash-amount').value = '';
-            document.getElementById('cash-notes').value = '';
-        });
-
-        document.getElementById('review-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const title = document.getElementById('review-title').value;
-            const type = document.getElementById('review-type').value;
-            const details = document.getElementById('review-details').value;
-
-            appData.reviews.unshift({ id: Date.now(), title, type, details });
-            saveData();
-
-            document.getElementById('review-title').value = '';
-            document.getElementById('review-details').value = '';
-        });
-
-    function deleteItem(type, id) {
-        if(type === 'customer') appData.customers = appData.customers.filter(c => c.id !== id);
-        if(type === 'cash') appData.cashFlow = appData.cashFlow.filter(c => c.id !== id);
-        if(type === 'review') appData.reviews = appData.reviews.filter(c => c.id !== id);
-        saveData();
-    }
-
-    function renderAll() {
-        let mTarget = appData.monthlyTarget;
-        let achieved = appData.achievedSales;
-        let remainingAmount = mTarget - achieved;
-        let remainingPercent = mTarget > 0 ? Math.round((remainingAmount / mTarget) * 100) : 0;
-        let dailyTarget = Math.round(mTarget / 30);
-
-        document.getElementById('disp-monthly').innerText = mTarget.toLocaleString() + ' ج.م';
-        document.getElementById('disp-achieved').innerText = achieved.toLocaleString() + ' ج.م';
-        document.getElementById('disp-daily').innerText = dailyTarget.toLocaleString() + ' ج.م';
-        document.getElementById('disp-remaining-amount').innerText = (remainingAmount > 0 ? remainingAmount : 0).toLocaleString() + ' ج.م';
-        document.getElementById('disp-remaining-percent').innerText = (remainingPercent > 0 ? remainingPercent : 0) + '%';
-
-        let custTable = document.getElementById('customers-table');
-        custTable.innerHTML = '';
-        appData.customers.forEach(c => {
-            custTable.innerHTML += `
-                <tr>
-                    <td>${c.name}</td>
-                    <td>${c.phone}</td>
-                    <td><span class="${c.isVip ? 'vip-badge' : 'normal-badge'}">${c.isVip ? '✨ VIP (ذهبي)' : 'عادي'}</span></td>
-                    <td><button class="delete-btn" onclick="deleteItem('customer', ${c.id})">حذف</button></td>
-                </tr>
-            `;
-        });
-
-        let cashTable = document.getElementById('cash-table');
-        cashTable.innerHTML = '';
-        appData.cashFlow.forEach(cf => {
-            cashTable.innerHTML += `
-                <tr>
-                    <td style="color: ${cf.type === 'زيادة' ? '#22c55e' : '#ef4444'}">${cf.type}</td>
-                    <td>${cf.amount} ج.م</td>
-                    <td>${cf.notes || '-'}</td>
-                    <td><button class="delete-btn" onclick="deleteItem('cash', ${cf.id})">حذف</button></td>
-                </tr>
-            `;
-        });
-function addItem() {
-    const val = document.getElementById('new-item').value;
-    if(val) { appData.items.push(val); saveData(); document.getElementById('new-item').value = ''; }
-}
-
-function addShortage() {
-    const item = document.getElementById('item-selector').value;
-    const qty = document.getElementById('qty-input').value;
-    const unit = document.getElementById('unit-selector').value;
-    if(item && qty) {
-        appData.shortages.unshift({ id: Date.now(), item, qty, unit });
-        saveData();
-    }
-}
-        let revTable = document.getElementById('review-table');
-        revTable.innerHTML = '';
-        appData.reviews.forEach(r => {
-            revTable.innerHTML += `
-                <tr>
-                    <td style="color: ${r.type.includes('جزاء') ? '#ef4444' : '#38bdf8'}">${r.type}</td>
-                    <td>${r.title}</td>
-                    <td>${r.details || '-'}</td>
-                    <td><button class="delete-btn" onclick="deleteItem('review', ${r.id})">حذف</button></td>
-                </tr>
-            `;
-        });
-    }
-
-    window.onload = renderAll;
-    </script>
 </body>
 </html>
