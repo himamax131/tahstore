@@ -262,7 +262,30 @@
                 <tbody id="cash-table"></tbody>
             </table>
         </div>
-
+<!-- القسم الجديد: إدارة الأصناف وتسجيل العجز -->
+<div class="card">
+    <h3>📦 إدارة المخزون وتسجيل العجز</h3>
+    <!-- إضافة صنف -->
+    <div style="display:flex; gap:5px; margin-bottom:10px;">
+        <input type="text" id="new-item" placeholder="اسم صنف جديد (تمر سكري..)" style="flex:1;">
+        <button onclick="addItem()" style="background:#059669;">إضافة</button>
+    </div>
+    <!-- تسجيل عجز -->
+    <div class="target-grid" style="grid-template-columns: 2fr 1fr 1fr;">
+        <select id="item-selector"><option value="">اختر الصنف...</option></select>
+        <input type="number" id="qty-input" placeholder="الكمية">
+        <select id="unit-selector">
+            <option value="كيلو">كيلو</option><option value="علبة">علبة</option>
+            <option value="حبة">حبة</option><option value="جنيه">جنيه</option>
+        </select>
+    </div>
+    <button onclick="addShortage()" style="width:100%; margin-top:10px; background:var(--primary);">تسجيل العجز</button>
+    
+    <table style="margin-top: 15px;">
+        <thead><tr><th>الصنف</th><th>الكمية</th><th>الوحدة</th><th>حذف</th></tr></thead>
+        <tbody id="shortage-table"></tbody>
+    </table>
+</div>
         <div class="card">
             <h3>👥 إضافة عميل جديد</h3>
             <form id="customer-form">
@@ -433,7 +456,20 @@
                 </tr>
             `;
         });
+function addItem() {
+    const val = document.getElementById('new-item').value;
+    if(val) { appData.items.push(val); saveData(); document.getElementById('new-item').value = ''; }
+}
 
+function addShortage() {
+    const item = document.getElementById('item-selector').value;
+    const qty = document.getElementById('qty-input').value;
+    const unit = document.getElementById('unit-selector').value;
+    if(item && qty) {
+        appData.shortages.unshift({ id: Date.now(), item, qty, unit });
+        saveData();
+    }
+}
         let revTable = document.getElementById('review-table');
         revTable.innerHTML = '';
         appData.reviews.forEach(r => {
