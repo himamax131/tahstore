@@ -91,7 +91,115 @@
     </style>
 </head>
 <body>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة متجر التمور المتطور</title>
+    <style>
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --text-color: #f8fafc; --primary: #d97706; --danger: #ef4444; --border: #334155; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; direction: rtl; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        h2, h3 { color: var(--primary); text-align: center; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: white; font-size: 14px; box-sizing: border-box; }
+        button { font-weight: bold; cursor: pointer; transition: 0.2s; border: none; background: var(--primary); }
+        button:hover { filter: brightness(1.2); }
+        .grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); }
+        .del-btn { background: var(--danger); padding: 5px 10px; border-radius: 4px; cursor: pointer; color: white; border: none; }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <h2>🌴 نظام إدارة متجر التمور</h2>
+
+    <!-- قسم إضافة الأصناف -->
+    <div class="card">
+        <h3>➕ إضافة أصناف التمور</h3>
+        <input type="text" id="item-input" placeholder="اسم الصنف (مثلاً: تمر سكري)">
+        <button onclick="addNewItem()">إضافة الصنف للقائمة</button>
+    </div>
+
+    <!-- قسم تسجيل العجز -->
+    <div class="card">
+        <h3>⚖️ تسجيل عجز أصناف</h3>
+        <select id="item-selector"><option value="">اختر الصنف من القائمة...</option></select>
+        <div class="grid-3">
+            <input type="number" id="qty-input" placeholder="الكمية">
+            <select id="unit-selector">
+                <option value="كيلو">كيلو</option>
+                <option value="علبة">علبة</option>
+                <option value="حبة">حبة</option>
+                <option value="جنيه">جنيه</option>
+            </select>
+            <button onclick="addShortage()" style="background: var(--danger);">تسجيل</button>
+        </div>
+    </div>
+
+    <!-- جدول العجوزات -->
+    <div class="card">
+        <h3>📋 سجل العجوزات</h3>
+        <table>
+            <thead><tr><th>الصنف</th><th>الكمية</th><th>الوحدة</th><th>إجراء</th></tr></thead>
+            <tbody id="shortage-table"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let appData = JSON.parse(localStorage.getItem('store_v_final')) || { items: [], shortages: [] };
+
+    function saveData() {
+        localStorage.setItem('store_v_final', JSON.stringify(appData));
+        render();
+    }
+
+    function addNewItem() {
+        const val = document.getElementById('item-input').value.trim();
+        if(val) { appData.items.push(val); saveData(); document.getElementById('item-input').value = ''; }
+    }
+
+    function addShortage() {
+        const item = document.getElementById('item-selector').value;
+        const qty = document.getElementById('qty-input').value;
+        const unit = document.getElementById('unit-selector').value;
+        if(item && qty) {
+            appData.shortages.unshift({ id: Date.now(), item, qty, unit });
+            saveData();
+            document.getElementById('qty-input').value = '';
+        }
+    }
+
+    function deleteItem(id) {
+        appData.shortages = appData.shortages.filter(s => s.id !== id);
+        saveData();
+    }
+
+    function render() {
+        // تحديث القائمة المنسدلة
+        const selector = document.getElementById('item-selector');
+        selector.innerHTML = '<option value="">اختر الصنف...</option>';
+        appData.items.forEach(i => selector.innerHTML += `<option value="${i}">${i}</option>`);
+
+        // تحديث الجدول
+        const table = document.getElementById('shortage-table');
+        table.innerHTML = '';
+        appData.shortages.forEach(s => {
+            table.innerHTML += `<tr>
+                <td>${s.item}</td><td>${s.qty}</td><td>${s.unit}</td>
+                <td><button class="del-btn" onclick="deleteItem(${s.id})">حذف</button></td>
+            </tr>`;
+        });
+    }
+
+    window.onload = render;
+</script>
+</body>
+</html>
     <div class="container">
         <h2>🌴 نظام إدارة متجر التمور</h2>
 
