@@ -673,7 +673,6 @@
     object-fit: cover;
     display: block;
 }
-
 .login-title {
     position: relative;
     margin: 0;
@@ -887,9 +886,10 @@
     <div class="login-card">
         <div class="login-glow"></div>
 
-<div class="login-logo">
+        <div class="login-logo">
     <img src="https://up6.cc/2026/08/178662434144331.jpg" alt="تمور الطحان">
 </div>
+
         <h2 class="login-title">تمور الطحان</h2>
         <div class="login-subtitle">نظام إدارة فرع مبارك</div>
 
@@ -932,9 +932,11 @@
         <div class="brand-text">
 
 
-<div class="hide-on-mobile" style="font-size: 11px; color: var(--primary-light); font-weight: bold;">تمور الطحان 🌴</div>
+<div class="hide-on-mobile" style="font-size: 13px; color: var(--primary-light); font-weight: bold;">تمور الطحان 🌴</div>
+
             <h3>AhmedEmad</h3>
-           <div class="hide-on-mobile" style="font-size: 10px; color: var(--primary-light); font-weight: bold;">فرع مبارك</div>
+
+           <div class="hide-on-mobile" style="font-size: 11px; color: var(--primary-light); font-weight: bold;">فرع مبارك</div>
 
         </div>
 
@@ -1579,96 +1581,58 @@ try {
 }
 
 async function loadData() {
+    try {
+        const doc = await storeRef.get();
 
-try {
+        if (doc.exists) {
+            const data = doc.data() || {};
 
-
-
-    const doc = await storeRef.get();
-
-
-
-    if (doc.exists) {
-
-
-
-        appData = doc.data();
-
-
-
-        if (!appData.inventoryShortages)
-
-            appData.inventoryShortages = [];
-
-
-
-        if (!appData.monthlyRecords)
-
-            appData.monthlyRecords = [];
-
-
-
-        if (!appData.salesTeam) {
-
-
-
-            appData.salesTeam = [
-
-                { name: "محمود حسن", penalties: [] },
-
-                { name: "إسلام عادل", penalties: [] },
-
-                { name: "كريم أحمد", penalties: [] },
-
-                { name: "محمد ربيع", penalties: [] },
-
-                { name: "عبدالرحمن علي", penalties: [] }
-
-            ];
-
-
-
+            // نحافظ على أي بيانات قديمة ونضيف القيم الناقصة فقط.
+            appData = {
+                ...appData,
+                ...data,
+                inventoryShortages: Array.isArray(data.inventoryShortages)
+                    ? data.inventoryShortages
+                    : [],
+                monthlyRecords: Array.isArray(data.monthlyRecords)
+                    ? data.monthlyRecords
+                    : [],
+                salesTeam: Array.isArray(data.salesTeam) && data.salesTeam.length
+                    ? data.salesTeam
+                    : [
+                        { name: "محمود حسن", penalties: [] },
+                        { name: "إسلام عادل", penalties: [] },
+                        { name: "كريم أحمد", penalties: [] },
+                        { name: "محمد ربيع", penalties: [] },
+                        { name: "عبدالرحمن علي", penalties: [] }
+                    ]
+            };
+        } else {
+            // لو المستند غير موجود نحاول إنشاءه للحساب المصرح له فقط.
+            await storeRef.set(appData);
         }
 
+        render();
+        return true;
 
+    } catch (error) {
+        console.error("Firestore Load Error:", error);
 
-    } else {
+        const errorBox = document.getElementById("login-error");
+        let message = "تعذر تحميل البيانات من Firebase.";
 
+        if (error && error.code === "permission-denied") {
+            message = "تم تسجيل الدخول، لكن صلاحيات Firestore تمنع قراءة بيانات النظام. عدّل Firestore Rules للسماح للحسابات المصرح لها.";
+        } else if (error && error.message) {
+            message += "\n" + error.message;
+        }
 
+        if (errorBox) {
+            errorBox.textContent = message;
+        }
 
-        // أول مرة فقط
-
-        await storeRef.set(appData);
-
-
-
+        return false;
     }
-
-
-
-    render();
-
-
-
-} catch (error) {
-
-
-
-    console.error("Firestore Load Error:", error);
-
-
-
-    alert(
-
-        "تعذر تحميل البيانات من Firebase:\n" +
-
-        error.message
-
-    );
-
-}
-
-
 }
 
 function switchTab(index) {
@@ -2214,7 +2178,8 @@ function togglePassword() {
 const ADMIN_EMAILS = [
     "himamax31@gmail.com",
     "ahmedemad@gmail.com"
-];
+].map(email => email.trim().toLowerCase());
+
 async function loginUser() {
     const emailInput = document.getElementById("login-email");
     const passwordInput = document.getElementById("login-password");
@@ -2264,6 +2229,12 @@ async function loginUser() {
             case "auth/network-request-failed":
                 message = "تعذر الاتصال بـ Firebase. تأكد من الإنترنت.";
                 break;
+            case "auth/operation-not-allowed":
+                message = "تسجيل الدخول بالبريد الإلكتروني غير مفعل في Firebase Authentication.";
+                break;
+            case "auth/invalid-api-key":
+                message = "مفتاح Firebase غير صحيح أو إعدادات المشروع غير صحيحة.";
+                break;
             default:
                 message = error.message || message;
         }
@@ -2284,31 +2255,39 @@ async function checkAdmin() {
     if (!currentUser) {
         isAdmin = false;
         if (loginScreen) loginScreen.style.display = "flex";
-        return;
+        return false;
     }
 
-   const userEmail = currentUser.email
-    ? currentUser.email.toLowerCase()
-    : "";
+    const userEmail = (currentUser.email || "").trim().toLowerCase();
 
-if (ADMIN_EMAILS.includes(userEmail)) {
+    // السماح للحسابين فقط.
+    if (!ADMIN_EMAILS.includes(userEmail)) {
+        isAdmin = false;
+
+        if (errorBox) {
+            errorBox.textContent = "هذا الحساب ليس لديه صلاحية الدخول إلى لوحة الإدارة.";
+        }
+
+        await auth.signOut();
+        if (loginScreen) loginScreen.style.display = "flex";
+        return false;
+    }
+
+    // الحساب مصرح له. لا نخفي شاشة الدخول إلا بعد نجاح تحميل Firestore.
     isAdmin = true;
+    const loaded = await loadData();
 
-    if (loginScreen) {
-        loginScreen.style.display = "none";
+    if (loaded) {
+        if (loginScreen) loginScreen.style.display = "none";
+        if (errorBox) errorBox.textContent = "";
+        return true;
     }
 
-    await loadData();
-
-} else {
+    // تسجيل الدخول إلى Firebase نجح، لكن Firestore رفض الوصول.
+    // نترك شاشة الدخول ظاهرة حتى لا يظهر للمستخدم أن الدخول نجح بينما البيانات غير متاحة.
     isAdmin = false;
-
-    if (errorBox) {
-        errorBox.textContent =
-            "هذا الحساب ليس لديه صلاحية الدخول إلى لوحة الإدارة.";
-    }
-
-    await auth.signOut();
+    if (loginScreen) loginScreen.style.display = "flex";
+    return false;
 }
 
 async function logoutUser() {
