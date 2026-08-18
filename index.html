@@ -10,6 +10,7 @@
     <link rel="manifest" href="manifest.json">
 <title>نظام إدارة تمور الطحان</title>
 
+<!-- مكتبة SheetJS لتصدير وتحميل ملفات Excel بالتنسيق المطلوب -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
@@ -176,7 +177,6 @@
     .edit-btn { background: #2563eb; padding: 6px 12px; border-radius: 6px; color: white; border: none; font-size: 12px; width: auto; }
     .delete-btn { background: var(--danger); padding: 6px 12px; border-radius: 6px; color: white; border: none; font-size: 12px; width: auto; }
 
-    /* تصميم مربعات المصانع الثلاثة بجانب بعض */
     .factories-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -263,9 +263,10 @@
         <div class="brand-logo" style="width: 70px; height: 70px; margin: 0 auto 15px; font-size: 30px;">🌴</div>
         <h2 style="color: #fbbf24; font-size: 22px;">نظام إدارة تمور الطحان</h2>
         <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">يرجى تسجيل الدخول للمتابعة</p>
-        <input type="email" id="login-email" placeholder="البريد الإلكتروني" value="ahmedemad@gmail.com">
+        <input type="email" id="login-email" placeholder="البريد الإلكتروني" value="mbarak@eltahan.com">
         <input type="password" id="login-password" placeholder="كلمة المرور">
-        <button onclick="loginUser()">دخول النظام</button>
+        <!-- تم تعديل الزر هنا ليصبح بدون onclick مباشر -->
+        <button type="button" id="login-btn">دخول النظام</button>
         <p id="login-error" style="color: var(--danger); font-size: 12px; margin-top: 10px;"></p>
     </div>
 </div>
@@ -744,7 +745,7 @@
         { code: "6224000682576-1", name: "علبه لانش بوكس 450جرام (ميكس فواكه)( 6 قطوع)", category: "علب الفي اي بي", stock: 8 }
     ];
 
-   window.switchTab = function(tabId) {
+    window.switchTab = function(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId + '-tab').classList.add('active');
@@ -754,7 +755,7 @@
         if(tabId === 'stats') loadStatsPage();
     }
 
-    window.loginUser = async function() {
+    async function loginUser() {
         const email = document.getElementById("login-email").value;
         const pass = document.getElementById("login-password").value;
         const errBox = document.getElementById("login-error");
@@ -764,6 +765,9 @@
             errBox.textContent = "خطأ في تسجيل الدخول: " + error.message;
         }
     }
+
+    // ربط الزر برمجياً لضمان عمله بكل سهولة
+    document.getElementById("login-btn").addEventListener("click", loginUser);
 
     window.logoutUser = async function() {
         await signOut(auth);
@@ -831,7 +835,6 @@
         loadSales();
     }
 
-    // دوال المبيعات (بدون اسم سيلز وبالمبالغ فقط)
     window.saveSale = async function(e) {
         e.preventDefault();
         const price = document.getElementById("sale-price").value;
@@ -1038,7 +1041,6 @@
         }
     }
 
-    // تحديد المصنع في مربعات الطلبات
     window.selectFactory = function(factoryName) {
         selectedFactoryName = factoryName;
         document.querySelectorAll('.factory-card').forEach(el => el.classList.remove('active'));
@@ -1048,7 +1050,7 @@
         if(factoryName === 'المريوطيه') document.getElementById('f-maryoutia').classList.add('active');
 
         document.getElementById('factory-order-section').style.display = 'block';
-        document.getElementById('selected-factory-title.textContent` = `إضافة طلبات لمصنع: ${factoryName}`;
+        document.getElementById('selected-factory-title').textContent = `إضافة طلبات لمصنع: ${factoryName}`;
     }
 
     window.addFactoryItemRequirement = async function(e) {
