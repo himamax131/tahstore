@@ -1,18 +1,13 @@
 html
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
 
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta name="theme-color" content="#080c14">
-
 <meta name="mobile-web-app-capable" content="yes">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <title>أوردرات الأونلاين - تمور الطحان</title>
@@ -50,8 +45,16 @@ body{
     overflow-x:hidden;
     font-family:"Segoe UI",Tahoma,Arial,sans-serif;
     background:
-        radial-gradient(circle at top right,rgba(245,158,11,.08),transparent 30%),
-        radial-gradient(circle at bottom left,rgba(56,189,248,.05),transparent 30%),
+        radial-gradient(
+            circle at top right,
+            rgba(245,158,11,.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at bottom left,
+            rgba(56,189,248,.05),
+            transparent 30%
+        ),
         var(--bg);
     color:var(--text);
 }
@@ -70,7 +73,11 @@ body{
     padding:20px;
     overflow-y:auto;
     background:
-        radial-gradient(circle at 50% 20%,rgba(245,158,11,.12),transparent 35%),
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(245,158,11,.12),
+            transparent 35%
+        ),
         #070b12;
 }
 
@@ -78,7 +85,12 @@ body{
     width:100%;
     max-width:430px;
     padding:35px 30px 25px;
-    background:linear-gradient(145deg,#182031,#0b111c);
+    background:
+        linear-gradient(
+            145deg,
+            #182031,
+            #0b111c
+        );
     border:1px solid rgba(245,158,11,.25);
     border-radius:22px;
     box-shadow:
@@ -168,7 +180,12 @@ body{
     margin-top:7px;
     border:0;
     border-radius:12px;
-    background:linear-gradient(135deg,#f59e0b,#d97706);
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #d97706
+        );
     color:white;
     font-weight:bold;
     cursor:pointer;
@@ -223,7 +240,12 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(135deg,#f59e0b,#d97706);
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #d97706
+        );
     font-size:20px;
 }
 
@@ -289,7 +311,8 @@ body{
 
 .stats{
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
     gap:12px;
     margin-bottom:18px;
 }
@@ -298,10 +321,21 @@ body{
     position:relative;
     overflow:hidden;
     min-width:0;
-    background:linear-gradient(145deg,#121b2b,#0d1420);
+    background:
+        linear-gradient(
+            145deg,
+            #121b2b,
+            #0d1420
+        );
     border:1px solid var(--border);
     border-radius:14px;
     padding:17px;
+    transition:.2s;
+}
+
+.stat:hover{
+    transform:translateY(-2px);
+    border-color:rgba(245,158,11,.2);
 }
 
 .stat::after{
@@ -356,141 +390,13 @@ body{
 }
 
 /* =========================
-   MONTHLY SALES
-========================= */
-
-.monthly-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin-bottom:15px;
-    flex-wrap:wrap;
-}
-
-.monthly-header h2{
-    margin:0;
-    color:var(--primary2);
-    font-size:15px;
-}
-
-.year-select{
-    height:40px;
-    min-width:130px;
-    background:#0a111d;
-    border:1px solid var(--border);
-    color:white;
-    border-radius:8px;
-    padding:0 12px;
-    outline:none;
-    font-size:12px;
-}
-
-.year-select:focus{
-    border-color:var(--primary);
-}
-
-.monthly-table-wrap{
-    width:100%;
-    overflow-x:auto;
-    border:1px solid var(--border);
-    border-radius:11px;
-}
-
-.monthly-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:700px;
-}
-
-.monthly-table thead{
-    background:#0b1220;
-}
-
-.monthly-table th{
-    padding:13px 9px;
-    color:var(--primary2);
-    font-size:11px;
-    border-bottom:1px solid var(--border);
-    white-space:nowrap;
-}
-
-.monthly-table td{
-    padding:12px 8px;
-    text-align:center;
-    font-size:11px;
-    border-bottom:1px solid rgba(255,255,255,.05);
-    white-space:nowrap;
-}
-
-.monthly-table tbody tr:hover{
-    background:rgba(245,158,11,.035);
-}
-
-.month-name{
-    color:#fbbf24;
-    font-weight:bold;
-}
-
-.month-orders{
-    color:#38bdf8;
-    font-weight:bold;
-}
-
-.month-total{
-    color:#4ade80;
-    font-weight:bold;
-}
-
-.month-delivery{
-    color:#fbbf24;
-}
-
-.month-net{
-    color:#22c55e;
-    font-weight:bold;
-}
-
-.month-zero{
-    color:#64748b;
-}
-
-.monthly-summary{
-    display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:10px;
-    margin-top:14px;
-}
-
-.month-summary-box{
-    min-width:0;
-    padding:13px;
-    border-radius:9px;
-    background:#0a111d;
-    border:1px solid var(--border);
-    text-align:center;
-}
-
-.month-summary-box span{
-    display:block;
-    color:var(--muted);
-    font-size:10px;
-}
-
-.month-summary-box strong{
-    display:block;
-    margin-top:5px;
-    color:var(--primary2);
-    font-size:15px;
-}
-
-/* =========================
    FORM
 ========================= */
 
 .order-form{
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
     gap:11px;
 }
 
@@ -524,7 +430,9 @@ body{
 .field input:focus,
 .field select:focus{
     border-color:var(--primary);
-    box-shadow:0 0 0 3px rgba(245,158,11,.07);
+    box-shadow:
+        0 0 0 3px
+        rgba(245,158,11,.07);
 }
 
 .full{
@@ -550,7 +458,12 @@ body{
 }
 
 .btn-primary{
-    background:linear-gradient(135deg,#f59e0b,#d97706);
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #d97706
+        );
 }
 
 .btn-blue{
@@ -571,7 +484,8 @@ body{
 
 .toolbar{
     display:grid;
-    grid-template-columns:2fr 1fr 1fr 1fr;
+    grid-template-columns:
+        2fr 1fr 1fr 1fr;
     gap:9px;
     margin-bottom:15px;
 }
@@ -738,7 +652,8 @@ tbody tr:hover{
 
 .table-footer{
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
     gap:10px;
     margin-top:14px;
 }
@@ -759,6 +674,159 @@ tbody tr:hover{
 }
 
 .footer-box strong{
+    display:block;
+    margin-top:5px;
+    color:var(--primary2);
+    font-size:15px;
+}
+
+/* =========================
+   MONTHLY SALES
+   موجودة في آخر الصفحة
+========================= */
+
+.monthly-card{
+    margin-top:5px;
+}
+
+.monthly-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+}
+
+.monthly-title{
+    min-width:0;
+}
+
+.monthly-title h2{
+    margin:0;
+    color:var(--primary2);
+    font-size:15px;
+}
+
+.monthly-title p{
+    margin:5px 0 0;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.month-selects{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.month-select,
+.year-select{
+    height:40px;
+    min-width:130px;
+    background:#0a111d;
+    border:1px solid var(--border);
+    color:white;
+    border-radius:8px;
+    padding:0 12px;
+    outline:none;
+    font-size:12px;
+}
+
+.month-select{
+    min-width:150px;
+}
+
+.month-select:focus,
+.year-select:focus{
+    border-color:var(--primary);
+}
+
+.monthly-table-wrap{
+    width:100%;
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:11px;
+}
+
+.monthly-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+.monthly-table thead{
+    background:#0b1220;
+}
+
+.monthly-table th{
+    padding:13px 9px;
+    color:var(--primary2);
+    font-size:11px;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+}
+
+.monthly-table td{
+    padding:15px 8px;
+    text-align:center;
+    font-size:12px;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    white-space:nowrap;
+}
+
+.month-name{
+    color:#fbbf24;
+    font-weight:bold;
+}
+
+.month-orders{
+    color:#38bdf8;
+    font-weight:bold;
+}
+
+.month-total{
+    color:#4ade80;
+    font-weight:bold;
+}
+
+.month-delivery{
+    color:#fbbf24;
+}
+
+.month-net{
+    color:#22c55e;
+    font-weight:bold;
+}
+
+.month-zero{
+    color:#64748b;
+}
+
+.monthly-summary{
+    display:grid;
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
+    gap:10px;
+    margin-top:14px;
+}
+
+.month-summary-box{
+    min-width:0;
+    padding:13px;
+    border-radius:9px;
+    background:#0a111d;
+    border:1px solid var(--border);
+    text-align:center;
+}
+
+.month-summary-box span{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.month-summary-box strong{
     display:block;
     margin-top:5px;
     color:var(--primary2);
@@ -847,19 +915,23 @@ tbody tr:hover{
     }
 
     .stats{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
     }
 
     .order-form{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
     }
 
     .toolbar{
-        grid-template-columns:2fr 1fr 1fr;
+        grid-template-columns:
+            2fr 1fr 1fr;
     }
 
     .monthly-summary{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
     }
 
 }
@@ -954,29 +1026,6 @@ tbody tr:hover{
         font-size:14px;
     }
 
-    .monthly-header{
-        align-items:stretch;
-        flex-direction:column;
-    }
-
-    .year-select{
-        width:100%;
-        height:44px;
-    }
-
-    .monthly-summary{
-        grid-template-columns:1fr 1fr;
-        gap:8px;
-    }
-
-    .month-summary-box{
-        padding:10px;
-    }
-
-    .month-summary-box strong{
-        font-size:13px;
-    }
-
     .order-form{
         grid-template-columns:1fr;
         gap:10px;
@@ -1043,6 +1092,49 @@ tbody tr:hover{
 
     .footer-box{
         padding:11px;
+    }
+
+    /* MONTHLY MOBILE */
+
+    .monthly-header{
+        align-items:stretch;
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .monthly-title h2{
+        font-size:14px;
+    }
+
+    .month-selects{
+        width:100%;
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+    }
+
+    .month-select,
+    .year-select{
+        width:100%;
+        min-width:0;
+        height:44px;
+    }
+
+    .monthly-table{
+        min-width:650px;
+    }
+
+    .monthly-summary{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+    }
+
+    .month-summary-box{
+        padding:10px;
+    }
+
+    .month-summary-box strong{
+        font-size:13px;
     }
 
     .modal{
@@ -1120,7 +1212,7 @@ tbody tr:hover{
 }
 
 /* =========================
-   LANDSCAPE MOBILE
+   LANDSCAPE
 ========================= */
 
 @media(max-width:900px) and (orientation:landscape){
@@ -1141,7 +1233,7 @@ tbody tr:hover{
 }
 
 /* =========================
-   TOUCH DEVICES
+   TOUCH
 ========================= */
 
 @media(pointer:coarse){
@@ -1175,79 +1267,77 @@ tbody tr:hover{
 
 <div id="login-screen" class="login-screen">
 
-<div class="login-card">
+    <div class="login-card">
 
-    <div class="login-logo">
-
-        <img src="https://up6.cc/2026/08/178662434144331.jpg">
-
-    </div>
-
-    <h1 class="login-title">
-        تمور الطحان
-    </h1>
-
-    <div class="login-subtitle">
-        نظام إدارة أوردرات الأونلاين
-    </div>
-
-    <div class="login-field">
-
-        <div class="login-icon">
-            ✉
+        <div class="login-logo">
+            <img src="https://up6.cc/2026/08/178662434144331.jpg">
         </div>
 
-        <div class="login-field-content">
+        <h1 class="login-title">
+            تمور الطحان
+        </h1>
 
-            <label>
-                البريد الإلكتروني
-            </label>
-
-            <input
-                type="email"
-                id="login-email"
-                placeholder="اكتب البريد الإلكتروني"
-            >
-
+        <div class="login-subtitle">
+            نظام إدارة أوردرات الأونلاين
         </div>
 
-    </div>
+        <div class="login-field">
 
-    <div class="login-field">
+            <div class="login-icon">
+                ✉
+            </div>
 
-        <div class="login-icon">
-            🔒
-        </div>
+            <div class="login-field-content">
 
-        <div class="login-field-content">
+                <label>
+                    البريد الإلكتروني
+                </label>
 
-            <label>
-                كلمة المرور
-            </label>
+                <input
+                    type="email"
+                    id="login-email"
+                    placeholder="اكتب البريد الإلكتروني"
+                >
 
-            <input
-                type="password"
-                id="login-password"
-                placeholder="اكتب كلمة المرور"
-            >
+            </div>
 
         </div>
 
+        <div class="login-field">
+
+            <div class="login-icon">
+                🔒
+            </div>
+
+            <div class="login-field-content">
+
+                <label>
+                    كلمة المرور
+                </label>
+
+                <input
+                    type="password"
+                    id="login-password"
+                    placeholder="اكتب كلمة المرور"
+                >
+
+            </div>
+
+        </div>
+
+        <button
+            class="login-btn"
+            onclick="loginUser()"
+        >
+            تسجيل الدخول ←
+        </button>
+
+        <div
+            id="login-error"
+            class="login-error"
+        ></div>
+
     </div>
-
-    <button
-        class="login-btn"
-        onclick="loginUser()"
-    >
-        تسجيل الدخول ←
-    </button>
-
-    <div
-        id="login-error"
-        class="login-error"
-    ></div>
-
-</div>
 
 </div>
 
@@ -1258,32 +1348,32 @@ tbody tr:hover{
 
 <header class="navbar">
 
-<div class="brand">
+    <div class="brand">
 
-    <div class="brand-logo">
-        🛒
+        <div class="brand-logo">
+            🛒
+        </div>
+
+        <div class="brand-text">
+
+            <strong>
+                تمور الطحان 🌴
+            </strong>
+
+            <span>
+                نظام أوردرات الأونلاين
+            </span>
+
+        </div>
+
     </div>
 
-    <div class="brand-text">
-
-        <strong>
-            تمور الطحان 🌴
-        </strong>
-
-        <span>
-            نظام أوردرات الأونلاين
-        </span>
-
-    </div>
-
-</div>
-
-<button
-    class="logout"
-    onclick="logoutUser()"
->
-    خروج
-</button>
+    <button
+        class="logout"
+        onclick="logoutUser()"
+    >
+        خروج
+    </button>
 
 </header>
 
@@ -1294,322 +1384,328 @@ tbody tr:hover{
 
 <main class="container">
 
-<div class="page-title">
+    <div class="page-title">
 
-    <div>
+        <div>
 
-        <h1>
-            🛒 أوردرات الأونلاين
-        </h1>
+            <h1>
+                🛒 أوردرات الأونلاين
+            </h1>
 
-        <p>
-            إدارة ومتابعة جميع طلبات العملاء
-        </p>
+            <p>
+                إدارة ومتابعة جميع طلبات العملاء
+            </p>
 
-    </div>
-
-</div>
-
-
-<!-- =========================
-     STATS
-========================= -->
-
-<div class="stats">
-
-    <div class="stat">
-
-        <div class="stat-label">
-            📦 إجمالي الأوردرات
-        </div>
-
-        <div
-            class="stat-value"
-            id="stat-orders"
-        >
-            0
         </div>
 
     </div>
 
 
-    <div class="stat">
+    <!-- =========================
+         STATS
+    ========================= -->
 
-        <div class="stat-label">
-            💰 إجمالي المبيعات
-        </div>
+    <div class="stats">
 
-        <div
-            class="stat-value"
-            id="stat-total"
-        >
-            0 EGP
-        </div>
+        <div class="stat">
 
-    </div>
+            <div class="stat-label">
+                📦 إجمالي الأوردرات
+            </div>
 
-
-    <div class="stat">
-
-        <div class="stat-label">
-            🚚 إجمالي التوصيل
-        </div>
-
-        <div
-            class="stat-value"
-            id="stat-delivery"
-        >
-            0 EGP
-        </div>
-
-    </div>
-
-
-    <div class="stat">
-
-        <div class="stat-label">
-            💵 بعد خصم التوصيل
-        </div>
-
-        <div
-            class="stat-value"
-            id="stat-net"
-        >
-            0 EGP
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================
-     MONTHLY SALES
-========================= -->
-
-<div class="card">
-
-    <div class="monthly-header">
-
-        <h2>
-            📊 إجمالي المبيعات حسب الشهر
-        </h2>
-
-        <select
-            id="monthly-year"
-            class="year-select"
-            onchange="renderMonthlySales()"
-        ></select>
-
-    </div>
-
-
-    <div class="monthly-table-wrap">
-
-        <table class="monthly-table">
-
-            <thead>
-
-                <tr>
-
-                    <th>
-                        الشهر
-                    </th>
-
-                    <th>
-                        عدد الأوردرات
-                    </th>
-
-                    <th>
-                        إجمالي المبيعات
-                    </th>
-
-                    <th>
-                        إجمالي التوصيل
-                    </th>
-
-                    <th>
-                        الصافي بعد التوصيل
-                    </th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="monthly-sales-body"></tbody>
-
-        </table>
-
-    </div>
-
-
-    <div class="monthly-summary">
-
-        <div class="month-summary-box">
-
-            <span>
-                إجمالي أوردرات السنة
-            </span>
-
-            <strong id="year-orders">
+            <div
+                class="stat-value"
+                id="stat-orders"
+            >
                 0
-            </strong>
+            </div>
 
         </div>
 
+        <div class="stat">
 
-        <div class="month-summary-box">
+            <div class="stat-label">
+                💰 إجمالي المبيعات
+            </div>
 
-            <span>
-                إجمالي مبيعات السنة
-            </span>
-
-            <strong id="year-total">
+            <div
+                class="stat-value"
+                id="stat-total"
+            >
                 0 EGP
-            </strong>
+            </div>
 
         </div>
 
+        <div class="stat">
 
-        <div class="month-summary-box">
+            <div class="stat-label">
+                🚚 إجمالي التوصيل
+            </div>
 
-            <span>
-                إجمالي التوصيل
-            </span>
-
-            <strong id="year-delivery">
+            <div
+                class="stat-value"
+                id="stat-delivery"
+            >
                 0 EGP
-            </strong>
+            </div>
 
         </div>
 
+        <div class="stat">
 
-        <div class="month-summary-box">
+            <div class="stat-label">
+                💵 بعد خصم التوصيل
+            </div>
 
-            <span>
-                صافي السنة
-            </span>
-
-            <strong id="year-net">
+            <div
+                class="stat-value"
+                id="stat-net"
+            >
                 0 EGP
-            </strong>
+            </div>
 
         </div>
 
     </div>
 
-</div>
+
+    <!-- =========================
+         ADD ORDER
+    ========================= -->
+
+    <div class="card">
+
+        <div class="card-title">
+
+            <h2>
+                ➕ إضافة أوردر جديد
+            </h2>
+
+        </div>
+
+        <form
+            id="order-form"
+            class="order-form"
+        >
+
+            <div class="field">
+
+                <label>
+                    رقم الحجز
+                </label>
+
+                <input
+                    type="text"
+                    id="booking-number"
+                    placeholder="مثال: 12584"
+                    required
+                >
+
+            </div>
 
 
-<!-- =========================
-     ADD ORDER
-========================= -->
+            <div class="field">
 
-<div class="card">
+                <label>
+                    اسم العميل
+                </label>
 
-    <div class="card-title">
+                <input
+                    type="text"
+                    id="customer-name"
+                    placeholder="اسم العميل"
+                    required
+                >
 
-        <h2>
-            ➕ إضافة أوردر جديد
-        </h2>
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    رقم الهاتف
+                </label>
+
+                <input
+                    type="tel"
+                    id="customer-phone"
+                    placeholder="01xxxxxxxxx"
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    تاريخ ووقت الأوردر
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="order-date"
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    اسم الصنف
+                </label>
+
+                <input
+                    type="text"
+                    id="item-name"
+                    placeholder="اسم الصنف"
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    طريقة الدفع
+                </label>
+
+                <select
+                    id="payment-method"
+                    required
+                >
+
+                    <option value="">
+                        اختر طريقة الدفع
+                    </option>
+
+                    <option value="كاش">
+                        💵 كاش
+                    </option>
+
+                    <option value="فيزا">
+                        💳 فيزا
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    المبلغ الإجمالي
+                </label>
+
+                <input
+                    type="number"
+                    id="total-amount"
+                    min="0"
+                    step="0.01"
+                    placeholder="0"
+                    required
+                    oninput="calculateNet()"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    سعر التوصيل
+                </label>
+
+                <input
+                    type="number"
+                    id="delivery-price"
+                    min="0"
+                    step="0.01"
+                    value="0"
+                    placeholder="0"
+                    oninput="calculateNet()"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    المبلغ بعد خصم التوصيل
+                </label>
+
+                <input
+                    type="number"
+                    id="net-amount"
+                    readonly
+                    placeholder="0"
+                >
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    💾 إضافة الأوردر
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-gray"
+                    onclick="clearOrderForm()"
+                >
+                    مسح البيانات
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
 
 
-    <form
-        id="order-form"
-        class="order-form"
-    >
+    <!-- =========================
+         ORDERS
+    ========================= -->
 
-        <div class="field">
+    <div class="card">
 
-            <label>
-                رقم الحجز
-            </label>
+        <div class="card-title">
+
+            <h2>
+                📋 سجل الأوردرات
+            </h2>
+
+        </div>
+
+
+        <div class="toolbar">
 
             <input
                 type="text"
-                id="booking-number"
-                placeholder="مثال: 12584"
-                required
+                id="search-input"
+                placeholder="🔎 بحث برقم الحجز / العميل / الهاتف / الصنف..."
+                oninput="renderOrders()"
             >
 
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                اسم العميل
-            </label>
-
-            <input
-                type="text"
-                id="customer-name"
-                placeholder="اسم العميل"
-                required
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                رقم الهاتف
-            </label>
-
-            <input
-                type="tel"
-                id="customer-phone"
-                placeholder="01xxxxxxxxx"
-                required
-            >
-
-        </div>
-<div class="field">
-
-    <label>
-        تاريخ ووقت الأوردر
-    </label>
-
-    <input
-        type="datetime-local"
-        id="order-date"
-        required
-    >
-
-</div>
-
-        <div class="field">
-
-            <label>
-                اسم الصنف
-            </label>
-
-            <input
-                type="text"
-                id="item-name"
-                placeholder="اسم الصنف"
-                required
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                طريقة الدفع
-            </label>
 
             <select
-                id="payment-method"
-                required
+                id="payment-filter"
+                onchange="renderOrders()"
             >
 
-                <option value="">
-                    اختر طريقة الدفع
+                <option value="all">
+                    كل طرق الدفع
                 </option>
 
                 <option value="كاش">
@@ -1622,286 +1718,350 @@ tbody tr:hover{
 
             </select>
 
-        </div>
 
-
-        <div class="field">
-
-            <label>
-                المبلغ الإجمالي
-            </label>
-
-            <input
-                type="number"
-                id="total-amount"
-                min="0"
-                step="0.01"
-                placeholder="0"
-                required
-                oninput="calculateNet()"
+            <select
+                id="status-filter"
+                onchange="renderOrders()"
             >
 
-        </div>
+                <option value="all">
+                    كل الحالات
+                </option>
+
+                <option value="active">
+                    ✅ غير ملغي
+                </option>
+
+                <option value="cancelled">
+                    ❌ ملغي
+                </option>
+
+            </select>
 
 
-        <div class="field">
-
-            <label>
-                سعر التوصيل
-            </label>
-
-            <input
-                type="number"
-                id="delivery-price"
-                min="0"
-                step="0.01"
-                value="0"
-                placeholder="0"
-                oninput="calculateNet()"
+            <select
+                id="sort-filter"
+                onchange="renderOrders()"
             >
 
-        </div>
+                <option value="newest">
+                    الأحدث أولاً
+                </option>
 
+                <option value="oldest">
+                    الأقدم أولاً
+                </option>
 
-        <div class="field">
+                <option value="high">
+                    الأعلى مبلغاً
+                </option>
 
-            <label>
-                المبلغ بعد خصم التوصيل
-            </label>
+                <option value="low">
+                    الأقل مبلغاً
+                </option>
 
-            <input
-                type="number"
-                id="net-amount"
-                readonly
-                placeholder="0"
-            >
-
-        </div>
-
-
-        <div class="form-actions">
-
-            <button
-                type="submit"
-                class="btn btn-primary"
-            >
-                💾 إضافة الأوردر
-            </button>
-
-            <button
-                type="button"
-                class="btn btn-gray"
-                onclick="clearOrderForm()"
-            >
-                مسح البيانات
-            </button>
+            </select>
 
         </div>
 
-    </form>
 
-</div>
+        <div class="table-wrap">
 
+            <table>
 
-<!-- =========================
-     ORDERS
-========================= -->
+                <thead>
 
-<div class="card">
+                    <tr>
 
-    <div class="card-title">
+                        <th>#</th>
 
-        <h2>
-            📋 سجل الأوردرات
-        </h2>
+                        <th>
+                            رقم الحجز
+                        </th>
 
-    </div>
+                        <th>
+                            اسم العميل
+                        </th>
 
+                        <th>
+                            الصنف
+                        </th>
 
-    <div class="toolbar">
+                        <th>
+                            الهاتف
+                        </th>
 
-        <input
-            type="text"
-            id="search-input"
-            placeholder="🔎 بحث برقم الحجز / العميل / الهاتف / الصنف..."
-            oninput="renderOrders()"
-        >
+                        <th>
+                            الدفع
+                        </th>
 
+                        <th>
+                            الإجمالي
+                        </th>
 
-        <select
-            id="payment-filter"
-            onchange="renderOrders()"
-        >
+                        <th>
+                            التوصيل
+                        </th>
 
-            <option value="all">
-                كل طرق الدفع
-            </option>
+                        <th>
+                            بعد خصم التوصيل
+                        </th>
 
-            <option value="كاش">
-                💵 كاش
-            </option>
+                        <th>
+                            الحالة
+                        </th>
 
-            <option value="فيزا">
-                💳 فيزا
-            </option>
+                        <th>
+                            التاريخ
+                        </th>
 
-        </select>
+                        <th>
+                            الإجراءات
+                        </th>
 
+                    </tr>
 
-        <select
-            id="status-filter"
-            onchange="renderOrders()"
-        >
+                </thead>
 
-            <option value="all">
-                كل الحالات
-            </option>
+                <tbody id="orders-body"></tbody>
 
-            <option value="active">
-                ✅ غير ملغي
-            </option>
-
-            <option value="cancelled">
-                ❌ ملغي
-            </option>
-
-        </select>
-
-
-        <select
-            id="sort-filter"
-            onchange="renderOrders()"
-        >
-
-            <option value="newest">
-                الأحدث أولاً
-            </option>
-
-            <option value="oldest">
-                الأقدم أولاً
-            </option>
-
-            <option value="high">
-                الأعلى مبلغاً
-            </option>
-
-            <option value="low">
-                الأقل مبلغاً
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div class="table-wrap">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>#</th>
-
-                    <th>
-                        رقم الحجز
-                    </th>
-
-                    <th>
-                        اسم العميل
-                    </th>
-
-                    <th>
-                        الصنف
-                    </th>
-
-                    <th>
-                        الهاتف
-                    </th>
-
-                    <th>
-                        الدفع
-                    </th>
-
-                    <th>
-                        الإجمالي
-                    </th>
-
-                    <th>
-                        التوصيل
-                    </th>
-
-                    <th>
-                        بعد خصم التوصيل
-                    </th>
-
-                    <th>
-                        الحالة
-                    </th>
-
-                    <th>
-                        التاريخ
-                    </th>
-
-                    <th>
-                        الإجراءات
-                    </th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="orders-body"></tbody>
-
-        </table>
-
-    </div>
-
-
-    <div class="table-footer">
-
-        <div class="footer-box">
-
-            <span>
-                الأوردرات الظاهرة
-            </span>
-
-            <strong id="footer-orders">
-                0
-            </strong>
+            </table>
 
         </div>
 
 
-        <div class="footer-box">
+        <div class="table-footer">
 
-            <span>
-                إجمالي الظاهر
-            </span>
+            <div class="footer-box">
 
-            <strong id="footer-total">
-                0 EGP
-            </strong>
+                <span>
+                    الأوردرات الظاهرة
+                </span>
 
-        </div>
+                <strong id="footer-orders">
+                    0
+                </strong>
+
+            </div>
 
 
-        <div class="footer-box">
+            <div class="footer-box">
 
-            <span>
-                صافي الظاهر
-            </span>
+                <span>
+                    إجمالي الظاهر
+                </span>
 
-            <strong id="footer-net">
-                0 EGP
-            </strong>
+                <strong id="footer-total">
+                    0 EGP
+                </strong>
+
+            </div>
+
+
+            <div class="footer-box">
+
+                <span>
+                    صافي الظاهر
+                </span>
+
+                <strong id="footer-net">
+                    0 EGP
+                </strong>
+
+            </div>
 
         </div>
 
     </div>
 
-</div>
+
+    <!-- =========================
+         MONTHLY SALES
+         آخر الصفحة
+    ========================= -->
+
+    <div class="card monthly-card">
+
+        <div class="monthly-header">
+
+            <div class="monthly-title">
+
+                <h2>
+                    📊 مبيعات الشهر
+                </h2>
+
+                <p>
+                    اختر الشهر والسنة لعرض بيانات هذا الشهر فقط
+                </p>
+
+            </div>
+
+
+            <div class="month-selects">
+
+                <select
+                    id="monthly-month"
+                    class="month-select"
+                    onchange="renderMonthlySales()"
+                >
+
+                    <option value="0">
+                        يناير
+                    </option>
+
+                    <option value="1">
+                        فبراير
+                    </option>
+
+                    <option value="2">
+                        مارس
+                    </option>
+
+                    <option value="3">
+                        أبريل
+                    </option>
+
+                    <option value="4">
+                        مايو
+                    </option>
+
+                    <option value="5">
+                        يونيو
+                    </option>
+
+                    <option value="6">
+                        يوليو
+                    </option>
+
+                    <option value="7">
+                        أغسطس
+                    </option>
+
+                    <option value="8">
+                        سبتمبر
+                    </option>
+
+                    <option value="9">
+                        أكتوبر
+                    </option>
+
+                    <option value="10">
+                        نوفمبر
+                    </option>
+
+                    <option value="11">
+                        ديسمبر
+                    </option>
+
+                </select>
+
+
+                <select
+                    id="monthly-year"
+                    class="year-select"
+                    onchange="renderMonthlySales()"
+                ></select>
+
+            </div>
+
+        </div>
+
+
+        <div class="monthly-table-wrap">
+
+            <table class="monthly-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            الشهر
+                        </th>
+
+                        <th>
+                            عدد الأوردرات
+                        </th>
+
+                        <th>
+                            إجمالي المبيعات
+                        </th>
+
+                        <th>
+                            إجمالي التوصيل
+                        </th>
+
+                        <th>
+                            الصافي بعد التوصيل
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="monthly-sales-body"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="monthly-summary">
+
+            <div class="month-summary-box">
+
+                <span>
+                    أوردرات الشهر
+                </span>
+
+                <strong id="year-orders">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="month-summary-box">
+
+                <span>
+                    مبيعات الشهر
+                </span>
+
+                <strong id="year-total">
+                    0 EGP
+                </strong>
+
+            </div>
+
+
+            <div class="month-summary-box">
+
+                <span>
+                    التوصيل
+                </span>
+
+                <strong id="year-delivery">
+                    0 EGP
+                </strong>
+
+            </div>
+
+
+            <div class="month-summary-box">
+
+                <span>
+                    صافي الشهر
+                </span>
+
+                <strong id="year-net">
+                    0 EGP
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </main>
 
@@ -1915,157 +2075,157 @@ tbody tr:hover{
     class="modal"
 >
 
-<div class="modal-card">
+    <div class="modal-card">
 
-    <div class="modal-header">
+        <div class="modal-header">
 
-        <h3>
-            ✏ تعديل الأوردر
-        </h3>
+            <h3>
+                ✏ تعديل الأوردر
+            </h3>
 
-        <button
-            class="close"
-            onclick="closeEditModal()"
-        >
-            ×
-        </button>
+            <button
+                class="close"
+                onclick="closeEditModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-grid">
+
+            <div class="field">
+
+                <label>
+                    رقم الحجز
+                </label>
+
+                <input id="edit-booking">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    اسم العميل
+                </label>
+
+                <input id="edit-customer">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    رقم الهاتف
+                </label>
+
+                <input id="edit-phone">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    اسم الصنف
+                </label>
+
+                <input id="edit-item">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    طريقة الدفع
+                </label>
+
+                <select id="edit-payment">
+
+                    <option value="كاش">
+                        💵 كاش
+                    </option>
+
+                    <option value="فيزا">
+                        💳 فيزا
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    المبلغ الإجمالي
+                </label>
+
+                <input
+                    type="number"
+                    id="edit-total"
+                    oninput="calculateEditNet()"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    التوصيل
+                </label>
+
+                <input
+                    type="number"
+                    id="edit-delivery"
+                    oninput="calculateEditNet()"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    بعد خصم التوصيل
+                </label>
+
+                <input
+                    type="number"
+                    id="edit-net"
+                    readonly
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="btn btn-primary"
+                onclick="saveEditedOrder()"
+            >
+                💾 حفظ التعديل
+            </button>
+
+            <button
+                class="btn btn-gray"
+                onclick="closeEditModal()"
+            >
+                إلغاء
+            </button>
+
+        </div>
 
     </div>
-
-
-    <div class="modal-grid">
-
-        <div class="field">
-
-            <label>
-                رقم الحجز
-            </label>
-
-            <input id="edit-booking">
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                اسم العميل
-            </label>
-
-            <input id="edit-customer">
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                رقم الهاتف
-            </label>
-
-            <input id="edit-phone">
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                اسم الصنف
-            </label>
-
-            <input id="edit-item">
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                طريقة الدفع
-            </label>
-
-            <select id="edit-payment">
-
-                <option value="كاش">
-                    💵 كاش
-                </option>
-
-                <option value="فيزا">
-                    💳 فيزا
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                المبلغ الإجمالي
-            </label>
-
-            <input
-                type="number"
-                id="edit-total"
-                oninput="calculateEditNet()"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                التوصيل
-            </label>
-
-            <input
-                type="number"
-                id="edit-delivery"
-                oninput="calculateEditNet()"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                بعد خصم التوصيل
-            </label>
-
-            <input
-                type="number"
-                id="edit-net"
-                readonly
-            >
-
-        </div>
-
-    </div>
-
-
-    <div class="modal-actions">
-
-        <button
-            class="btn btn-primary"
-            onclick="saveEditedOrder()"
-        >
-            💾 حفظ التعديل
-        </button>
-
-        <button
-            class="btn btn-gray"
-            onclick="closeEditModal()"
-        >
-            إلغاء
-        </button>
-
-    </div>
-
-</div>
 
 </div>
 
@@ -2162,8 +2322,7 @@ async function loginUser(){
     const password =
         document.getElementById(
             "login-password"
-        )
-        .value;
+        ).value;
 
 
     showLoginError("");
@@ -2288,6 +2447,8 @@ async function loadOrders(){
 
 
         prepareMonthlyYears();
+
+        setCurrentMonth();
 
         renderOrders();
 
@@ -2423,12 +2584,21 @@ function calculateEditNet(){
         ).toFixed(2);
 
 }
+
+
+/* =========================
+   CURRENT DATE
+========================= */
+
 function getCurrentDateTimeLocal(){
 
-    const now = new Date();
+    const now =
+        new Date();
+
 
     const offset =
         now.getTimezoneOffset();
+
 
     const localDate =
         new Date(
@@ -2436,15 +2606,46 @@ function getCurrentDateTimeLocal(){
             offset * 60000
         );
 
+
     return localDate
         .toISOString()
         .slice(0,16);
 
 }
+
+
+function setCurrentMonth(){
+
+    const now =
+        new Date();
+
+
+    const monthSelect =
+        document.getElementById(
+            "monthly-month"
+        );
+
+
+    if(monthSelect){
+
+        monthSelect.value =
+            now.getMonth();
+
+    }
+
+}
+
+
+/* =========================
+   SET DEFAULT ORDER DATE
+========================= */
+
 document.getElementById(
     "order-date"
 ).value =
     getCurrentDateTimeLocal();
+
+
 /* =========================
    ADD ORDER
 ========================= */
@@ -2497,6 +2698,12 @@ document.getElementById(
             ).value;
 
 
+        const orderDate =
+            document.getElementById(
+                "order-date"
+            ).value;
+
+
         const total =
             parseFloat(
                 document.getElementById(
@@ -2519,6 +2726,7 @@ document.getElementById(
             !phone ||
             !item ||
             !payment ||
+            !orderDate ||
             total < 0
         ){
 
@@ -2593,6 +2801,15 @@ document.getElementById(
             cancelled:
                 false,
 
+            /*
+             * التاريخ الذي اختاره المستخدم
+             */
+            orderDate:
+                orderDate,
+
+            /*
+             * وقت إنشاء السجل فعلياً
+             */
             createdAt:
                 now.toISOString(),
 
@@ -2653,11 +2870,17 @@ function clearOrderForm(){
     ).value =
         "";
 
+
+    document.getElementById(
+        "order-date"
+    ).value =
+        getCurrentDateTimeLocal();
+
 }
 
 
 /* =========================
-   RENDER
+   RENDER ORDERS
 ========================= */
 
 function renderOrders(){
@@ -2838,7 +3061,7 @@ function renderOrders(){
 
                 const date =
                     formatDate(
-                        order.createdAt
+                        getOrderDateValue(order)
                     );
 
 
@@ -3120,9 +3343,49 @@ const monthNames = [
 ];
 
 
+/*
+ * أهم تعديل:
+ * لو الأوردر الجديد عنده orderDate
+ * نستخدمه.
+ *
+ * الأوردرات القديمة التي لا يوجد بها orderDate
+ * نرجع إلى createdAt.
+ */
+
+function getOrderDateValue(order){
+
+    if(
+        order &&
+        order.orderDate
+    ){
+
+        return order.orderDate;
+
+    }
+
+
+    if(
+        order &&
+        order.createdAt
+    ){
+
+        return order.createdAt;
+
+    }
+
+
+    return null;
+
+}
+
+
 function getOrderDate(order){
 
-    if(!order || !order.createdAt){
+    const value =
+        getOrderDateValue(order);
+
+
+    if(!value){
 
         return null;
 
@@ -3130,9 +3393,7 @@ function getOrderDate(order){
 
 
     const date =
-        new Date(
-            order.createdAt
-        );
+        new Date(value);
 
 
     if(
@@ -3262,7 +3523,7 @@ function prepareMonthlyYears(){
 
 
 /* =========================
-   RENDER MONTHLY SALES
+   RENDER SELECTED MONTH ONLY
 ========================= */
 
 function renderMonthlySales(){
@@ -3279,7 +3540,17 @@ function renderMonthlySales(){
         );
 
 
-    if(!body || !yearSelect){
+    const monthSelect =
+        document.getElementById(
+            "monthly-month"
+        );
+
+
+    if(
+        !body ||
+        !yearSelect ||
+        !monthSelect
+    ){
 
         return;
 
@@ -3292,28 +3563,29 @@ function renderMonthlySales(){
         );
 
 
-    if(!selectedYear){
+    const selectedMonth =
+        Number(
+            monthSelect.value
+        );
+
+
+    if(
+        !selectedYear ||
+        selectedMonth < 0
+    ){
 
         return;
 
     }
 
 
-    const monthlyData =
-        Array.from(
-            {length:12},
-            () => ({
+    let orders = 0;
 
-                orders:0,
+    let total = 0;
 
-                total:0,
+    let delivery = 0;
 
-                delivery:0,
-
-                net:0
-
-            })
-        );
+    let net = 0;
 
 
     onlineOrders.forEach(
@@ -3353,143 +3625,112 @@ function renderMonthlySales(){
             }
 
 
-            const month =
-                date.getMonth();
+            if(
+                date.getMonth()
+                !==
+                selectedMonth
+            ){
+
+                return;
+
+            }
 
 
-            monthlyData[month].orders += 1;
+            orders += 1;
 
 
-            monthlyData[month].total +=
+            total +=
                 Number(order.total) || 0;
 
 
-            monthlyData[month].delivery +=
+            delivery +=
                 Number(order.delivery) || 0;
 
 
-            monthlyData[month].net +=
+            net +=
                 Number(order.net) || 0;
 
         }
     );
 
 
-    body.innerHTML = "";
+    body.innerHTML = `
 
+        <tr>
 
-    let yearOrders = 0;
+            <td class="month-name">
 
-    let yearTotal = 0;
+                ${monthNames[selectedMonth]}
 
-    let yearDelivery = 0;
+            </td>
 
-    let yearNet = 0;
+            <td class="${
+                orders > 0
+                ? "month-orders"
+                : "month-zero"
+            }">
 
+                ${orders}
 
-    monthlyData.forEach(
-        (data,index) => {
+            </td>
 
-            yearOrders +=
-                data.orders;
+            <td class="${
+                orders > 0
+                ? "month-total"
+                : "month-zero"
+            }">
 
+                ${money(total)}
 
-            yearTotal +=
-                data.total;
+            </td>
 
+            <td class="${
+                orders > 0
+                ? "month-delivery"
+                : "month-zero"
+            }">
 
-            yearDelivery +=
-                data.delivery;
+                ${money(delivery)}
 
+            </td>
 
-            yearNet +=
-                data.net;
+            <td class="${
+                orders > 0
+                ? "month-net"
+                : "month-zero"
+            }">
 
+                ${money(net)}
 
-            const hasData =
-                data.orders > 0;
+            </td>
 
+        </tr>
 
-            body.innerHTML += `
-
-                <tr>
-
-                    <td class="month-name">
-
-                        ${monthNames[index]}
-
-                    </td>
-
-                    <td class="${
-                        hasData
-                        ? "month-orders"
-                        : "month-zero"
-                    }">
-
-                        ${data.orders}
-
-                    </td>
-
-                    <td class="${
-                        hasData
-                        ? "month-total"
-                        : "month-zero"
-                    }">
-
-                        ${money(data.total)}
-
-                    </td>
-
-                    <td class="${
-                        hasData
-                        ? "month-delivery"
-                        : "month-zero"
-                    }">
-
-                        ${money(data.delivery)}
-
-                    </td>
-
-                    <td class="${
-                        hasData
-                        ? "month-net"
-                        : "month-zero"
-                    }">
-
-                        ${money(data.net)}
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
+    `;
 
 
     document.getElementById(
         "year-orders"
     ).textContent =
-        yearOrders;
+        orders;
 
 
     document.getElementById(
         "year-total"
     ).textContent =
-        money(yearTotal);
+        money(total);
 
 
     document.getElementById(
         "year-delivery"
     ).textContent =
-        money(yearDelivery);
+        money(delivery);
 
 
     document.getElementById(
         "year-net"
     ).textContent =
-        money(yearNet);
+        money(net);
 
 }
 
