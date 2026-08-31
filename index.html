@@ -1,12 +1,18 @@
+html
 <!DOCTYPE html>
 
 <html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta name="theme-color" content="#080c14">
+
 <meta name="mobile-web-app-capable" content="yes">
+
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <title>أوردرات الأونلاين - تمور الطحان</title>
@@ -347,6 +353,135 @@ body{
     margin:0;
     font-size:15px;
     color:var(--primary2);
+}
+
+/* =========================
+   MONTHLY SALES
+========================= */
+
+.monthly-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+}
+
+.monthly-header h2{
+    margin:0;
+    color:var(--primary2);
+    font-size:15px;
+}
+
+.year-select{
+    height:40px;
+    min-width:130px;
+    background:#0a111d;
+    border:1px solid var(--border);
+    color:white;
+    border-radius:8px;
+    padding:0 12px;
+    outline:none;
+    font-size:12px;
+}
+
+.year-select:focus{
+    border-color:var(--primary);
+}
+
+.monthly-table-wrap{
+    width:100%;
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:11px;
+}
+
+.monthly-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+.monthly-table thead{
+    background:#0b1220;
+}
+
+.monthly-table th{
+    padding:13px 9px;
+    color:var(--primary2);
+    font-size:11px;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+}
+
+.monthly-table td{
+    padding:12px 8px;
+    text-align:center;
+    font-size:11px;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    white-space:nowrap;
+}
+
+.monthly-table tbody tr:hover{
+    background:rgba(245,158,11,.035);
+}
+
+.month-name{
+    color:#fbbf24;
+    font-weight:bold;
+}
+
+.month-orders{
+    color:#38bdf8;
+    font-weight:bold;
+}
+
+.month-total{
+    color:#4ade80;
+    font-weight:bold;
+}
+
+.month-delivery{
+    color:#fbbf24;
+}
+
+.month-net{
+    color:#22c55e;
+    font-weight:bold;
+}
+
+.month-zero{
+    color:#64748b;
+}
+
+.monthly-summary{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:10px;
+    margin-top:14px;
+}
+
+.month-summary-box{
+    min-width:0;
+    padding:13px;
+    border-radius:9px;
+    background:#0a111d;
+    border:1px solid var(--border);
+    text-align:center;
+}
+
+.month-summary-box span{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+}
+
+.month-summary-box strong{
+    display:block;
+    margin-top:5px;
+    color:var(--primary2);
+    font-size:15px;
 }
 
 /* =========================
@@ -723,6 +858,10 @@ tbody tr:hover{
         grid-template-columns:2fr 1fr 1fr;
     }
 
+    .monthly-summary{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
 }
 
 /* =========================
@@ -813,6 +952,29 @@ tbody tr:hover{
 
     .card-title h2{
         font-size:14px;
+    }
+
+    .monthly-header{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .year-select{
+        width:100%;
+        height:44px;
+    }
+
+    .monthly-summary{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+    }
+
+    .month-summary-box{
+        padding:10px;
+    }
+
+    .month-summary-box strong{
+        font-size:13px;
     }
 
     .order-form{
@@ -1013,14 +1175,17 @@ tbody tr:hover{
 
 <div id="login-screen" class="login-screen">
 
-```
 <div class="login-card">
 
     <div class="login-logo">
+
         <img src="https://up6.cc/2026/08/178662434144331.jpg">
+
     </div>
 
-    <h1 class="login-title">تمور الطحان</h1>
+    <h1 class="login-title">
+        تمور الطحان
+    </h1>
 
     <div class="login-subtitle">
         نظام إدارة أوردرات الأونلاين
@@ -1028,11 +1193,15 @@ tbody tr:hover{
 
     <div class="login-field">
 
-        <div class="login-icon">✉</div>
+        <div class="login-icon">
+            ✉
+        </div>
 
         <div class="login-field-content">
 
-            <label>البريد الإلكتروني</label>
+            <label>
+                البريد الإلكتروني
+            </label>
 
             <input
                 type="email"
@@ -1046,11 +1215,15 @@ tbody tr:hover{
 
     <div class="login-field">
 
-        <div class="login-icon">🔒</div>
+        <div class="login-icon">
+            🔒
+        </div>
 
         <div class="login-field-content">
 
-            <label>كلمة المرور</label>
+            <label>
+                كلمة المرور
+            </label>
 
             <input
                 type="password"
@@ -1062,16 +1235,22 @@ tbody tr:hover{
 
     </div>
 
-    <button class="login-btn" onclick="loginUser()">
+    <button
+        class="login-btn"
+        onclick="loginUser()"
+    >
         تسجيل الدخول ←
     </button>
 
-    <div id="login-error" class="login-error"></div>
+    <div
+        id="login-error"
+        class="login-error"
+    ></div>
 
 </div>
-```
 
 </div>
+
 
 <!-- =========================
      NAVBAR
@@ -1079,7 +1258,6 @@ tbody tr:hover{
 
 <header class="navbar">
 
-```
 <div class="brand">
 
     <div class="brand-logo">
@@ -1088,7 +1266,9 @@ tbody tr:hover{
 
     <div class="brand-text">
 
-        <strong>تمور الطحان 🌴</strong>
+        <strong>
+            تمور الطحان 🌴
+        </strong>
 
         <span>
             نظام أوردرات الأونلاين
@@ -1098,12 +1278,15 @@ tbody tr:hover{
 
 </div>
 
-<button class="logout" onclick="logoutUser()">
+<button
+    class="logout"
+    onclick="logoutUser()"
+>
     خروج
 </button>
-```
 
 </header>
+
 
 <!-- =========================
      MAIN
@@ -1111,7 +1294,6 @@ tbody tr:hover{
 
 <main class="container">
 
-```
 <div class="page-title">
 
     <div>
@@ -1141,7 +1323,10 @@ tbody tr:hover{
             📦 إجمالي الأوردرات
         </div>
 
-        <div class="stat-value" id="stat-orders">
+        <div
+            class="stat-value"
+            id="stat-orders"
+        >
             0
         </div>
 
@@ -1154,7 +1339,10 @@ tbody tr:hover{
             💰 إجمالي المبيعات
         </div>
 
-        <div class="stat-value" id="stat-total">
+        <div
+            class="stat-value"
+            id="stat-total"
+        >
             0 EGP
         </div>
 
@@ -1167,7 +1355,10 @@ tbody tr:hover{
             🚚 إجمالي التوصيل
         </div>
 
-        <div class="stat-value" id="stat-delivery">
+        <div
+            class="stat-value"
+            id="stat-delivery"
+        >
             0 EGP
         </div>
 
@@ -1180,8 +1371,129 @@ tbody tr:hover{
             💵 بعد خصم التوصيل
         </div>
 
-        <div class="stat-value" id="stat-net">
+        <div
+            class="stat-value"
+            id="stat-net"
+        >
             0 EGP
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MONTHLY SALES
+========================= -->
+
+<div class="card">
+
+    <div class="monthly-header">
+
+        <h2>
+            📊 إجمالي المبيعات حسب الشهر
+        </h2>
+
+        <select
+            id="monthly-year"
+            class="year-select"
+            onchange="renderMonthlySales()"
+        ></select>
+
+    </div>
+
+
+    <div class="monthly-table-wrap">
+
+        <table class="monthly-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        الشهر
+                    </th>
+
+                    <th>
+                        عدد الأوردرات
+                    </th>
+
+                    <th>
+                        إجمالي المبيعات
+                    </th>
+
+                    <th>
+                        إجمالي التوصيل
+                    </th>
+
+                    <th>
+                        الصافي بعد التوصيل
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="monthly-sales-body"></tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="monthly-summary">
+
+        <div class="month-summary-box">
+
+            <span>
+                إجمالي أوردرات السنة
+            </span>
+
+            <strong id="year-orders">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="month-summary-box">
+
+            <span>
+                إجمالي مبيعات السنة
+            </span>
+
+            <strong id="year-total">
+                0 EGP
+            </strong>
+
+        </div>
+
+
+        <div class="month-summary-box">
+
+            <span>
+                إجمالي التوصيل
+            </span>
+
+            <strong id="year-delivery">
+                0 EGP
+            </strong>
+
+        </div>
+
+
+        <div class="month-summary-box">
+
+            <span>
+                صافي السنة
+            </span>
+
+            <strong id="year-net">
+                0 EGP
+            </strong>
+
         </div>
 
     </div>
@@ -1204,7 +1516,10 @@ tbody tr:hover{
     </div>
 
 
-    <form id="order-form" class="order-form">
+    <form
+        id="order-form"
+        class="order-form"
+    >
 
         <div class="field">
 
@@ -1276,7 +1591,10 @@ tbody tr:hover{
                 طريقة الدفع
             </label>
 
-            <select id="payment-method" required>
+            <select
+                id="payment-method"
+                required
+            >
 
                 <option value="">
                     اختر طريقة الدفع
@@ -1398,7 +1716,10 @@ tbody tr:hover{
         >
 
 
-        <select id="payment-filter" onchange="renderOrders()">
+        <select
+            id="payment-filter"
+            onchange="renderOrders()"
+        >
 
             <option value="all">
                 كل طرق الدفع
@@ -1415,7 +1736,10 @@ tbody tr:hover{
         </select>
 
 
-        <select id="status-filter" onchange="renderOrders()">
+        <select
+            id="status-filter"
+            onchange="renderOrders()"
+        >
 
             <option value="all">
                 كل الحالات
@@ -1432,7 +1756,10 @@ tbody tr:hover{
         </select>
 
 
-        <select id="sort-filter" onchange="renderOrders()">
+        <select
+            id="sort-filter"
+            onchange="renderOrders()"
+        >
 
             <option value="newest">
                 الأحدث أولاً
@@ -1464,17 +1791,50 @@ tbody tr:hover{
                 <tr>
 
                     <th>#</th>
-                    <th>رقم الحجز</th>
-                    <th>اسم العميل</th>
-                    <th>الصنف</th>
-                    <th>الهاتف</th>
-                    <th>الدفع</th>
-                    <th>الإجمالي</th>
-                    <th>التوصيل</th>
-                    <th>بعد خصم التوصيل</th>
-                    <th>الحالة</th>
-                    <th>التاريخ</th>
-                    <th>الإجراءات</th>
+
+                    <th>
+                        رقم الحجز
+                    </th>
+
+                    <th>
+                        اسم العميل
+                    </th>
+
+                    <th>
+                        الصنف
+                    </th>
+
+                    <th>
+                        الهاتف
+                    </th>
+
+                    <th>
+                        الدفع
+                    </th>
+
+                    <th>
+                        الإجمالي
+                    </th>
+
+                    <th>
+                        التوصيل
+                    </th>
+
+                    <th>
+                        بعد خصم التوصيل
+                    </th>
+
+                    <th>
+                        الحالة
+                    </th>
+
+                    <th>
+                        التاريخ
+                    </th>
+
+                    <th>
+                        الإجراءات
+                    </th>
 
                 </tr>
 
@@ -1530,17 +1890,19 @@ tbody tr:hover{
     </div>
 
 </div>
-```
 
 </main>
+
 
 <!-- =========================
      EDIT MODAL
 ========================= -->
 
-<div id="edit-modal" class="modal">
+<div
+    id="edit-modal"
+    class="modal"
+>
 
-```
 <div class="modal-card">
 
     <div class="modal-header">
@@ -1549,7 +1911,10 @@ tbody tr:hover{
             ✏ تعديل الأوردر
         </h3>
 
-        <button class="close" onclick="closeEditModal()">
+        <button
+            class="close"
+            onclick="closeEditModal()"
+        >
             ×
         </button>
 
@@ -1689,9 +2054,9 @@ tbody tr:hover{
     </div>
 
 </div>
-```
 
 </div>
+
 
 <!-- =========================
      FIREBASE
@@ -1702,6 +2067,7 @@ tbody tr:hover{
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
+
 
 <script>
 
@@ -1727,9 +2093,12 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 
-const auth = firebase.auth();
+const auth =
+    firebase.auth();
 
-const db = firebase.firestore();
+
+const db =
+    firebase.firestore();
 
 
 const storeRef =
@@ -1759,7 +2128,9 @@ const ADMIN_EMAILS = [
 
 function showLoginError(message){
 
-    document.getElementById("login-error").textContent =
+    document.getElementById(
+        "login-error"
+    ).textContent =
         message || "";
 
 }
@@ -1768,16 +2139,23 @@ function showLoginError(message){
 async function loginUser(){
 
     const email =
-        document.getElementById("login-email")
+        document.getElementById(
+            "login-email"
+        )
         .value
         .trim()
         .toLowerCase();
 
+
     const password =
-        document.getElementById("login-password")
+        document.getElementById(
+            "login-password"
+        )
         .value;
 
+
     showLoginError("");
+
 
     if(!email || !password){
 
@@ -1786,6 +2164,7 @@ async function loginUser(){
         );
 
         return;
+
     }
 
 
@@ -1813,15 +2192,18 @@ async function loginUser(){
             );
 
             return;
+
         }
 
 
-        currentUser = result.user;
+        currentUser =
+            result.user;
 
 
         document.getElementById(
             "login-screen"
-        ).style.display = "none";
+        ).style.display =
+            "none";
 
 
         await loadOrders();
@@ -1849,7 +2231,8 @@ async function logoutUser(){
 
     document.getElementById(
         "login-screen"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
     renderOrders();
 
@@ -1870,7 +2253,8 @@ async function loadOrders(){
 
         if(doc.exists){
 
-            const data = doc.data() || {};
+            const data =
+                doc.data() || {};
 
 
             if(Array.isArray(data.onlineOrders)){
@@ -1891,7 +2275,11 @@ async function loadOrders(){
         }
 
 
+        prepareMonthlyYears();
+
         renderOrders();
+
+        renderMonthlySales();
 
     }catch(error){
 
@@ -1914,7 +2302,9 @@ async function saveOrders(){
 
     if(!currentUser){
 
-        alert("يجب تسجيل الدخول أولاً.");
+        alert(
+            "يجب تسجيل الدخول أولاً."
+        );
 
         return false;
 
@@ -1926,7 +2316,8 @@ async function saveOrders(){
         await storeRef.set(
 
             {
-                onlineOrders:onlineOrders
+                onlineOrders:
+                    onlineOrders
             },
 
             {
@@ -1964,23 +2355,31 @@ function calculateNet(){
 
     const total =
         parseFloat(
-            document.getElementById("total-amount").value
+            document.getElementById(
+                "total-amount"
+            ).value
         ) || 0;
 
 
     const delivery =
         parseFloat(
-            document.getElementById("delivery-price").value
+            document.getElementById(
+                "delivery-price"
+            ).value
         ) || 0;
 
 
     const net =
-        Math.max(total - delivery,0);
+        Math.max(
+            total - delivery,
+            0
+        );
 
 
     document.getElementById(
         "net-amount"
-    ).value = net.toFixed(2);
+    ).value =
+        net.toFixed(2);
 
 }
 
@@ -1989,20 +2388,27 @@ function calculateEditNet(){
 
     const total =
         parseFloat(
-            document.getElementById("edit-total").value
+            document.getElementById(
+                "edit-total"
+            ).value
         ) || 0;
 
 
     const delivery =
         parseFloat(
-            document.getElementById("edit-delivery").value
+            document.getElementById(
+                "edit-delivery"
+            ).value
         ) || 0;
 
 
     document.getElementById(
         "edit-net"
     ).value =
-        Math.max(total-delivery,0).toFixed(2);
+        Math.max(
+            total - delivery,
+            0
+        ).toFixed(2);
 
 }
 
@@ -2011,148 +2417,186 @@ function calculateEditNet(){
    ADD ORDER
 ========================= */
 
-document.getElementById("order-form")
-.addEventListener("submit",async function(event){
+document.getElementById(
+    "order-form"
+)
+.addEventListener(
+    "submit",
+    async function(event){
 
-    event.preventDefault();
-
-
-    const booking =
-        document.getElementById("booking-number")
-        .value
-        .trim();
+        event.preventDefault();
 
 
-    const customer =
-        document.getElementById("customer-name")
-        .value
-        .trim();
+        const booking =
+            document.getElementById(
+                "booking-number"
+            )
+            .value
+            .trim();
 
 
-    const phone =
-        document.getElementById("customer-phone")
-        .value
-        .trim();
+        const customer =
+            document.getElementById(
+                "customer-name"
+            )
+            .value
+            .trim();
 
 
-    const item =
-        document.getElementById("item-name")
-        .value
-        .trim();
+        const phone =
+            document.getElementById(
+                "customer-phone"
+            )
+            .value
+            .trim();
 
 
-    const payment =
-        document.getElementById("payment-method")
-        .value;
+        const item =
+            document.getElementById(
+                "item-name"
+            )
+            .value
+            .trim();
 
 
-    const total =
-        parseFloat(
-            document.getElementById("total-amount").value
-        ) || 0;
+        const payment =
+            document.getElementById(
+                "payment-method"
+            ).value;
 
 
-    const delivery =
-        parseFloat(
-            document.getElementById("delivery-price").value
-        ) || 0;
+        const total =
+            parseFloat(
+                document.getElementById(
+                    "total-amount"
+                ).value
+            ) || 0;
 
 
-    if(!booking ||
-       !customer ||
-       !phone ||
-       !item ||
-       !payment ||
-       total < 0){
+        const delivery =
+            parseFloat(
+                document.getElementById(
+                    "delivery-price"
+                ).value
+            ) || 0;
 
-        alert(
-            "من فضلك أكمل جميع بيانات الأوردر."
+
+        if(
+            !booking ||
+            !customer ||
+            !phone ||
+            !item ||
+            !payment ||
+            total < 0
+        ){
+
+            alert(
+                "من فضلك أكمل جميع بيانات الأوردر."
+            );
+
+            return;
+
+        }
+
+
+        const duplicate =
+            onlineOrders.find(
+                order =>
+                    String(order.booking) ===
+                    String(booking)
+            );
+
+
+        if(duplicate){
+
+            alert(
+                "رقم الحجز موجود بالفعل في النظام."
+            );
+
+            return;
+
+        }
+
+
+        const now =
+            new Date();
+
+
+        const order = {
+
+            id:
+                Date.now().toString()
+                + "_"
+                + Math.random()
+                    .toString(36)
+                    .substring(2,8),
+
+            booking:
+                booking,
+
+            customer:
+                customer,
+
+            phone:
+                phone,
+
+            item:
+                item,
+
+            payment:
+                payment,
+
+            total:
+                total,
+
+            delivery:
+                delivery,
+
+            net:
+                Math.max(
+                    total - delivery,
+                    0
+                ),
+
+            cancelled:
+                false,
+
+            createdAt:
+                now.toISOString(),
+
+            createdTimestamp:
+                Date.now()
+
+        };
+
+
+        onlineOrders.unshift(
+            order
         );
 
-        return;
+
+        const saved =
+            await saveOrders();
+
+
+        if(saved){
+
+            clearOrderForm();
+
+            prepareMonthlyYears();
+
+            renderOrders();
+
+            renderMonthlySales();
+
+            alert(
+                "تم إضافة الأوردر بنجاح ✅"
+            );
+
+        }
 
     }
-
-
-    const duplicate =
-        onlineOrders.find(
-            order =>
-                String(order.booking) ===
-                String(booking)
-        );
-
-
-    if(duplicate){
-
-        alert(
-            "رقم الحجز موجود بالفعل في النظام."
-        );
-
-        return;
-
-    }
-
-
-    const now = new Date();
-
-
-    const order = {
-
-        id:
-            Date.now().toString()
-            + "_"
-            + Math.random()
-                .toString(36)
-                .substring(2,8),
-
-        booking:booking,
-
-        customer:customer,
-
-        phone:phone,
-
-        item:item,
-
-        payment:payment,
-
-        total:total,
-
-        delivery:delivery,
-
-        net:
-            Math.max(total-delivery,0),
-
-        cancelled:false,
-
-        createdAt:
-            now.toISOString(),
-
-        createdTimestamp:
-            Date.now()
-
-    };
-
-
-    onlineOrders.unshift(order);
-
-
-    const saved =
-        await saveOrders();
-
-
-    if(saved){
-
-        clearOrderForm();
-
-        renderOrders();
-
-        alert(
-            "تم إضافة الأوردر بنجاح ✅"
-        );
-
-    }
-
-});
+);
 
 
 /* =========================
@@ -2168,12 +2612,14 @@ function clearOrderForm(){
 
     document.getElementById(
         "delivery-price"
-    ).value = "0";
+    ).value =
+        "0";
 
 
     document.getElementById(
         "net-amount"
-    ).value = "";
+    ).value =
+        "";
 
 }
 
@@ -2225,26 +2671,30 @@ function renderOrders(){
     if(search){
 
         filtered =
-            filtered.filter(order => {
+            filtered.filter(
+                order => {
 
-                const text = [
+                    const text = [
 
-                    order.booking,
+                        order.booking,
 
-                    order.customer,
+                        order.customer,
 
-                    order.phone,
+                        order.phone,
 
-                    order.item
+                        order.item
 
-                ]
-                .join(" ")
-                .toLowerCase();
+                    ]
+                    .join(" ")
+                    .toLowerCase();
 
 
-                return text.includes(search);
+                    return text.includes(
+                        search
+                    );
 
-            });
+                }
+            );
 
     }
 
@@ -2502,15 +2952,17 @@ function renderOrders(){
     let visibleNet = 0;
 
 
-    filtered.forEach(order => {
+    filtered.forEach(
+        order => {
 
-        visibleTotal +=
-            Number(order.total) || 0;
+            visibleTotal +=
+                Number(order.total) || 0;
 
-        visibleNet +=
-            Number(order.net) || 0;
+            visibleNet +=
+                Number(order.net) || 0;
 
-    });
+        }
+    );
 
 
     document.getElementById(
@@ -2522,17 +2974,21 @@ function renderOrders(){
     document.getElementById(
         "footer-total"
     ).textContent =
-        money(filtered.length
+        money(
+            filtered.length
             ? visibleTotal
-            : 0);
+            : 0
+        );
 
 
     document.getElementById(
         "footer-net"
     ).textContent =
-        money(filtered.length
+        money(
+            filtered.length
             ? visibleNet
-            : 0);
+            : 0
+        );
 
 }
 
@@ -2557,18 +3013,20 @@ function updateStats(){
     let net = 0;
 
 
-    active.forEach(order => {
+    active.forEach(
+        order => {
 
-        total +=
-            Number(order.total) || 0;
+            total +=
+                Number(order.total) || 0;
 
-        delivery +=
-            Number(order.delivery) || 0;
+            delivery +=
+                Number(order.delivery) || 0;
 
-        net +=
-            Number(order.net) || 0;
+            net +=
+                Number(order.net) || 0;
 
-    });
+        }
+    );
 
 
     document.getElementById(
@@ -2597,6 +3055,413 @@ function updateStats(){
 }
 
 
+/* =========================================================
+   MONTHLY SALES
+========================================================= */
+
+const monthNames = [
+
+    "يناير",
+
+    "فبراير",
+
+    "مارس",
+
+    "أبريل",
+
+    "مايو",
+
+    "يونيو",
+
+    "يوليو",
+
+    "أغسطس",
+
+    "سبتمبر",
+
+    "أكتوبر",
+
+    "نوفمبر",
+
+    "ديسمبر"
+
+];
+
+
+function getOrderDate(order){
+
+    if(!order || !order.createdAt){
+
+        return null;
+
+    }
+
+
+    const date =
+        new Date(
+            order.createdAt
+        );
+
+
+    if(
+        isNaN(
+            date.getTime()
+        )
+    ){
+
+        return null;
+
+    }
+
+
+    return date;
+
+}
+
+
+/* =========================
+   YEARS
+========================= */
+
+function prepareMonthlyYears(){
+
+    const select =
+        document.getElementById(
+            "monthly-year"
+        );
+
+
+    if(!select){
+
+        return;
+
+    }
+
+
+    const years =
+        new Set();
+
+
+    onlineOrders.forEach(
+        order => {
+
+            const date =
+                getOrderDate(order);
+
+
+            if(date){
+
+                years.add(
+                    date.getFullYear()
+                );
+
+            }
+
+        }
+    );
+
+
+    const currentYear =
+        new Date().getFullYear();
+
+
+    years.add(
+        currentYear
+    );
+
+
+    const sortedYears =
+        [...years]
+        .sort(
+            (a,b) =>
+                b-a
+        );
+
+
+    const oldValue =
+        select.value;
+
+
+    select.innerHTML = "";
+
+
+    sortedYears.forEach(
+        year => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                year;
+
+
+            option.textContent =
+                year;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    if(
+        sortedYears.includes(
+            Number(oldValue)
+        )
+    ){
+
+        select.value =
+            oldValue;
+
+    }else{
+
+        select.value =
+            currentYear;
+
+    }
+
+}
+
+
+/* =========================
+   RENDER MONTHLY SALES
+========================= */
+
+function renderMonthlySales(){
+
+    const body =
+        document.getElementById(
+            "monthly-sales-body"
+        );
+
+
+    const yearSelect =
+        document.getElementById(
+            "monthly-year"
+        );
+
+
+    if(!body || !yearSelect){
+
+        return;
+
+    }
+
+
+    const selectedYear =
+        Number(
+            yearSelect.value
+        );
+
+
+    if(!selectedYear){
+
+        return;
+
+    }
+
+
+    const monthlyData =
+        Array.from(
+            {length:12},
+            () => ({
+
+                orders:0,
+
+                total:0,
+
+                delivery:0,
+
+                net:0
+
+            })
+        );
+
+
+    onlineOrders.forEach(
+        order => {
+
+            /*
+             * الأوردر الملغي
+             * لا يدخل في حساب المبيعات
+             */
+
+            if(order.cancelled){
+
+                return;
+
+            }
+
+
+            const date =
+                getOrderDate(order);
+
+
+            if(!date){
+
+                return;
+
+            }
+
+
+            if(
+                date.getFullYear()
+                !==
+                selectedYear
+            ){
+
+                return;
+
+            }
+
+
+            const month =
+                date.getMonth();
+
+
+            monthlyData[month].orders += 1;
+
+
+            monthlyData[month].total +=
+                Number(order.total) || 0;
+
+
+            monthlyData[month].delivery +=
+                Number(order.delivery) || 0;
+
+
+            monthlyData[month].net +=
+                Number(order.net) || 0;
+
+        }
+    );
+
+
+    body.innerHTML = "";
+
+
+    let yearOrders = 0;
+
+    let yearTotal = 0;
+
+    let yearDelivery = 0;
+
+    let yearNet = 0;
+
+
+    monthlyData.forEach(
+        (data,index) => {
+
+            yearOrders +=
+                data.orders;
+
+
+            yearTotal +=
+                data.total;
+
+
+            yearDelivery +=
+                data.delivery;
+
+
+            yearNet +=
+                data.net;
+
+
+            const hasData =
+                data.orders > 0;
+
+
+            body.innerHTML += `
+
+                <tr>
+
+                    <td class="month-name">
+
+                        ${monthNames[index]}
+
+                    </td>
+
+                    <td class="${
+                        hasData
+                        ? "month-orders"
+                        : "month-zero"
+                    }">
+
+                        ${data.orders}
+
+                    </td>
+
+                    <td class="${
+                        hasData
+                        ? "month-total"
+                        : "month-zero"
+                    }">
+
+                        ${money(data.total)}
+
+                    </td>
+
+                    <td class="${
+                        hasData
+                        ? "month-delivery"
+                        : "month-zero"
+                    }">
+
+                        ${money(data.delivery)}
+
+                    </td>
+
+                    <td class="${
+                        hasData
+                        ? "month-net"
+                        : "month-zero"
+                    }">
+
+                        ${money(data.net)}
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    document.getElementById(
+        "year-orders"
+    ).textContent =
+        yearOrders;
+
+
+    document.getElementById(
+        "year-total"
+    ).textContent =
+        money(yearTotal);
+
+
+    document.getElementById(
+        "year-delivery"
+    ).textContent =
+        money(yearDelivery);
+
+
+    document.getElementById(
+        "year-net"
+    ).textContent =
+        money(yearNet);
+
+}
+
+
 /* =========================
    EDIT
 ========================= */
@@ -2617,7 +3482,8 @@ function editOrder(id){
     }
 
 
-    editingOrderId = id;
+    editingOrderId =
+        id;
 
 
     document.getElementById(
@@ -2667,18 +3533,24 @@ function editOrder(id){
 
     document.getElementById(
         "edit-modal"
-    ).classList.add("show");
+    ).classList.add(
+        "show"
+    );
 
 }
 
 
 function closeEditModal(){
 
-    editingOrderId = null;
+    editingOrderId =
+        null;
+
 
     document.getElementById(
         "edit-modal"
-    ).classList.remove("show");
+    ).classList.remove(
+        "show"
+    );
 
 }
 
@@ -2753,10 +3625,12 @@ async function saveEditedOrder(){
         ) || 0;
 
 
-    if(!booking ||
-       !customer ||
-       !phone ||
-       !item){
+    if(
+        !booking ||
+        !customer ||
+        !phone ||
+        !item
+    ){
 
         alert(
             "من فضلك أكمل البيانات."
@@ -2770,7 +3644,8 @@ async function saveEditedOrder(){
     const duplicate =
         onlineOrders.find(
             x =>
-                x.id !== editingOrderId &&
+                x.id !==
+                editingOrderId &&
                 String(x.booking) ===
                 String(booking)
         );
@@ -2787,22 +3662,39 @@ async function saveEditedOrder(){
     }
 
 
-    order.booking = booking;
+    order.booking =
+        booking;
 
-    order.customer = customer;
 
-    order.phone = phone;
+    order.customer =
+        customer;
 
-    order.item = item;
 
-    order.payment = payment;
+    order.phone =
+        phone;
 
-    order.total = total;
 
-    order.delivery = delivery;
+    order.item =
+        item;
+
+
+    order.payment =
+        payment;
+
+
+    order.total =
+        total;
+
+
+    order.delivery =
+        delivery;
+
 
     order.net =
-        Math.max(total-delivery,0);
+        Math.max(
+            total-delivery,
+            0
+        );
 
 
     const saved =
@@ -2813,7 +3705,11 @@ async function saveEditedOrder(){
 
         closeEditModal();
 
+        prepareMonthlyYears();
+
         renderOrders();
+
+        renderMonthlySales();
 
         alert(
             "تم تعديل الأوردر بنجاح ✅"
@@ -2861,7 +3757,9 @@ async function cancelOrder(id){
     }
 
 
-    order.cancelled = true;
+    order.cancelled =
+        true;
+
 
     order.cancelledAt =
         new Date().toISOString();
@@ -2874,6 +3772,8 @@ async function cancelOrder(id){
     if(saved){
 
         renderOrders();
+
+        renderMonthlySales();
 
     }
 
@@ -2900,9 +3800,12 @@ async function restoreOrder(id){
     }
 
 
-    order.cancelled = false;
+    order.cancelled =
+        false;
 
-    order.cancelledAt = null;
+
+    order.cancelledAt =
+        null;
 
 
     const saved =
@@ -2912,6 +3815,8 @@ async function restoreOrder(id){
     if(saved){
 
         renderOrders();
+
+        renderMonthlySales();
 
     }
 
@@ -2971,7 +3876,11 @@ async function deleteOrder(id){
 
     if(saved){
 
+        prepareMonthlyYears();
+
         renderOrders();
+
+        renderMonthlySales();
 
     }
 
@@ -3012,7 +3921,11 @@ function formatDate(value){
         new Date(value);
 
 
-    if(isNaN(date.getTime())){
+    if(
+        isNaN(
+            date.getTime()
+        )
+    ){
 
         return "-";
 
@@ -3042,12 +3955,29 @@ function formatDate(value){
 
 function escapeHtml(value){
 
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -3059,26 +3989,34 @@ function escapeHtml(value){
 [
     "login-email",
     "login-password"
-].forEach(id => {
+]
+.forEach(
+    id => {
 
-    const input =
-        document.getElementById(id);
+        const input =
+            document.getElementById(
+                id
+            );
 
 
-    input.addEventListener(
-        "keydown",
-        function(event){
+        input.addEventListener(
+            "keydown",
+            function(event){
 
-            if(event.key === "Enter"){
+                if(
+                    event.key ===
+                    "Enter"
+                ){
 
-                loginUser();
+                    loginUser();
+
+                }
 
             }
+        );
 
-        }
-    );
-
-});
+    }
+);
 
 
 /* =========================
@@ -3090,11 +4028,15 @@ auth.onAuthStateChanged(
 
         if(!user){
 
-            currentUser = null;
+            currentUser =
+                null;
+
 
             document.getElementById(
                 "login-screen"
-            ).style.display = "flex";
+            ).style.display =
+                "flex";
+
 
             return;
 
@@ -3107,7 +4049,11 @@ auth.onAuthStateChanged(
             .toLowerCase();
 
 
-        if(!ADMIN_EMAILS.includes(email)){
+        if(
+            !ADMIN_EMAILS.includes(
+                email
+            )
+        ){
 
             await auth.signOut();
 
@@ -3116,12 +4062,14 @@ auth.onAuthStateChanged(
         }
 
 
-        currentUser = user;
+        currentUser =
+            user;
 
 
         document.getElementById(
             "login-screen"
-        ).style.display = "none";
+        ).style.display =
+            "none";
 
 
         await loadOrders();
@@ -3132,4 +4080,6 @@ auth.onAuthStateChanged(
 </script>
 
 </body>
+
 </html>
+
