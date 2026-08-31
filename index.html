@@ -1567,7 +1567,19 @@ tbody tr:hover{
             >
 
         </div>
+<div class="field">
 
+    <label>
+        تاريخ ووقت الأوردر
+    </label>
+
+    <input
+        type="datetime-local"
+        id="order-date"
+        required
+    >
+
+</div>
 
         <div class="field">
 
@@ -2411,8 +2423,28 @@ function calculateEditNet(){
         ).toFixed(2);
 
 }
+function getCurrentDateTimeLocal(){
 
+    const now = new Date();
 
+    const offset =
+        now.getTimezoneOffset();
+
+    const localDate =
+        new Date(
+            now.getTime() -
+            offset * 60000
+        );
+
+    return localDate
+        .toISOString()
+        .slice(0,16);
+
+}
+document.getElementById(
+    "order-date"
+).value =
+    getCurrentDateTimeLocal();
 /* =========================
    ADD ORDER
 ========================= */
