@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -30,15 +31,23 @@
     box-sizing:border-box;
 }
 
+html{
+    width:100%;
+    min-height:100%;
+}
+
 body{
     margin:0;
+    padding:0;
+    width:100%;
+    min-height:100vh;
+    overflow-x:hidden;
     font-family:"Segoe UI",Tahoma,Arial,sans-serif;
     background:
         radial-gradient(circle at top right,rgba(245,158,11,.08),transparent 30%),
         radial-gradient(circle at bottom left,rgba(56,189,248,.05),transparent 30%),
         var(--bg);
     color:var(--text);
-    min-height:100vh;
 }
 
 /* =========================
@@ -53,6 +62,7 @@ body{
     align-items:center;
     justify-content:center;
     padding:20px;
+    overflow-y:auto;
     background:
         radial-gradient(circle at 50% 20%,rgba(245,158,11,.12),transparent 35%),
         #070b12;
@@ -114,6 +124,7 @@ body{
 .login-icon{
     width:35px;
     height:35px;
+    min-width:35px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -124,6 +135,7 @@ body{
 
 .login-field-content{
     flex:1;
+    min-width:0;
     text-align:right;
 }
 
@@ -136,6 +148,7 @@ body{
 
 .login-field-content input{
     width:100%;
+    min-width:0;
     border:0;
     outline:0;
     background:none;
@@ -181,6 +194,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
+    gap:15px;
     padding:0 22px;
     background:rgba(9,14,23,.96);
     border-bottom:1px solid rgba(245,158,11,.2);
@@ -192,17 +206,23 @@ body{
     display:flex;
     align-items:center;
     gap:10px;
+    min-width:0;
 }
 
 .brand-logo{
     width:40px;
     height:40px;
+    min-width:40px;
     border-radius:12px;
     display:flex;
     align-items:center;
     justify-content:center;
     background:linear-gradient(135deg,#f59e0b,#d97706);
     font-size:20px;
+}
+
+.brand-text{
+    min-width:0;
 }
 
 .brand-text strong{
@@ -224,6 +244,7 @@ body{
     padding:8px 15px;
     cursor:pointer;
     font-weight:bold;
+    white-space:nowrap;
 }
 
 /* =========================
@@ -232,7 +253,7 @@ body{
 
 .container{
     width:100%;
-    max-width:1450px;
+    max-width:1500px;
     margin:auto;
     padding:22px;
 }
@@ -262,7 +283,7 @@ body{
 
 .stats{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(4,minmax(0,1fr));
     gap:12px;
     margin-bottom:18px;
 }
@@ -270,6 +291,7 @@ body{
 .stat{
     position:relative;
     overflow:hidden;
+    min-width:0;
     background:linear-gradient(145deg,#121b2b,#0d1420);
     border:1px solid var(--border);
     border-radius:14px;
@@ -304,6 +326,7 @@ body{
 ========================= */
 
 .card{
+    width:100%;
     background:rgba(15,23,42,.88);
     border:1px solid var(--border);
     border-radius:15px;
@@ -316,6 +339,7 @@ body{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
     margin-bottom:15px;
 }
 
@@ -331,7 +355,7 @@ body{
 
 .order-form{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(4,minmax(0,1fr));
     gap:11px;
 }
 
@@ -339,6 +363,7 @@ body{
     display:flex;
     flex-direction:column;
     gap:5px;
+    min-width:0;
 }
 
 .field label{
@@ -350,6 +375,7 @@ body{
 .field input,
 .field select{
     width:100%;
+    min-width:0;
     height:43px;
     padding:0 11px;
     border-radius:9px;
@@ -373,6 +399,7 @@ body{
 .form-actions{
     grid-column:1/-1;
     display:flex;
+    flex-wrap:wrap;
     gap:8px;
     margin-top:3px;
 }
@@ -416,6 +443,8 @@ body{
 
 .toolbar input,
 .toolbar select{
+    width:100%;
+    min-width:0;
     height:40px;
     background:#0a111d;
     border:1px solid var(--border);
@@ -431,7 +460,10 @@ body{
 ========================= */
 
 .table-wrap{
+    width:100%;
     overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
     border:1px solid var(--border);
     border-radius:11px;
 }
@@ -570,16 +602,14 @@ tbody tr:hover{
 ========================= */
 
 .table-footer{
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:10px;
     margin-top:14px;
 }
 
 .footer-box{
-    flex:1;
-    min-width:180px;
+    min-width:0;
     padding:12px;
     border-radius:9px;
     background:#0a111d;
@@ -612,6 +642,7 @@ tbody tr:hover{
     align-items:center;
     justify-content:center;
     padding:20px;
+    overflow-y:auto;
     background:rgba(0,0,0,.72);
     backdrop-filter:blur(5px);
 }
@@ -623,6 +654,8 @@ tbody tr:hover{
 .modal-card{
     width:100%;
     max-width:600px;
+    max-height:calc(100vh - 40px);
+    overflow-y:auto;
     background:#111a2a;
     border:1px solid rgba(245,158,11,.25);
     border-radius:16px;
@@ -634,6 +667,7 @@ tbody tr:hover{
     display:flex;
     align-items:center;
     justify-content:space-between;
+    gap:10px;
     margin-bottom:15px;
 }
 
@@ -648,6 +682,7 @@ tbody tr:hover{
     color:white;
     width:30px;
     height:30px;
+    min-width:30px;
     border-radius:7px;
     cursor:pointer;
 }
@@ -660,34 +695,74 @@ tbody tr:hover{
 
 .modal-actions{
     display:flex;
+    flex-wrap:wrap;
     gap:8px;
     margin-top:15px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media(max-width:1100px){
+
+    .container{
+        max-width:100%;
+        padding:18px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .order-form{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .toolbar{
+        grid-template-columns:2fr 1fr 1fr;
+    }
+
 }
 
 /* =========================
    MOBILE
 ========================= */
 
-@media(max-width:900px){
+@media(max-width:700px){
 
-    .stats{
-        grid-template-columns:repeat(2,1fr);
+    body{
+        font-size:14px;
     }
-
-    .order-form{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .toolbar{
-        grid-template-columns:1fr 1fr;
-    }
-
-}
-
-@media(max-width:600px){
 
     .navbar{
-        padding:0 10px;
+        height:auto;
+        min-height:60px;
+        padding:9px 10px;
+    }
+
+    .brand{
+        gap:8px;
+    }
+
+    .brand-logo{
+        width:37px;
+        height:37px;
+        min-width:37px;
+        font-size:18px;
+    }
+
+    .brand-text strong{
+        font-size:12px;
+    }
+
+    .brand-text span{
+        display:none;
+    }
+
+    .logout{
+        padding:8px 12px;
+        font-size:11px;
     }
 
     .container{
@@ -696,51 +771,238 @@ tbody tr:hover{
 
     .page-title{
         display:block;
+        margin-bottom:15px;
     }
 
     .page-title h1{
-        font-size:21px;
+        font-size:20px;
+    }
+
+    .page-title p{
+        font-size:11px;
     }
 
     .stats{
         grid-template-columns:1fr 1fr;
+        gap:8px;
     }
 
     .stat{
-        padding:13px;
+        padding:12px;
+        border-radius:12px;
+    }
+
+    .stat-label{
+        font-size:10px;
     }
 
     .stat-value{
-        font-size:17px;
+        font-size:16px;
+        margin-top:5px;
+    }
+
+    .card{
+        padding:13px;
+        border-radius:13px;
+        margin-bottom:13px;
+    }
+
+    .card-title{
+        margin-bottom:12px;
+    }
+
+    .card-title h2{
+        font-size:14px;
     }
 
     .order-form{
         grid-template-columns:1fr;
+        gap:10px;
     }
 
     .full{
         grid-column:auto;
     }
 
-    .toolbar{
-        grid-template-columns:1fr;
+    .field input,
+    .field select{
+        height:46px;
+        font-size:13px;
+    }
+
+    .field label{
+        font-size:10px;
     }
 
     .form-actions{
+        grid-column:auto;
         flex-direction:column;
+        width:100%;
+    }
+
+    .form-actions .btn{
+        width:100%;
+        min-height:45px;
+    }
+
+    .toolbar{
+        grid-template-columns:1fr;
+        gap:8px;
+    }
+
+    .toolbar input,
+    .toolbar select{
+        height:44px;
+        font-size:12px;
+    }
+
+    .table-wrap{
+        border-radius:9px;
+    }
+
+    table{
+        min-width:1050px;
+    }
+
+    th{
+        padding:11px 7px;
+        font-size:10px;
+    }
+
+    td{
+        padding:10px 6px;
+        font-size:10px;
+    }
+
+    .table-footer{
+        grid-template-columns:1fr;
+        gap:8px;
+    }
+
+    .footer-box{
+        padding:11px;
+    }
+
+    .modal{
+        align-items:flex-start;
+        padding:10px;
+    }
+
+    .modal-card{
+        max-height:calc(100vh - 20px);
+        padding:15px;
+        border-radius:13px;
+        margin:auto 0;
     }
 
     .modal-grid{
         grid-template-columns:1fr;
+        gap:9px;
     }
 
-    .brand-text span{
-        display:none;
+    .modal-actions{
+        flex-direction:column;
+    }
+
+    .modal-actions .btn{
+        width:100%;
+        min-height:44px;
+    }
+
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media(max-width:400px){
+
+    .container{
+        padding:9px;
+    }
+
+    .stats{
+        gap:6px;
+    }
+
+    .stat{
+        padding:10px;
+    }
+
+    .stat-label{
+        font-size:9px;
+    }
+
+    .stat-value{
+        font-size:14px;
+    }
+
+    .page-title h1{
+        font-size:18px;
+    }
+
+    .login-card{
+        padding:28px 18px 20px;
+        border-radius:18px;
+    }
+
+    .login-logo{
+        width:72px;
+        height:72px;
+    }
+
+    .login-title{
+        font-size:22px;
+    }
+
+}
+
+/* =========================
+   LANDSCAPE MOBILE
+========================= */
+
+@media(max-width:900px) and (orientation:landscape){
+
+    .login-screen{
+        align-items:flex-start;
+        padding:15px;
+    }
+
+    .login-card{
+        margin:auto;
+    }
+
+    .modal{
+        align-items:flex-start;
+    }
+
+}
+
+/* =========================
+   TOUCH DEVICES
+========================= */
+
+@media(pointer:coarse){
+
+    button,
+    select,
+    input{
+        -webkit-tap-highlight-color:transparent;
+    }
+
+    .action-btn{
+        min-height:32px;
+        padding:6px 9px;
+    }
+
+    .btn{
+        min-height:44px;
     }
 
 }
 
 </style>
+
 </head>
 
 <body>
@@ -751,64 +1013,65 @@ tbody tr:hover{
 
 <div id="login-screen" class="login-screen">
 
-    <div class="login-card">
+```
+<div class="login-card">
 
-        <div class="login-logo">
-            <img src="https://up6.cc/2026/08/178662434144331.jpg">
-        </div>
+    <div class="login-logo">
+        <img src="https://up6.cc/2026/08/178662434144331.jpg">
+    </div>
 
-        <h1 class="login-title">تمور الطحان</h1>
+    <h1 class="login-title">تمور الطحان</h1>
 
-        <div class="login-subtitle">
-            نظام إدارة أوردرات الأونلاين
-        </div>
+    <div class="login-subtitle">
+        نظام إدارة أوردرات الأونلاين
+    </div>
 
-        <div class="login-field">
+    <div class="login-field">
 
-            <div class="login-icon">✉</div>
+        <div class="login-icon">✉</div>
 
-            <div class="login-field-content">
+        <div class="login-field-content">
 
-                <label>البريد الإلكتروني</label>
+            <label>البريد الإلكتروني</label>
 
-                <input
-                    type="email"
-                    id="login-email"
-                    placeholder="اكتب البريد الإلكتروني"
-                >
-
-            </div>
-
-        </div>
-
-        <div class="login-field">
-
-            <div class="login-icon">🔒</div>
-
-            <div class="login-field-content">
-
-                <label>كلمة المرور</label>
-
-                <input
-                    type="password"
-                    id="login-password"
-                    placeholder="اكتب كلمة المرور"
-                >
-
-            </div>
+            <input
+                type="email"
+                id="login-email"
+                placeholder="اكتب البريد الإلكتروني"
+            >
 
         </div>
-
-        <button class="login-btn" onclick="loginUser()">
-            تسجيل الدخول ←
-        </button>
-
-        <div id="login-error" class="login-error"></div>
 
     </div>
 
-</div>
+    <div class="login-field">
 
+        <div class="login-icon">🔒</div>
+
+        <div class="login-field-content">
+
+            <label>كلمة المرور</label>
+
+            <input
+                type="password"
+                id="login-password"
+                placeholder="اكتب كلمة المرور"
+            >
+
+        </div>
+
+    </div>
+
+    <button class="login-btn" onclick="loginUser()">
+        تسجيل الدخول ←
+    </button>
+
+    <div id="login-error" class="login-error"></div>
+
+</div>
+```
+
+</div>
 
 <!-- =========================
      NAVBAR
@@ -816,30 +1079,31 @@ tbody tr:hover{
 
 <header class="navbar">
 
-    <div class="brand">
+```
+<div class="brand">
 
-        <div class="brand-logo">
-            🛒
-        </div>
+    <div class="brand-logo">
+        🛒
+    </div>
 
-        <div class="brand-text">
+    <div class="brand-text">
 
-            <strong>تمور الطحان 🌴</strong>
+        <strong>تمور الطحان 🌴</strong>
 
-            <span>
-                نظام أوردرات الأونلاين
-            </span>
-
-        </div>
+        <span>
+            نظام أوردرات الأونلاين
+        </span>
 
     </div>
 
-    <button class="logout" onclick="logoutUser()">
-        خروج
-    </button>
+</div>
+
+<button class="logout" onclick="logoutUser()">
+    خروج
+</button>
+```
 
 </header>
-
 
 <!-- =========================
      MAIN
@@ -847,296 +1111,175 @@ tbody tr:hover{
 
 <main class="container">
 
-    <div class="page-title">
+```
+<div class="page-title">
 
-        <div>
+    <div>
 
-            <h1>
-                🛒 أوردرات الأونلاين
-            </h1>
+        <h1>
+            🛒 أوردرات الأونلاين
+        </h1>
 
-            <p>
-                إدارة ومتابعة جميع طلبات العملاء
-            </p>
+        <p>
+            إدارة ومتابعة جميع طلبات العملاء
+        </p>
 
+    </div>
+
+</div>
+
+
+<!-- =========================
+     STATS
+========================= -->
+
+<div class="stats">
+
+    <div class="stat">
+
+        <div class="stat-label">
+            📦 إجمالي الأوردرات
+        </div>
+
+        <div class="stat-value" id="stat-orders">
+            0
         </div>
 
     </div>
 
 
-    <!-- =========================
-         STATS
-    ========================= -->
+    <div class="stat">
 
-    <div class="stats">
-
-        <div class="stat">
-
-            <div class="stat-label">
-                📦 إجمالي الأوردرات
-            </div>
-
-            <div class="stat-value" id="stat-orders">
-                0
-            </div>
-
+        <div class="stat-label">
+            💰 إجمالي المبيعات
         </div>
 
-
-        <div class="stat">
-
-            <div class="stat-label">
-                💰 إجمالي المبيعات
-            </div>
-
-            <div class="stat-value" id="stat-total">
-                0 EGP
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-label">
-                🚚 إجمالي التوصيل
-            </div>
-
-            <div class="stat-value" id="stat-delivery">
-                0 EGP
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-label">
-                💵 بعد خصم التوصيل
-            </div>
-
-            <div class="stat-value" id="stat-net">
-                0 EGP
-            </div>
-
+        <div class="stat-value" id="stat-total">
+            0 EGP
         </div>
 
     </div>
 
 
-    <!-- =========================
-         ADD ORDER
-    ========================= -->
+    <div class="stat">
 
-    <div class="card">
-
-        <div class="card-title">
-
-            <h2>
-                ➕ إضافة أوردر جديد
-            </h2>
-
+        <div class="stat-label">
+            🚚 إجمالي التوصيل
         </div>
 
-
-        <form id="order-form" class="order-form">
-
-            <div class="field">
-
-                <label>
-                    رقم الحجز
-                </label>
-
-                <input
-                    type="text"
-                    id="booking-number"
-                    placeholder="مثال: 12584"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    اسم العميل
-                </label>
-
-                <input
-                    type="text"
-                    id="customer-name"
-                    placeholder="اسم العميل"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    رقم الهاتف
-                </label>
-
-                <input
-                    type="tel"
-                    id="customer-phone"
-                    placeholder="01xxxxxxxxx"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    اسم الصنف
-                </label>
-
-                <input
-                    type="text"
-                    id="item-name"
-                    placeholder="اسم الصنف"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    طريقة الدفع
-                </label>
-
-                <select id="payment-method" required>
-
-                    <option value="">
-                        اختر طريقة الدفع
-                    </option>
-
-                    <option value="كاش">
-                        💵 كاش
-                    </option>
-
-                    <option value="فيزا">
-                        💳 فيزا
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    المبلغ الإجمالي
-                </label>
-
-                <input
-                    type="number"
-                    id="total-amount"
-                    min="0"
-                    step="0.01"
-                    placeholder="0"
-                    required
-                    oninput="calculateNet()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    سعر التوصيل
-                </label>
-
-                <input
-                    type="number"
-                    id="delivery-price"
-                    min="0"
-                    step="0.01"
-                    value="0"
-                    placeholder="0"
-                    oninput="calculateNet()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    المبلغ بعد خصم التوصيل
-                </label>
-
-                <input
-                    type="number"
-                    id="net-amount"
-                    readonly
-                    placeholder="0"
-                >
-
-            </div>
-
-
-            <div class="form-actions">
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    💾 إضافة الأوردر
-                </button>
-
-                <button
-                    type="button"
-                    class="btn btn-gray"
-                    onclick="clearOrderForm()"
-                >
-                    مسح البيانات
-                </button>
-
-            </div>
-
-        </form>
+        <div class="stat-value" id="stat-delivery">
+            0 EGP
+        </div>
 
     </div>
 
 
-    <!-- =========================
-         ORDERS
-    ========================= -->
+    <div class="stat">
 
-    <div class="card">
-
-        <div class="card-title">
-
-            <h2>
-                📋 سجل الأوردرات
-            </h2>
-
+        <div class="stat-label">
+            💵 بعد خصم التوصيل
         </div>
 
+        <div class="stat-value" id="stat-net">
+            0 EGP
+        </div>
 
-        <div class="toolbar">
+    </div>
+
+</div>
+
+
+<!-- =========================
+     ADD ORDER
+========================= -->
+
+<div class="card">
+
+    <div class="card-title">
+
+        <h2>
+            ➕ إضافة أوردر جديد
+        </h2>
+
+    </div>
+
+
+    <form id="order-form" class="order-form">
+
+        <div class="field">
+
+            <label>
+                رقم الحجز
+            </label>
 
             <input
                 type="text"
-                id="search-input"
-                placeholder="🔎 بحث برقم الحجز / العميل / الهاتف / الصنف..."
-                oninput="renderOrders()"
+                id="booking-number"
+                placeholder="مثال: 12584"
+                required
             >
 
+        </div>
 
-            <select id="payment-filter" onchange="renderOrders()">
 
-                <option value="all">
-                    كل طرق الدفع
+        <div class="field">
+
+            <label>
+                اسم العميل
+            </label>
+
+            <input
+                type="text"
+                id="customer-name"
+                placeholder="اسم العميل"
+                required
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                رقم الهاتف
+            </label>
+
+            <input
+                type="tel"
+                id="customer-phone"
+                placeholder="01xxxxxxxxx"
+                required
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                اسم الصنف
+            </label>
+
+            <input
+                type="text"
+                id="item-name"
+                placeholder="اسم الصنف"
+                required
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                طريقة الدفع
+            </label>
+
+            <select id="payment-method" required>
+
+                <option value="">
+                    اختر طريقة الدفع
                 </option>
 
                 <option value="كاش">
@@ -1149,162 +1292,247 @@ tbody tr:hover{
 
             </select>
 
-
-            <select id="status-filter" onchange="renderOrders()">
-
-                <option value="all">
-                    كل الحالات
-                </option>
-
-                <option value="active">
-                    ✅ غير ملغي
-                </option>
-
-                <option value="cancelled">
-                    ❌ ملغي
-                </option>
-
-            </select>
+        </div>
 
 
-            <select id="sort-filter" onchange="renderOrders()">
+        <div class="field">
 
-                <option value="newest">
-                    الأحدث أولاً
-                </option>
+            <label>
+                المبلغ الإجمالي
+            </label>
 
-                <option value="oldest">
-                    الأقدم أولاً
-                </option>
-
-                <option value="high">
-                    الأعلى مبلغاً
-                </option>
-
-                <option value="low">
-                    الأقل مبلغاً
-                </option>
-
-            </select>
+            <input
+                type="number"
+                id="total-amount"
+                min="0"
+                step="0.01"
+                placeholder="0"
+                required
+                oninput="calculateNet()"
+            >
 
         </div>
 
 
-        <div class="table-wrap">
+        <div class="field">
 
-            <table>
+            <label>
+                سعر التوصيل
+            </label>
 
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            #
-                        </th>
-
-                        <th>
-                            رقم الحجز
-                        </th>
-
-                        <th>
-                            اسم العميل
-                        </th>
-
-                        <th>
-                            الصنف
-                        </th>
-
-                        <th>
-                            الهاتف
-                        </th>
-
-                        <th>
-                            الدفع
-                        </th>
-
-                        <th>
-                            الإجمالي
-                        </th>
-
-                        <th>
-                            التوصيل
-                        </th>
-
-                        <th>
-                            بعد خصم التوصيل
-                        </th>
-
-                        <th>
-                            الحالة
-                        </th>
-
-                        <th>
-                            التاريخ
-                        </th>
-
-                        <th>
-                            الإجراءات
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="orders-body">
-
-                </tbody>
-
-            </table>
+            <input
+                type="number"
+                id="delivery-price"
+                min="0"
+                step="0.01"
+                value="0"
+                placeholder="0"
+                oninput="calculateNet()"
+            >
 
         </div>
 
 
-        <div class="table-footer">
+        <div class="field">
 
-            <div class="footer-box">
+            <label>
+                المبلغ بعد خصم التوصيل
+            </label>
 
-                <span>
-                    الأوردرات الظاهرة
-                </span>
+            <input
+                type="number"
+                id="net-amount"
+                readonly
+                placeholder="0"
+            >
 
-                <strong id="footer-orders">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="footer-box">
-
-                <span>
-                    إجمالي الظاهر
-                </span>
-
-                <strong id="footer-total">
-                    0 EGP
-                </strong>
-
-            </div>
+        </div>
 
 
-            <div class="footer-box">
+        <div class="form-actions">
 
-                <span>
-                    صافي الظاهر
-                </span>
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                💾 إضافة الأوردر
+            </button>
 
-                <strong id="footer-net">
-                    0 EGP
-                </strong>
+            <button
+                type="button"
+                class="btn btn-gray"
+                onclick="clearOrderForm()"
+            >
+                مسح البيانات
+            </button>
 
-            </div>
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =========================
+     ORDERS
+========================= -->
+
+<div class="card">
+
+    <div class="card-title">
+
+        <h2>
+            📋 سجل الأوردرات
+        </h2>
+
+    </div>
+
+
+    <div class="toolbar">
+
+        <input
+            type="text"
+            id="search-input"
+            placeholder="🔎 بحث برقم الحجز / العميل / الهاتف / الصنف..."
+            oninput="renderOrders()"
+        >
+
+
+        <select id="payment-filter" onchange="renderOrders()">
+
+            <option value="all">
+                كل طرق الدفع
+            </option>
+
+            <option value="كاش">
+                💵 كاش
+            </option>
+
+            <option value="فيزا">
+                💳 فيزا
+            </option>
+
+        </select>
+
+
+        <select id="status-filter" onchange="renderOrders()">
+
+            <option value="all">
+                كل الحالات
+            </option>
+
+            <option value="active">
+                ✅ غير ملغي
+            </option>
+
+            <option value="cancelled">
+                ❌ ملغي
+            </option>
+
+        </select>
+
+
+        <select id="sort-filter" onchange="renderOrders()">
+
+            <option value="newest">
+                الأحدث أولاً
+            </option>
+
+            <option value="oldest">
+                الأقدم أولاً
+            </option>
+
+            <option value="high">
+                الأعلى مبلغاً
+            </option>
+
+            <option value="low">
+                الأقل مبلغاً
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+                    <th>رقم الحجز</th>
+                    <th>اسم العميل</th>
+                    <th>الصنف</th>
+                    <th>الهاتف</th>
+                    <th>الدفع</th>
+                    <th>الإجمالي</th>
+                    <th>التوصيل</th>
+                    <th>بعد خصم التوصيل</th>
+                    <th>الحالة</th>
+                    <th>التاريخ</th>
+                    <th>الإجراءات</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="orders-body"></tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="table-footer">
+
+        <div class="footer-box">
+
+            <span>
+                الأوردرات الظاهرة
+            </span>
+
+            <strong id="footer-orders">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="footer-box">
+
+            <span>
+                إجمالي الظاهر
+            </span>
+
+            <strong id="footer-total">
+                0 EGP
+            </strong>
+
+        </div>
+
+
+        <div class="footer-box">
+
+            <span>
+                صافي الظاهر
+            </span>
+
+            <strong id="footer-net">
+                0 EGP
+            </strong>
 
         </div>
 
     </div>
 
-</main>
+</div>
+```
 
+</main>
 
 <!-- =========================
      EDIT MODAL
@@ -1312,166 +1540,168 @@ tbody tr:hover{
 
 <div id="edit-modal" class="modal">
 
-    <div class="modal-card">
+```
+<div class="modal-card">
 
-        <div class="modal-header">
+    <div class="modal-header">
 
-            <h3>
-                ✏ تعديل الأوردر
-            </h3>
+        <h3>
+            ✏ تعديل الأوردر
+        </h3>
 
-            <button class="close" onclick="closeEditModal()">
-                ×
-            </button>
+        <button class="close" onclick="closeEditModal()">
+            ×
+        </button>
 
-        </div>
-
-
-        <div class="modal-grid">
-
-            <div class="field">
-
-                <label>
-                    رقم الحجز
-                </label>
-
-                <input id="edit-booking">
-
-            </div>
+    </div>
 
 
-            <div class="field">
+    <div class="modal-grid">
 
-                <label>
-                    اسم العميل
-                </label>
+        <div class="field">
 
-                <input id="edit-customer">
+            <label>
+                رقم الحجز
+            </label>
 
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    رقم الهاتف
-                </label>
-
-                <input id="edit-phone">
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    اسم الصنف
-                </label>
-
-                <input id="edit-item">
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    طريقة الدفع
-                </label>
-
-                <select id="edit-payment">
-
-                    <option value="كاش">
-                        💵 كاش
-                    </option>
-
-                    <option value="فيزا">
-                        💳 فيزا
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    المبلغ الإجمالي
-                </label>
-
-                <input
-                    type="number"
-                    id="edit-total"
-                    oninput="calculateEditNet()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    التوصيل
-                </label>
-
-                <input
-                    type="number"
-                    id="edit-delivery"
-                    oninput="calculateEditNet()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    بعد خصم التوصيل
-                </label>
-
-                <input
-                    type="number"
-                    id="edit-net"
-                    readonly
-                >
-
-            </div>
+            <input id="edit-booking">
 
         </div>
 
 
-        <div class="modal-actions">
+        <div class="field">
 
-            <button
-                class="btn btn-primary"
-                onclick="saveEditedOrder()"
-            >
-                💾 حفظ التعديل
-            </button>
+            <label>
+                اسم العميل
+            </label>
 
-            <button
-                class="btn btn-gray"
-                onclick="closeEditModal()"
+            <input id="edit-customer">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                رقم الهاتف
+            </label>
+
+            <input id="edit-phone">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                اسم الصنف
+            </label>
+
+            <input id="edit-item">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                طريقة الدفع
+            </label>
+
+            <select id="edit-payment">
+
+                <option value="كاش">
+                    💵 كاش
+                </option>
+
+                <option value="فيزا">
+                    💳 فيزا
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                المبلغ الإجمالي
+            </label>
+
+            <input
+                type="number"
+                id="edit-total"
+                oninput="calculateEditNet()"
             >
-                إلغاء
-            </button>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                التوصيل
+            </label>
+
+            <input
+                type="number"
+                id="edit-delivery"
+                oninput="calculateEditNet()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                بعد خصم التوصيل
+            </label>
+
+            <input
+                type="number"
+                id="edit-net"
+                readonly
+            >
 
         </div>
 
     </div>
 
-</div>
 
+    <div class="modal-actions">
+
+        <button
+            class="btn btn-primary"
+            onclick="saveEditedOrder()"
+        >
+            💾 حفظ التعديل
+        </button>
+
+        <button
+            class="btn btn-gray"
+            onclick="closeEditModal()"
+        >
+            إلغاء
+        </button>
+
+    </div>
+
+</div>
+```
+
+</div>
 
 <!-- =========================
      FIREBASE
 ========================= -->
 
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
 
 <script>
 
@@ -1502,18 +1732,10 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 
-/*
-    نفس قاعدة البيانات القديمة
-*/
-
 const storeRef =
     db.collection("store")
       .doc("store_v_final_v4");
 
-
-/*
-    الأوردرات ستتخزن هنا داخل نفس الـ document
-*/
 
 let onlineOrders = [];
 
@@ -1852,10 +2074,6 @@ document.getElementById("order-form")
     }
 
 
-    /*
-        منع تكرار رقم الحجز
-    */
-
     const duplicate =
         onlineOrders.find(
             order =>
@@ -2004,10 +2222,6 @@ function renderOrders(){
         [...onlineOrders];
 
 
-    /*
-        البحث
-    */
-
     if(search){
 
         filtered =
@@ -2035,10 +2249,6 @@ function renderOrders(){
     }
 
 
-    /*
-        طريقة الدفع
-    */
-
     if(paymentFilter !== "all"){
 
         filtered =
@@ -2050,10 +2260,6 @@ function renderOrders(){
 
     }
 
-
-    /*
-        حالة الطلب
-    */
 
     if(statusFilter === "active"){
 
@@ -2076,10 +2282,6 @@ function renderOrders(){
 
     }
 
-
-    /*
-        ترتيب
-    */
 
     if(sortFilter === "newest"){
 
@@ -2222,9 +2424,7 @@ function renderOrders(){
                             ${escapeHtml(order.item)}
                         </td>
 
-                        <td
-                            dir="ltr"
-                        >
+                        <td dir="ltr">
                             ${escapeHtml(order.phone)}
                         </td>
 
@@ -2260,9 +2460,7 @@ function renderOrders(){
                             ${status}
                         </td>
 
-                        <td
-                            dir="ltr"
-                        >
+                        <td dir="ltr">
                             ${date}
                         </td>
 
@@ -2296,16 +2494,8 @@ function renderOrders(){
     }
 
 
-    /*
-        إحصائيات عامة
-    */
-
     updateStats();
 
-
-    /*
-        إحصائيات الفلترة
-    */
 
     let visibleTotal = 0;
 
@@ -2352,10 +2542,6 @@ function renderOrders(){
 ========================= */
 
 function updateStats(){
-
-    /*
-        الإحصائيات تحسب الطلبات غير الملغية فقط
-    */
 
     const active =
         onlineOrders.filter(
@@ -2580,11 +2766,6 @@ async function saveEditedOrder(){
 
     }
 
-
-    /*
-        التأكد أن رقم الحجز
-        ليس مستخدماً في أوردر آخر
-    */
 
     const duplicate =
         onlineOrders.find(
