@@ -1,17 +1,12 @@
-html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080c14">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-
 <title>أوردرات الأونلاين - تمور الطحان</title>
-
 <style>
 
 :root{
@@ -1256,3103 +1251,680 @@ tbody tr:hover{
 }
 
 </style>
-
 </head>
-
 <body>
-
-<!-- =========================
-     LOGIN
-========================= -->
-
 <div id="login-screen" class="login-screen">
-
-    <div class="login-card">
-
-        <div class="login-logo">
-            <img src="https://up6.cc/2026/08/178662434144331.jpg">
-        </div>
-
-        <h1 class="login-title">
-            تمور الطحان
-        </h1>
-
-        <div class="login-subtitle">
-            نظام إدارة أوردرات الأونلاين
-        </div>
-
-        <div class="login-field">
-
-            <div class="login-icon">
-                ✉
-            </div>
-
-            <div class="login-field-content">
-
-                <label>
-                    البريد الإلكتروني
-                </label>
-
-                <input
-                    type="email"
-                    id="login-email"
-                    placeholder="اكتب البريد الإلكتروني"
-                >
-
-            </div>
-
-        </div>
-
-        <div class="login-field">
-
-            <div class="login-icon">
-                🔒
-            </div>
-
-            <div class="login-field-content">
-
-                <label>
-                    كلمة المرور
-                </label>
-
-                <input
-                    type="password"
-                    id="login-password"
-                    placeholder="اكتب كلمة المرور"
-                >
-
-            </div>
-
-        </div>
-
-        <button
-            class="login-btn"
-            onclick="loginUser()"
-        >
-            تسجيل الدخول ←
-        </button>
-
-        <div
-            id="login-error"
-            class="login-error"
-        ></div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================
-     NAVBAR
-========================= -->
+<div class="login-card">
+<div class="login-logo"><img src="https://up6.cc/2026/08/178662434144331.jpg"></div>
+<h1 class="login-title">تمور الطحان</h1>
+<div class="login-subtitle">نظام إدارة أوردرات الأونلاين</div>
+<div class="login-field"><div class="login-icon">✉</div><div class="login-field-content"><label>البريد الإلكتروني</label><input type="email" id="login-email" placeholder="اكتب البريد الإلكتروني"></div></div>
+<div class="login-field"><div class="login-icon">🔒</div><div class="login-field-content"><label>كلمة المرور</label><input type="password" id="login-password" placeholder="اكتب كلمة المرور"></div></div>
+<button class="login-btn" onclick="loginUser()">تسجيل الدخول ←</button>
+<div id="login-error" class="login-error"></div>
+</div></div>
 
 <header class="navbar">
-
-    <div class="brand">
-
-        <div class="brand-logo">
-            🛒
-        </div>
-
-        <div class="brand-text">
-
-            <strong>
-                تمور الطحان 🌴
-            </strong>
-
-            <span>
-                نظام أوردرات الأونلاين
-            </span>
-
-        </div>
-
-    </div>
-
-    <button
-        class="logout"
-        onclick="logoutUser()"
-    >
-        خروج
-    </button>
-
+<div class="brand"><div class="brand-logo">🛒</div><div class="brand-text"><strong>تمور الطحان 🌴</strong><span>نظام أوردرات الأونلاين</span></div></div>
+<button class="logout" onclick="logoutUser()">خروج</button>
 </header>
 
-
-<!-- =========================
-     MAIN
-========================= -->
-
 <main class="container">
-
-    <div class="page-title">
-
-        <div>
-
-            <h1>
-                🛒 أوردرات الأونلاين
-            </h1>
-
-            <p>
-                إدارة ومتابعة جميع طلبات العملاء
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         STATS
-    ========================= -->
-
-    <div class="stats">
-
-        <div class="stat">
-
-            <div class="stat-label">
-                📦 إجمالي الأوردرات
-            </div>
-
-            <div
-                class="stat-value"
-                id="stat-orders"
-            >
-                0
-            </div>
-
-        </div>
-
-        <div class="stat">
-
-            <div class="stat-label">
-                💰 إجمالي المبيعات
-            </div>
-
-            <div
-                class="stat-value"
-                id="stat-total"
-            >
-                0 EGP
-            </div>
-
-        </div>
-
-        <div class="stat">
-
-            <div class="stat-label">
-                🚚 إجمالي التوصيل
-            </div>
-
-            <div
-                class="stat-value"
-                id="stat-delivery"
-            >
-                0 EGP
-            </div>
-
-        </div>
-
-        <div class="stat">
-
-            <div class="stat-label">
-                💵 بعد خصم التوصيل
-            </div>
-
-            <div
-                class="stat-value"
-                id="stat-net"
-            >
-                0 EGP
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         ADD ORDER
-    ========================= -->
-
-    <div class="card">
-
-        <div class="card-title">
-
-            <h2>
-                ➕ إضافة أوردر جديد
-            </h2>
-
-        </div>
-
-        <form
-            id="order-form"
-            class="order-form"
-        >
-
-            <div class="field">
-
-                <label>
-                    رقم الحجز
-                </label>
-
-                <input
-                    type="text"
-                    id="booking-number"
-                    placeholder="مثال: 12584"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    اسم العميل
-                </label>
-
-                <input
-                    type="text"
-                    id="customer-name"
-                    placeholder="اسم العميل"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    رقم الهاتف
-                </label>
-
-                <input
-                    type="tel"
-                    id="customer-phone"
-                    placeholder="01xxxxxxxxx"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    تاريخ ووقت الأوردر
-                </label>
-
-                <input
-                    type="datetime-local"
-                    id="order-date"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    اسم الصنف
-                </label>
-
-                <input
-                    type="text"
-                    id="item-name"
-                    placeholder="اسم الصنف"
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    طريقة الدفع
-                </label>
-
-                <select
-                    id="payment-method"
-                    required
-                >
-
-                    <option value="">
-                        اختر طريقة الدفع
-                    </option>
-
-                    <option value="كاش">
-                        💵 كاش
-                    </option>
-
-                    <option value="فيزا">
-                        💳 فيزا
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    المبلغ الإجمالي
-                </label>
-
-                <input
-                    type="number"
-                    id="total-amount"
-                    min="0"
-                    step="0.01"
-                    placeholder="0"
-                    required
-                    oninput="calculateNet()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    سعر التوصيل
-                </label>
-
-                <input
-                    type="number"
-                    id="delivery-price"
-                    min="0"
-                    step="0.01"
-                    value="0"
-                    placeholder="0"
-                    oninput="calculateNet()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    المبلغ بعد خصم التوصيل
-                </label>
-
-                <input
-                    type="number"
-                    id="net-amount"
-                    readonly
-                    placeholder="0"
-                >
-
-            </div>
-
-
-            <div class="form-actions">
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    💾 إضافة الأوردر
-                </button>
-
-                <button
-                    type="button"
-                    class="btn btn-gray"
-                    onclick="clearOrderForm()"
-                >
-                    مسح البيانات
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-
-    <!-- =========================
-         ORDERS
-    ========================= -->
-
-    <div class="card">
-
-        <div class="card-title">
-
-            <h2>
-                📋 سجل الأوردرات
-            </h2>
-
-        </div>
-
-
-        <div class="toolbar">
-
-            <input
-                type="text"
-                id="search-input"
-                placeholder="🔎 بحث برقم الحجز / العميل / الهاتف / الصنف..."
-                oninput="renderOrders()"
-            >
-
-
-            <select
-                id="payment-filter"
-                onchange="renderOrders()"
-            >
-
-                <option value="all">
-                    كل طرق الدفع
-                </option>
-
-                <option value="كاش">
-                    💵 كاش
-                </option>
-
-                <option value="فيزا">
-                    💳 فيزا
-                </option>
-
-            </select>
-
-
-            <select
-                id="status-filter"
-                onchange="renderOrders()"
-            >
-
-                <option value="all">
-                    كل الحالات
-                </option>
-
-                <option value="active">
-                    ✅ غير ملغي
-                </option>
-
-                <option value="cancelled">
-                    ❌ ملغي
-                </option>
-
-            </select>
-
-
-            <select
-                id="sort-filter"
-                onchange="renderOrders()"
-            >
-
-                <option value="newest">
-                    الأحدث أولاً
-                </option>
-
-                <option value="oldest">
-                    الأقدم أولاً
-                </option>
-
-                <option value="high">
-                    الأعلى مبلغاً
-                </option>
-
-                <option value="low">
-                    الأقل مبلغاً
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div class="table-wrap">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>#</th>
-
-                        <th>
-                            رقم الحجز
-                        </th>
-
-                        <th>
-                            اسم العميل
-                        </th>
-
-                        <th>
-                            الصنف
-                        </th>
-
-                        <th>
-                            الهاتف
-                        </th>
-
-                        <th>
-                            الدفع
-                        </th>
-
-                        <th>
-                            الإجمالي
-                        </th>
-
-                        <th>
-                            التوصيل
-                        </th>
-
-                        <th>
-                            بعد خصم التوصيل
-                        </th>
-
-                        <th>
-                            الحالة
-                        </th>
-
-                        <th>
-                            التاريخ
-                        </th>
-
-                        <th>
-                            الإجراءات
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="orders-body"></tbody>
-
-            </table>
-
-        </div>
-
-
-        <div class="table-footer">
-
-            <div class="footer-box">
-
-                <span>
-                    الأوردرات الظاهرة
-                </span>
-
-                <strong id="footer-orders">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="footer-box">
-
-                <span>
-                    إجمالي الظاهر
-                </span>
-
-                <strong id="footer-total">
-                    0 EGP
-                </strong>
-
-            </div>
-
-
-            <div class="footer-box">
-
-                <span>
-                    صافي الظاهر
-                </span>
-
-                <strong id="footer-net">
-                    0 EGP
-                </strong>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         MONTHLY SALES
-         آخر الصفحة
-    ========================= -->
-
-    <div class="card monthly-card">
-
-        <div class="monthly-header">
-
-            <div class="monthly-title">
-
-                <h2>
-                    📊 مبيعات الشهر
-                </h2>
-
-                <p>
-                    اختر الشهر والسنة لعرض بيانات هذا الشهر فقط
-                </p>
-
-            </div>
-
-
-            <div class="month-selects">
-
-                <select
-                    id="monthly-month"
-                    class="month-select"
-                    onchange="renderMonthlySales()"
-                >
-
-                    <option value="0">
-                        يناير
-                    </option>
-
-                    <option value="1">
-                        فبراير
-                    </option>
-
-                    <option value="2">
-                        مارس
-                    </option>
-
-                    <option value="3">
-                        أبريل
-                    </option>
-
-                    <option value="4">
-                        مايو
-                    </option>
-
-                    <option value="5">
-                        يونيو
-                    </option>
-
-                    <option value="6">
-                        يوليو
-                    </option>
-
-                    <option value="7">
-                        أغسطس
-                    </option>
-
-                    <option value="8">
-                        سبتمبر
-                    </option>
-
-                    <option value="9">
-                        أكتوبر
-                    </option>
-
-                    <option value="10">
-                        نوفمبر
-                    </option>
-
-                    <option value="11">
-                        ديسمبر
-                    </option>
-
-                </select>
-
-
-                <select
-                    id="monthly-year"
-                    class="year-select"
-                    onchange="renderMonthlySales()"
-                ></select>
-
-            </div>
-
-        </div>
-
-
-        <div class="monthly-table-wrap">
-
-            <table class="monthly-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            الشهر
-                        </th>
-
-                        <th>
-                            عدد الأوردرات
-                        </th>
-
-                        <th>
-                            إجمالي المبيعات
-                        </th>
-
-                        <th>
-                            إجمالي التوصيل
-                        </th>
-
-                        <th>
-                            الصافي بعد التوصيل
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="monthly-sales-body"></tbody>
-
-            </table>
-
-        </div>
-
-
-        <div class="monthly-summary">
-
-            <div class="month-summary-box">
-
-                <span>
-                    أوردرات الشهر
-                </span>
-
-                <strong id="year-orders">
-                    0
-                </strong>
-
-            </div>
-
-
-            <div class="month-summary-box">
-
-                <span>
-                    مبيعات الشهر
-                </span>
-
-                <strong id="year-total">
-                    0 EGP
-                </strong>
-
-            </div>
-
-
-            <div class="month-summary-box">
-
-                <span>
-                    التوصيل
-                </span>
-
-                <strong id="year-delivery">
-                    0 EGP
-                </strong>
-
-            </div>
-
-
-            <div class="month-summary-box">
-
-                <span>
-                    صافي الشهر
-                </span>
-
-                <strong id="year-net">
-                    0 EGP
-                </strong>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</main>
-
-
-<!-- =========================
-     EDIT MODAL
-========================= -->
-
-<div
-    id="edit-modal"
-    class="modal"
->
-
-    <div class="modal-card">
-
-        <div class="modal-header">
-
-            <h3>
-                ✏ تعديل الأوردر
-            </h3>
-
-            <button
-                class="close"
-                onclick="closeEditModal()"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="modal-grid">
-
-            <div class="field">
-
-                <label>
-                    رقم الحجز
-                </label>
-
-                <input id="edit-booking">
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    اسم العميل
-                </label>
-
-                <input id="edit-customer">
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    رقم الهاتف
-                </label>
-
-                <input id="edit-phone">
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    اسم الصنف
-                </label>
-
-                <input id="edit-item">
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    طريقة الدفع
-                </label>
-
-                <select id="edit-payment">
-
-                    <option value="كاش">
-                        💵 كاش
-                    </option>
-
-                    <option value="فيزا">
-                        💳 فيزا
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    المبلغ الإجمالي
-                </label>
-
-                <input
-                    type="number"
-                    id="edit-total"
-                    oninput="calculateEditNet()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    التوصيل
-                </label>
-
-                <input
-                    type="number"
-                    id="edit-delivery"
-                    oninput="calculateEditNet()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    بعد خصم التوصيل
-                </label>
-
-                <input
-                    type="number"
-                    id="edit-net"
-                    readonly
-                >
-
-            </div>
-
-        </div>
-
-
-        <div class="modal-actions">
-
-            <button
-                class="btn btn-primary"
-                onclick="saveEditedOrder()"
-            >
-                💾 حفظ التعديل
-            </button>
-
-            <button
-                class="btn btn-gray"
-                onclick="closeEditModal()"
-            >
-                إلغاء
-            </button>
-
-        </div>
-
-    </div>
-
+<div class="page-title"><div><h1>🛒 أوردرات الأونلاين</h1><p>إدارة ومتابعة جميع طلبات العملاء</p></div></div>
+
+<div class="stats">
+<div class="stat"><div class="stat-label">📦 إجمالي الأوردرات</div><div class="stat-value" id="stat-orders">0</div></div>
+<div class="stat"><div class="stat-label">💰 إجمالي المبيعات</div><div class="stat-value" id="stat-total">0 EGP</div></div>
+<div class="stat"><div class="stat-label">🚚 إجمالي التوصيل</div><div class="stat-value" id="stat-delivery">0 EGP</div></div>
+<div class="stat"><div class="stat-label">💵 بعد خصم التوصيل</div><div class="stat-value" id="stat-net">0 EGP</div></div>
 </div>
 
+<div class="card">
+<div class="card-title"><h2>➕ إضافة أوردر جديد</h2></div>
+<form id="order-form" class="order-form">
+<div class="field"><label>رقم الحجز</label><input type="text" id="booking-number" placeholder="مثال: 12584" required></div>
+<div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="order-date" required></div>
+<div class="field"><label>المبلغ الإجمالي</label><input type="number" id="total-amount" min="0" step="0.01" placeholder="0" required oninput="calculateNet()"></div>
+<div class="field"><label>طريقة الدفع</label><select id="payment-method" required><option value="">اختر طريقة الدفع</option><option value="كاش">💵 كاش</option><option value="فيزا">💳 فيزا</option></select></div>
+<div class="field"><label>مبلغ التوصيل</label><input type="number" id="delivery-price" min="0" step="0.01" value="0" placeholder="0" oninput="calculateNet()"></div>
+<div class="field"><label>المبلغ بعد التوصيل</label><input type="number" id="net-amount" readonly placeholder="0"></div>
+<div class="form-actions"><button type="submit" class="btn btn-primary">💾 إضافة الأوردر</button><button type="button" class="btn btn-gray" onclick="clearOrderForm()">مسح البيانات</button></div>
+</form></div>
 
-<!-- =========================
-     FIREBASE
-========================= -->
+<div class="card">
+<div class="card-title"><h2>📋 سجل الأوردرات</h2></div>
+<div class="toolbar">
+<input type="text" id="search-input" placeholder="🔎 بحث برقم الحجز..." oninput="renderOrders()">
+<select id="status-filter" onchange="renderOrders()"><option value="all">كل الحالات</option><option value="active">✅ غير ملغي</option><option value="cancelled">❌ ملغي</option></select>
+</div>
+<div class="table-wrap">
+<table><thead><tr><th>#</th><th>رقم الحجز</th><th>المبلغ الإجمالي</th><th>طريقة الدفع</th><th>مبلغ التوصيل</th><th>المبلغ بعد التوصيل</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+<tbody id="orders-body"></tbody></table>
+</div>
+<div class="table-footer">
+<div class="footer-box"><span>الأوردرات الظاهرة</span><strong id="footer-orders">0</strong></div>
+<div class="footer-box"><span>إجمالي الظاهر</span><strong id="footer-total">0 EGP</strong></div>
+<div class="footer-box"><span>صافي الظاهر</span><strong id="footer-net">0 EGP</strong></div>
+</div></div>
+
+<div class="card monthly-card">
+<div class="monthly-header"><div class="monthly-title"><h2>📊 إحصائيات المبيعات الشهرية</h2><p>كل شهر له إحصائياته حسب تاريخ الأوردر</p></div>
+<div class="month-selects"><select id="monthly-year" class="year-select" onchange="renderMonthlySales()"></select></div></div>
+<div class="monthly-table-wrap"><table class="monthly-table"><thead><tr><th>الشهر</th><th>عدد الأوردرات</th><th>إجمالي المبيعات</th><th>إجمالي التوصيل</th><th>الصافي بعد التوصيل</th></tr></thead><tbody id="monthly-sales-body"></tbody></table></div>
+<div class="monthly-summary">
+<div class="month-summary-box"><span>إجمالي أوردرات السنة</span><strong id="year-orders">0</strong></div>
+<div class="month-summary-box"><span>إجمالي مبيعات السنة</span><strong id="year-total">0 EGP</strong></div>
+<div class="month-summary-box"><span>إجمالي التوصيل</span><strong id="year-delivery">0 EGP</strong></div>
+<div class="month-summary-box"><span>صافي السنة</span><strong id="year-net">0 EGP</strong></div>
+</div></div>
+</main>
+
+<div id="edit-modal" class="modal"><div class="modal-card">
+<div class="modal-header"><h3>✏ تعديل الأوردر</h3><button class="close" onclick="closeEditModal()">×</button></div>
+<div class="modal-grid">
+<div class="field"><label>رقم الحجز</label><input id="edit-booking"></div>
+<div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="edit-date"></div>
+<div class="field"><label>المبلغ الإجمالي</label><input type="number" id="edit-total" min="0" step="0.01" oninput="calculateEditNet()"></div>
+<div class="field"><label>طريقة الدفع</label><select id="edit-payment"><option value="كاش">💵 كاش</option><option value="فيزا">💳 فيزا</option></select></div>
+<div class="field"><label>مبلغ التوصيل</label><input type="number" id="edit-delivery" min="0" step="0.01" oninput="calculateEditNet()"></div>
+<div class="field"><label>المبلغ بعد التوصيل</label><input type="number" id="edit-net" readonly></div>
+</div>
+<div class="modal-actions"><button class="btn btn-primary" onclick="saveEditedOrder()">💾 حفظ التعديل</button><button class="btn btn-gray" onclick="closeEditModal()">إلغاء</button></div>
+</div></div>
 
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
-
-
 <script>
-
 const firebaseConfig = {
-
-    apiKey:"AIzaSyBoGxX4SvH6dqvS1_D07GmHliTlrfaJTw8",
-
-    authDomain:"store-754c5.firebaseapp.com",
-
-    projectId:"store-754c5",
-
-    storageBucket:"store-754c5.firebasestorage.app",
-
-    messagingSenderId:"392118549414",
-
-    appId:"1:392118549414:web:5abc5e61f041518f8ced67",
-
-    measurementId:"G-WRW47QYCJ4"
-
+apiKey:"AIzaSyBoGxX4SvH6dqvS1_D07GmHliTlrfaJTw8",
+authDomain:"store-754c5.firebaseapp.com",
+projectId:"store-754c5",
+storageBucket:"store-754c5.firebasestorage.app",
+messagingSenderId:"392118549414",
+appId:"1:392118549414:web:5abc5e61f041518f8ced67",
+measurementId:"G-WRW47QYCJ4"
 };
 
-
 firebase.initializeApp(firebaseConfig);
-
-
-const auth =
-    firebase.auth();
-
-
-const db =
-    firebase.firestore();
-
-
-const storeRef =
-    db.collection("store")
-      .doc("store_v_final_v4");
-
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storeRef = db.collection("store").doc("store_v_final_v4");
 
 let onlineOrders = [];
-
 let currentUser = null;
-
 let editingOrderId = null;
 
-
 const ADMIN_EMAILS = [
-
-    "himamax31@gmail.com",
-
-    "ahmedemad@gmail.com"
-
+"himamax31@gmail.com",
+"ahmedemad@gmail.com"
 ];
-
-
-/* =========================
-   LOGIN
-========================= */
 
 function showLoginError(message){
-
-    document.getElementById(
-        "login-error"
-    ).textContent =
-        message || "";
-
+document.getElementById("login-error").textContent = message || "";
 }
-
 
 async function loginUser(){
+const email = document.getElementById("login-email").value.trim().toLowerCase();
+const password = document.getElementById("login-password").value;
+showLoginError("");
 
-    const email =
-        document.getElementById(
-            "login-email"
-        )
-        .value
-        .trim()
-        .toLowerCase();
-
-
-    const password =
-        document.getElementById(
-            "login-password"
-        ).value;
-
-
-    showLoginError("");
-
-
-    if(!email || !password){
-
-        showLoginError(
-            "من فضلك أدخل البريد الإلكتروني وكلمة المرور."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const result =
-            await auth.signInWithEmailAndPassword(
-                email,
-                password
-            );
-
-
-        const loggedEmail =
-            (result.user.email || "")
-            .trim()
-            .toLowerCase();
-
-
-        if(!ADMIN_EMAILS.includes(loggedEmail)){
-
-            await auth.signOut();
-
-            showLoginError(
-                "هذا الحساب ليس لديه صلاحية الدخول."
-            );
-
-            return;
-
-        }
-
-
-        currentUser =
-            result.user;
-
-
-        document.getElementById(
-            "login-screen"
-        ).style.display =
-            "none";
-
-
-        await loadOrders();
-
-    }catch(error){
-
-        console.error(error);
-
-        showLoginError(
-            "البريد الإلكتروني أو كلمة المرور غير صحيحة."
-        );
-
-    }
-
+if(!email || !password){
+showLoginError("من فضلك أدخل البريد الإلكتروني وكلمة المرور.");
+return;
 }
 
+try{
+const result = await auth.signInWithEmailAndPassword(email,password);
+const loggedEmail = (result.user.email || "").trim().toLowerCase();
+
+if(!ADMIN_EMAILS.includes(loggedEmail)){
+await auth.signOut();
+showLoginError("هذا الحساب ليس لديه صلاحية الدخول.");
+return;
+}
+
+currentUser = result.user;
+document.getElementById("login-screen").style.display = "none";
+await loadOrders();
+
+}catch(error){
+console.error(error);
+showLoginError("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+}
+}
 
 async function logoutUser(){
-
-    await auth.signOut();
-
-    currentUser = null;
-
-    onlineOrders = [];
-
-    document.getElementById(
-        "login-screen"
-    ).style.display =
-        "flex";
-
-    renderOrders();
-
+await auth.signOut();
+currentUser = null;
+onlineOrders = [];
+document.getElementById("login-screen").style.display = "flex";
+renderOrders();
+renderMonthlySales();
 }
-
-
-/* =========================
-   FIREBASE
-========================= */
 
 async function loadOrders(){
+try{
+const doc = await storeRef.get();
 
-    try{
-
-        const doc =
-            await storeRef.get();
-
-
-        if(doc.exists){
-
-            const data =
-                doc.data() || {};
-
-
-            if(Array.isArray(data.onlineOrders)){
-
-                onlineOrders =
-                    data.onlineOrders;
-
-            }else{
-
-                onlineOrders = [];
-
-            }
-
-        }else{
-
-            onlineOrders = [];
-
-        }
-
-
-        prepareMonthlyYears();
-
-        setCurrentMonth();
-
-        renderOrders();
-
-        renderMonthlySales();
-
-    }catch(error){
-
-        console.error(
-            "Firebase Load Error:",
-            error
-        );
-
-        alert(
-            "حدث خطأ أثناء تحميل الأوردرات:\n"
-            + error.message
-        );
-
-    }
-
+if(doc.exists){
+const data = doc.data() || {};
+onlineOrders = Array.isArray(data.onlineOrders) ? data.onlineOrders : [];
+}else{
+onlineOrders = [];
 }
 
+prepareMonthlyYears();
+setCurrentYear();
+renderOrders();
+renderMonthlySales();
+
+}catch(error){
+console.error("Firebase Load Error:",error);
+alert("حدث خطأ أثناء تحميل الأوردرات:\n" + error.message);
+}
+}
 
 async function saveOrders(){
-
-    if(!currentUser){
-
-        alert(
-            "يجب تسجيل الدخول أولاً."
-        );
-
-        return false;
-
-    }
-
-
-    try{
-
-        await storeRef.set(
-
-            {
-                onlineOrders:
-                    onlineOrders
-            },
-
-            {
-                merge:true
-            }
-
-        );
-
-        return true;
-
-    }catch(error){
-
-        console.error(
-            "Firebase Save Error:",
-            error
-        );
-
-        alert(
-            "حدث خطأ أثناء حفظ البيانات:\n"
-            + error.message
-        );
-
-        return false;
-
-    }
-
+if(!currentUser){
+alert("يجب تسجيل الدخول أولاً.");
+return false;
 }
 
-
-/* =========================
-   CALCULATIONS
-========================= */
+try{
+await storeRef.set({onlineOrders:onlineOrders},{merge:true});
+return true;
+}catch(error){
+console.error("Firebase Save Error:",error);
+alert("حدث خطأ أثناء حفظ البيانات:\n" + error.message);
+return false;
+}
+}
 
 function calculateNet(){
-
-    const total =
-        parseFloat(
-            document.getElementById(
-                "total-amount"
-            ).value
-        ) || 0;
-
-
-    const delivery =
-        parseFloat(
-            document.getElementById(
-                "delivery-price"
-            ).value
-        ) || 0;
-
-
-    const net =
-        Math.max(
-            total - delivery,
-            0
-        );
-
-
-    document.getElementById(
-        "net-amount"
-    ).value =
-        net.toFixed(2);
-
+const total = parseFloat(document.getElementById("total-amount").value) || 0;
+const delivery = parseFloat(document.getElementById("delivery-price").value) || 0;
+document.getElementById("net-amount").value = Math.max(total-delivery,0).toFixed(2);
 }
-
 
 function calculateEditNet(){
-
-    const total =
-        parseFloat(
-            document.getElementById(
-                "edit-total"
-            ).value
-        ) || 0;
-
-
-    const delivery =
-        parseFloat(
-            document.getElementById(
-                "edit-delivery"
-            ).value
-        ) || 0;
-
-
-    document.getElementById(
-        "edit-net"
-    ).value =
-        Math.max(
-            total - delivery,
-            0
-        ).toFixed(2);
-
+const total = parseFloat(document.getElementById("edit-total").value) || 0;
+const delivery = parseFloat(document.getElementById("edit-delivery").value) || 0;
+document.getElementById("edit-net").value = Math.max(total-delivery,0).toFixed(2);
 }
-
-
-/* =========================
-   CURRENT DATE
-========================= */
 
 function getCurrentDateTimeLocal(){
-
-    const now =
-        new Date();
-
-
-    const offset =
-        now.getTimezoneOffset();
-
-
-    const localDate =
-        new Date(
-            now.getTime() -
-            offset * 60000
-        );
-
-
-    return localDate
-        .toISOString()
-        .slice(0,16);
-
+const now = new Date();
+const offset = now.getTimezoneOffset();
+const localDate = new Date(now.getTime() - offset*60000);
+return localDate.toISOString().slice(0,16);
 }
 
-
-function setCurrentMonth(){
-
-    const now =
-        new Date();
-
-
-    const monthSelect =
-        document.getElementById(
-            "monthly-month"
-        );
-
-
-    if(monthSelect){
-
-        monthSelect.value =
-            now.getMonth();
-
-    }
-
+function setCurrentYear(){
+const yearSelect = document.getElementById("monthly-year");
+if(yearSelect) yearSelect.value = new Date().getFullYear();
 }
 
-
-/* =========================
-   SET DEFAULT ORDER DATE
-========================= */
-
-document.getElementById(
-    "order-date"
-).value =
-    getCurrentDateTimeLocal();
-
-
-/* =========================
-   ADD ORDER
-========================= */
-
-document.getElementById(
-    "order-form"
-)
-.addEventListener(
-    "submit",
-    async function(event){
-
-        event.preventDefault();
-
-
-        const booking =
-            document.getElementById(
-                "booking-number"
-            )
-            .value
-            .trim();
-
-
-        const customer =
-            document.getElementById(
-                "customer-name"
-            )
-            .value
-            .trim();
-
-
-        const phone =
-            document.getElementById(
-                "customer-phone"
-            )
-            .value
-            .trim();
-
-
-        const item =
-            document.getElementById(
-                "item-name"
-            )
-            .value
-            .trim();
-
-
-        const payment =
-            document.getElementById(
-                "payment-method"
-            ).value;
-
-
-        const orderDate =
-            document.getElementById(
-                "order-date"
-            ).value;
-
-
-        const total =
-            parseFloat(
-                document.getElementById(
-                    "total-amount"
-                ).value
-            ) || 0;
-
-
-        const delivery =
-            parseFloat(
-                document.getElementById(
-                    "delivery-price"
-                ).value
-            ) || 0;
-
-
-        if(
-            !booking ||
-            !customer ||
-            !phone ||
-            !item ||
-            !payment ||
-            !orderDate ||
-            total < 0
-        ){
-
-            alert(
-                "من فضلك أكمل جميع بيانات الأوردر."
-            );
-
-            return;
-
-        }
-
-
-        const duplicate =
-            onlineOrders.find(
-                order =>
-                    String(order.booking) ===
-                    String(booking)
-            );
-
-
-        if(duplicate){
-
-            alert(
-                "رقم الحجز موجود بالفعل في النظام."
-            );
-
-            return;
-
-        }
-
-
-        const now =
-            new Date();
-
-
-        const order = {
-
-            id:
-                Date.now().toString()
-                + "_"
-                + Math.random()
-                    .toString(36)
-                    .substring(2,8),
-
-            booking:
-                booking,
-
-            customer:
-                customer,
-
-            phone:
-                phone,
-
-            item:
-                item,
-
-            payment:
-                payment,
-
-            total:
-                total,
-
-            delivery:
-                delivery,
-
-            net:
-                Math.max(
-                    total - delivery,
-                    0
-                ),
-
-            cancelled:
-                false,
-
-            /*
-             * التاريخ الذي اختاره المستخدم
-             */
-            orderDate:
-                orderDate,
-
-            /*
-             * وقت إنشاء السجل فعلياً
-             */
-            createdAt:
-                now.toISOString(),
-
-            createdTimestamp:
-                Date.now()
-
-        };
-
-
-        onlineOrders.unshift(
-            order
-        );
-
-
-        const saved =
-            await saveOrders();
-
-
-        if(saved){
-
-            clearOrderForm();
-
-            prepareMonthlyYears();
-
-            renderOrders();
-
-            renderMonthlySales();
-
-            alert(
-                "تم إضافة الأوردر بنجاح ✅"
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================
-   CLEAR FORM
-========================= */
+document.getElementById("order-date").value = getCurrentDateTimeLocal();
+
+document.getElementById("order-form").addEventListener("submit",async function(event){
+event.preventDefault();
+
+const booking = document.getElementById("booking-number").value.trim();
+const orderDate = document.getElementById("order-date").value;
+const total = parseFloat(document.getElementById("total-amount").value) || 0;
+const payment = document.getElementById("payment-method").value;
+const delivery = parseFloat(document.getElementById("delivery-price").value) || 0;
+
+if(!booking || !orderDate || !payment || total < 0 || delivery < 0){
+alert("من فضلك أكمل بيانات الأوردر.");
+return;
+}
+
+const duplicate = onlineOrders.find(order => String(order.booking) === String(booking));
+
+if(duplicate){
+alert("رقم الحجز موجود بالفعل في النظام.");
+return;
+}
+
+const now = new Date();
+
+const order = {
+id:Date.now().toString()+"_"+Math.random().toString(36).substring(2,8),
+booking:booking,
+payment:payment,
+total:total,
+delivery:delivery,
+net:Math.max(total-delivery,0),
+cancelled:false,
+orderDate:orderDate,
+createdAt:now.toISOString(),
+createdTimestamp:Date.now()
+};
+
+onlineOrders.unshift(order);
+
+const saved = await saveOrders();
+
+if(saved){
+clearOrderForm();
+prepareMonthlyYears();
+renderOrders();
+renderMonthlySales();
+alert("تم إضافة الأوردر بنجاح ✅");
+}
+});
 
 function clearOrderForm(){
-
-    document.getElementById(
-        "order-form"
-    ).reset();
-
-
-    document.getElementById(
-        "delivery-price"
-    ).value =
-        "0";
-
-
-    document.getElementById(
-        "net-amount"
-    ).value =
-        "";
-
-
-    document.getElementById(
-        "order-date"
-    ).value =
-        getCurrentDateTimeLocal();
-
+document.getElementById("order-form").reset();
+document.getElementById("delivery-price").value = "0";
+document.getElementById("net-amount").value = "";
+document.getElementById("order-date").value = getCurrentDateTimeLocal();
 }
-
-
-/* =========================
-   RENDER ORDERS
-========================= */
 
 function renderOrders(){
-
-    const body =
-        document.getElementById(
-            "orders-body"
-        );
-
-
-    const search =
-        (
-            document.getElementById(
-                "search-input"
-            )?.value || ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-    const paymentFilter =
-        document.getElementById(
-            "payment-filter"
-        )?.value || "all";
-
-
-    const statusFilter =
-        document.getElementById(
-            "status-filter"
-        )?.value || "all";
-
-
-    const sortFilter =
-        document.getElementById(
-            "sort-filter"
-        )?.value || "newest";
-
-
-    let filtered =
-        [...onlineOrders];
-
-
-    if(search){
-
-        filtered =
-            filtered.filter(
-                order => {
-
-                    const text = [
-
-                        order.booking,
-
-                        order.customer,
-
-                        order.phone,
-
-                        order.item
-
-                    ]
-                    .join(" ")
-                    .toLowerCase();
-
-
-                    return text.includes(
-                        search
-                    );
-
-                }
-            );
-
-    }
-
-
-    if(paymentFilter !== "all"){
-
-        filtered =
-            filtered.filter(
-                order =>
-                    order.payment ===
-                    paymentFilter
-            );
-
-    }
-
-
-    if(statusFilter === "active"){
-
-        filtered =
-            filtered.filter(
-                order =>
-                    !order.cancelled
-            );
-
-    }
-
-
-    if(statusFilter === "cancelled"){
-
-        filtered =
-            filtered.filter(
-                order =>
-                    order.cancelled
-            );
-
-    }
-
-
-    if(sortFilter === "newest"){
-
-        filtered.sort(
-            (a,b) =>
-                (b.createdTimestamp || 0) -
-                (a.createdTimestamp || 0)
-        );
-
-    }
-
-
-    if(sortFilter === "oldest"){
-
-        filtered.sort(
-            (a,b) =>
-                (a.createdTimestamp || 0) -
-                (b.createdTimestamp || 0)
-        );
-
-    }
-
-
-    if(sortFilter === "high"){
-
-        filtered.sort(
-            (a,b) =>
-                (b.total || 0) -
-                (a.total || 0)
-        );
-
-    }
-
-
-    if(sortFilter === "low"){
-
-        filtered.sort(
-            (a,b) =>
-                (a.total || 0) -
-                (b.total || 0)
-        );
-
-    }
-
-
-    body.innerHTML = "";
-
-
-    if(filtered.length === 0){
-
-        body.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="12"
-                    class="empty"
-                >
-
-                    📭 لا توجد أوردرات مطابقة للبحث
-
-                </td>
-
-            </tr>
-
-        `;
-
-    }else{
-
-        filtered.forEach(
-            (order,index) => {
-
-                const date =
-                    formatDate(
-                        getOrderDateValue(order)
-                    );
-
-
-                const paymentClass =
-                    order.payment === "فيزا"
-                    ? "visa"
-                    : "cash";
-
-
-                const status =
-                    order.cancelled
-
-                    ? `
-                        <span class="badge cancelled">
-                            ❌ ملغي
-                        </span>
-                      `
-
-                    : `
-                        <span class="badge active-order">
-                            ✅ مؤكد
-                        </span>
-                      `;
-
-
-                const action =
-                    order.cancelled
-
-                    ? `
-                        <button
-                            class="action-btn restore"
-                            onclick="restoreOrder('${order.id}')"
-                        >
-                            إعادة
-                        </button>
-                      `
-
-                    : `
-                        <button
-                            class="action-btn cancel"
-                            onclick="cancelOrder('${order.id}')"
-                        >
-                            إلغاء
-                        </button>
-                      `;
-
-
-                body.innerHTML += `
-
-                    <tr>
-
-                        <td>
-                            ${index + 1}
-                        </td>
-
-                        <td class="booking">
-                            ${escapeHtml(order.booking)}
-                        </td>
-
-                        <td>
-                            ${escapeHtml(order.customer)}
-                        </td>
-
-                        <td>
-                            ${escapeHtml(order.item)}
-                        </td>
-
-                        <td dir="ltr">
-                            ${escapeHtml(order.phone)}
-                        </td>
-
-                        <td>
-
-                            <span
-                                class="badge ${paymentClass}"
-                            >
-
-                                ${
-                                    order.payment === "فيزا"
-                                    ? "💳 فيزا"
-                                    : "💵 كاش"
-                                }
-
-                            </span>
-
-                        </td>
-
-                        <td class="amount">
-                            ${money(order.total)}
-                        </td>
-
-                        <td class="delivery">
-                            ${money(order.delivery)}
-                        </td>
-
-                        <td class="net">
-                            ${money(order.net)}
-                        </td>
-
-                        <td>
-                            ${status}
-                        </td>
-
-                        <td dir="ltr">
-                            ${date}
-                        </td>
-
-                        <td>
-
-                            <button
-                                class="action-btn edit"
-                                onclick="editOrder('${order.id}')"
-                            >
-                                تعديل
-                            </button>
-
-                            ${action}
-
-                            <button
-                                class="action-btn delete"
-                                onclick="deleteOrder('${order.id}')"
-                            >
-                                حذف
-                            </button>
-
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
-        );
-
-    }
-
-
-    updateStats();
-
-
-    let visibleTotal = 0;
-
-    let visibleNet = 0;
-
-
-    filtered.forEach(
-        order => {
-
-            visibleTotal +=
-                Number(order.total) || 0;
-
-            visibleNet +=
-                Number(order.net) || 0;
-
-        }
-    );
-
-
-    document.getElementById(
-        "footer-orders"
-    ).textContent =
-        filtered.length;
-
-
-    document.getElementById(
-        "footer-total"
-    ).textContent =
-        money(
-            filtered.length
-            ? visibleTotal
-            : 0
-        );
-
-
-    document.getElementById(
-        "footer-net"
-    ).textContent =
-        money(
-            filtered.length
-            ? visibleNet
-            : 0
-        );
-
+const body = document.getElementById("orders-body");
+const search = (document.getElementById("search-input")?.value || "").trim().toLowerCase();
+const statusFilter = document.getElementById("status-filter")?.value || "all";
+
+let filtered = [...onlineOrders];
+
+if(search){
+filtered = filtered.filter(order =>
+String(order.booking || "").toLowerCase().includes(search)
+);
 }
 
+if(statusFilter === "active"){
+filtered = filtered.filter(order => !order.cancelled);
+}
 
-/* =========================
-   STATS
-========================= */
+if(statusFilter === "cancelled"){
+filtered = filtered.filter(order => order.cancelled);
+}
+
+/* الترتيب دائماً حسب تاريخ الأوردر، الأحدث أولاً */
+filtered.sort((a,b) => {
+const dateA = getOrderDate(a);
+const dateB = getOrderDate(b);
+const timeA = dateA ? dateA.getTime() : 0;
+const timeB = dateB ? dateB.getTime() : 0;
+return timeB-timeA;
+});
+
+body.innerHTML = "";
+
+if(filtered.length === 0){
+body.innerHTML = '<tr><td colspan="9" class="empty">📭 لا توجد أوردرات مطابقة للبحث</td></tr>';
+}else{
+filtered.forEach((order,index) => {
+const date = formatDate(getOrderDateValue(order));
+
+const status = order.cancelled
+? '<span class="badge cancelled">❌ ملغي</span>'
+: '<span class="badge active-order">✅ مؤكد</span>';
+
+const action = order.cancelled
+? '<button class="action-btn restore" onclick="restoreOrder(\''+order.id+'\')">إعادة</button>'
+: '<button class="action-btn cancel" onclick="cancelOrder(\''+order.id+'\')">إلغاء</button>';
+
+const netValue = order.net !== undefined
+? order.net
+: Math.max(Number(order.total||0)-Number(order.delivery||0),0);
+
+body.innerHTML += `
+<tr>
+<td>${index+1}</td>
+<td class="booking">${escapeHtml(order.booking)}</td>
+<td class="amount">${money(order.total)}</td>
+<td><span class="badge ${order.payment === "فيزا" ? "visa" : order.payment === "كاش" ? "cash" : ""}">${order.payment === "فيزا" ? "💳 فيزا" : order.payment === "كاش" ? "💵 كاش" : "— غير محدد"}</span></td>
+<td class="delivery">${money(order.delivery)}</td>
+<td class="net">${money(netValue)}</td>
+<td dir="ltr">${date}</td>
+<td>${status}</td>
+<td>
+<button class="action-btn edit" onclick="editOrder('${order.id}')">تعديل</button>
+${action}
+<button class="action-btn delete" onclick="deleteOrder('${order.id}')">حذف</button>
+</td>
+</tr>
+`;
+});
+}
+
+updateStats();
+
+let visibleTotal = 0;
+let visibleNet = 0;
+
+filtered.forEach(order => {
+visibleTotal += Number(order.total) || 0;
+visibleNet += Number(order.net !== undefined ? order.net : Math.max(Number(order.total||0)-Number(order.delivery||0),0)) || 0;
+});
+
+document.getElementById("footer-orders").textContent = filtered.length;
+document.getElementById("footer-total").textContent = money(filtered.length ? visibleTotal : 0);
+document.getElementById("footer-net").textContent = money(filtered.length ? visibleNet : 0);
+}
 
 function updateStats(){
+const active = onlineOrders.filter(order => !order.cancelled);
+let total = 0;
+let delivery = 0;
+let net = 0;
 
-    const active =
-        onlineOrders.filter(
-            order =>
-                !order.cancelled
-        );
+active.forEach(order => {
+total += Number(order.total) || 0;
+delivery += Number(order.delivery) || 0;
+net += Number(order.net !== undefined ? order.net : Math.max(Number(order.total||0)-Number(order.delivery||0),0)) || 0;
+});
 
-
-    let total = 0;
-
-    let delivery = 0;
-
-    let net = 0;
-
-
-    active.forEach(
-        order => {
-
-            total +=
-                Number(order.total) || 0;
-
-            delivery +=
-                Number(order.delivery) || 0;
-
-            net +=
-                Number(order.net) || 0;
-
-        }
-    );
-
-
-    document.getElementById(
-        "stat-orders"
-    ).textContent =
-        active.length;
-
-
-    document.getElementById(
-        "stat-total"
-    ).textContent =
-        money(total);
-
-
-    document.getElementById(
-        "stat-delivery"
-    ).textContent =
-        money(delivery);
-
-
-    document.getElementById(
-        "stat-net"
-    ).textContent =
-        money(net);
-
+document.getElementById("stat-orders").textContent = active.length;
+document.getElementById("stat-total").textContent = money(total);
+document.getElementById("stat-delivery").textContent = money(delivery);
+document.getElementById("stat-net").textContent = money(net);
 }
 
-
-/* =========================================================
-   MONTHLY SALES
-========================================================= */
-
-const monthNames = [
-
-    "يناير",
-
-    "فبراير",
-
-    "مارس",
-
-    "أبريل",
-
-    "مايو",
-
-    "يونيو",
-
-    "يوليو",
-
-    "أغسطس",
-
-    "سبتمبر",
-
-    "أكتوبر",
-
-    "نوفمبر",
-
-    "ديسمبر"
-
-];
-
-
-/*
- * أهم تعديل:
- * لو الأوردر الجديد عنده orderDate
- * نستخدمه.
- *
- * الأوردرات القديمة التي لا يوجد بها orderDate
- * نرجع إلى createdAt.
- */
+const monthNames = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
 
 function getOrderDateValue(order){
-
-    if(
-        order &&
-        order.orderDate
-    ){
-
-        return order.orderDate;
-
-    }
-
-
-    if(
-        order &&
-        order.createdAt
-    ){
-
-        return order.createdAt;
-
-    }
-
-
-    return null;
-
+if(order && order.orderDate) return order.orderDate;
+if(order && order.createdAt) return order.createdAt;
+return null;
 }
-
 
 function getOrderDate(order){
-
-    const value =
-        getOrderDateValue(order);
-
-
-    if(!value){
-
-        return null;
-
-    }
-
-
-    const date =
-        new Date(value);
-
-
-    if(
-        isNaN(
-            date.getTime()
-        )
-    ){
-
-        return null;
-
-    }
-
-
-    return date;
-
+const value = getOrderDateValue(order);
+if(!value) return null;
+const date = new Date(value);
+if(isNaN(date.getTime())) return null;
+return date;
 }
-
-
-/* =========================
-   YEARS
-========================= */
 
 function prepareMonthlyYears(){
+const select = document.getElementById("monthly-year");
+if(!select) return;
 
-    const select =
-        document.getElementById(
-            "monthly-year"
-        );
+const years = new Set();
 
+onlineOrders.forEach(order => {
+const date = getOrderDate(order);
+if(date) years.add(date.getFullYear());
+});
 
-    if(!select){
+const currentYear = new Date().getFullYear();
+years.add(currentYear);
 
-        return;
+const sortedYears = [...years].sort((a,b) => b-a);
+const oldValue = select.value;
+select.innerHTML = "";
 
-    }
+sortedYears.forEach(year => {
+const option = document.createElement("option");
+option.value = year;
+option.textContent = year;
+select.appendChild(option);
+});
 
-
-    const years =
-        new Set();
-
-
-    onlineOrders.forEach(
-        order => {
-
-            const date =
-                getOrderDate(order);
-
-
-            if(date){
-
-                years.add(
-                    date.getFullYear()
-                );
-
-            }
-
-        }
-    );
-
-
-    const currentYear =
-        new Date().getFullYear();
-
-
-    years.add(
-        currentYear
-    );
-
-
-    const sortedYears =
-        [...years]
-        .sort(
-            (a,b) =>
-                b-a
-        );
-
-
-    const oldValue =
-        select.value;
-
-
-    select.innerHTML = "";
-
-
-    sortedYears.forEach(
-        year => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-
-            option.value =
-                year;
-
-
-            option.textContent =
-                year;
-
-
-            select.appendChild(
-                option
-            );
-
-        }
-    );
-
-
-    if(
-        sortedYears.includes(
-            Number(oldValue)
-        )
-    ){
-
-        select.value =
-            oldValue;
-
-    }else{
-
-        select.value =
-            currentYear;
-
-    }
-
+if(sortedYears.includes(Number(oldValue))){
+select.value = oldValue;
+}else{
+select.value = currentYear;
 }
-
-
-/* =========================
-   RENDER SELECTED MONTH ONLY
-========================= */
+}
 
 function renderMonthlySales(){
-
-    const body =
-        document.getElementById(
-            "monthly-sales-body"
-        );
-
-
-    const yearSelect =
-        document.getElementById(
-            "monthly-year"
-        );
-
-
-    const monthSelect =
-        document.getElementById(
-            "monthly-month"
-        );
-
-
-    if(
-        !body ||
-        !yearSelect ||
-        !monthSelect
-    ){
-
-        return;
-
-    }
-
-
-    const selectedYear =
-        Number(
-            yearSelect.value
-        );
-
-
-    const selectedMonth =
-        Number(
-            monthSelect.value
-        );
-
-
-    if(
-        !selectedYear ||
-        selectedMonth < 0
-    ){
-
-        return;
-
-    }
-
-
-    let orders = 0;
-
-    let total = 0;
-
-    let delivery = 0;
-
-    let net = 0;
-
-
-    onlineOrders.forEach(
-        order => {
-
-            /*
-             * الأوردر الملغي
-             * لا يدخل في حساب المبيعات
-             */
-
-            if(order.cancelled){
-
-                return;
-
-            }
-
-
-            const date =
-                getOrderDate(order);
-
-
-            if(!date){
-
-                return;
-
-            }
-
-
-            if(
-                date.getFullYear()
-                !==
-                selectedYear
-            ){
-
-                return;
-
-            }
-
-
-            if(
-                date.getMonth()
-                !==
-                selectedMonth
-            ){
-
-                return;
-
-            }
-
-
-            orders += 1;
-
-
-            total +=
-                Number(order.total) || 0;
-
-
-            delivery +=
-                Number(order.delivery) || 0;
-
-
-            net +=
-                Number(order.net) || 0;
-
-        }
-    );
-
-
-    body.innerHTML = `
-
-        <tr>
-
-            <td class="month-name">
-
-                ${monthNames[selectedMonth]}
-
-            </td>
-
-            <td class="${
-                orders > 0
-                ? "month-orders"
-                : "month-zero"
-            }">
-
-                ${orders}
-
-            </td>
-
-            <td class="${
-                orders > 0
-                ? "month-total"
-                : "month-zero"
-            }">
-
-                ${money(total)}
-
-            </td>
-
-            <td class="${
-                orders > 0
-                ? "month-delivery"
-                : "month-zero"
-            }">
-
-                ${money(delivery)}
-
-            </td>
-
-            <td class="${
-                orders > 0
-                ? "month-net"
-                : "month-zero"
-            }">
-
-                ${money(net)}
-
-            </td>
-
-        </tr>
-
-    `;
-
-
-    document.getElementById(
-        "year-orders"
-    ).textContent =
-        orders;
-
-
-    document.getElementById(
-        "year-total"
-    ).textContent =
-        money(total);
-
-
-    document.getElementById(
-        "year-delivery"
-    ).textContent =
-        money(delivery);
-
-
-    document.getElementById(
-        "year-net"
-    ).textContent =
-        money(net);
-
+const body = document.getElementById("monthly-sales-body");
+const yearSelect = document.getElementById("monthly-year");
+
+if(!body || !yearSelect) return;
+
+const selectedYear = Number(yearSelect.value);
+if(!selectedYear) return;
+
+let yearOrders = 0;
+let yearTotal = 0;
+let yearDelivery = 0;
+let yearNet = 0;
+let rows = "";
+
+for(let month=0; month<12; month++){
+let orders = 0;
+let total = 0;
+let delivery = 0;
+let net = 0;
+
+onlineOrders.forEach(order => {
+if(order.cancelled) return;
+
+const date = getOrderDate(order);
+if(!date) return;
+if(date.getFullYear() !== selectedYear) return;
+if(date.getMonth() !== month) return;
+
+orders++;
+total += Number(order.total) || 0;
+delivery += Number(order.delivery) || 0;
+net += Number(order.net !== undefined ? order.net : Math.max(Number(order.total||0)-Number(order.delivery||0),0)) || 0;
+});
+
+yearOrders += orders;
+yearTotal += total;
+yearDelivery += delivery;
+yearNet += net;
+
+rows += `
+<tr>
+<td class="${orders>0 ? "month-name" : "month-zero"}">${monthNames[month]}</td>
+<td class="${orders>0 ? "month-orders" : "month-zero"}">${orders}</td>
+<td class="${orders>0 ? "month-total" : "month-zero"}">${money(total)}</td>
+<td class="${orders>0 ? "month-delivery" : "month-zero"}">${money(delivery)}</td>
+<td class="${orders>0 ? "month-net" : "month-zero"}">${money(net)}</td>
+</tr>
+`;
 }
 
-
-/* =========================
-   EDIT
-========================= */
+body.innerHTML = rows;
+document.getElementById("year-orders").textContent = yearOrders;
+document.getElementById("year-total").textContent = money(yearTotal);
+document.getElementById("year-delivery").textContent = money(yearDelivery);
+document.getElementById("year-net").textContent = money(yearNet);
+}
 
 function editOrder(id){
+const order = onlineOrders.find(item => item.id === id);
+if(!order) return;
 
-    const order =
-        onlineOrders.find(
-            item =>
-                item.id === id
-        );
+editingOrderId = id;
 
+document.getElementById("edit-booking").value = order.booking || "";
+document.getElementById("edit-date").value = normalizeDateTimeLocal(getOrderDateValue(order));
+document.getElementById("edit-total").value = order.total || 0;
+document.getElementById("edit-payment").value = order.payment || "كاش";
+document.getElementById("edit-delivery").value = order.delivery || 0;
 
-    if(!order){
-
-        return;
-
-    }
-
-
-    editingOrderId =
-        id;
-
-
-    document.getElementById(
-        "edit-booking"
-    ).value =
-        order.booking || "";
-
-
-    document.getElementById(
-        "edit-customer"
-    ).value =
-        order.customer || "";
-
-
-    document.getElementById(
-        "edit-phone"
-    ).value =
-        order.phone || "";
-
-
-    document.getElementById(
-        "edit-item"
-    ).value =
-        order.item || "";
-
-
-    document.getElementById(
-        "edit-payment"
-    ).value =
-        order.payment || "كاش";
-
-
-    document.getElementById(
-        "edit-total"
-    ).value =
-        order.total || 0;
-
-
-    document.getElementById(
-        "edit-delivery"
-    ).value =
-        order.delivery || 0;
-
-
-    calculateEditNet();
-
-
-    document.getElementById(
-        "edit-modal"
-    ).classList.add(
-        "show"
-    );
-
+calculateEditNet();
+document.getElementById("edit-modal").classList.add("show");
 }
 
+function normalizeDateTimeLocal(value){
+if(!value) return getCurrentDateTimeLocal();
+
+const date = new Date(value);
+if(isNaN(date.getTime())) return getCurrentDateTimeLocal();
+
+const offset = date.getTimezoneOffset();
+const localDate = new Date(date.getTime()-offset*60000);
+
+return localDate.toISOString().slice(0,16);
+}
 
 function closeEditModal(){
-
-    editingOrderId =
-        null;
-
-
-    document.getElementById(
-        "edit-modal"
-    ).classList.remove(
-        "show"
-    );
-
+editingOrderId = null;
+document.getElementById("edit-modal").classList.remove("show");
 }
-
 
 async function saveEditedOrder(){
+if(!editingOrderId) return;
 
-    if(!editingOrderId){
+const order = onlineOrders.find(item => item.id === editingOrderId);
+if(!order) return;
 
-        return;
+const booking = document.getElementById("edit-booking").value.trim();
+const orderDate = document.getElementById("edit-date").value;
+const total = parseFloat(document.getElementById("edit-total").value) || 0;
+const payment = document.getElementById("edit-payment").value;
+const delivery = parseFloat(document.getElementById("edit-delivery").value) || 0;
 
-    }
-
-
-    const order =
-        onlineOrders.find(
-            item =>
-                item.id ===
-                editingOrderId
-        );
-
-
-    if(!order){
-
-        return;
-
-    }
-
-
-    const booking =
-        document.getElementById(
-            "edit-booking"
-        ).value.trim();
-
-
-    const customer =
-        document.getElementById(
-            "edit-customer"
-        ).value.trim();
-
-
-    const phone =
-        document.getElementById(
-            "edit-phone"
-        ).value.trim();
-
-
-    const item =
-        document.getElementById(
-            "edit-item"
-        ).value.trim();
-
-
-    const payment =
-        document.getElementById(
-            "edit-payment"
-        ).value;
-
-
-    const total =
-        parseFloat(
-            document.getElementById(
-                "edit-total"
-            ).value
-        ) || 0;
-
-
-    const delivery =
-        parseFloat(
-            document.getElementById(
-                "edit-delivery"
-            ).value
-        ) || 0;
-
-
-    if(
-        !booking ||
-        !customer ||
-        !phone ||
-        !item
-    ){
-
-        alert(
-            "من فضلك أكمل البيانات."
-        );
-
-        return;
-
-    }
-
-
-    const duplicate =
-        onlineOrders.find(
-            x =>
-                x.id !==
-                editingOrderId &&
-                String(x.booking) ===
-                String(booking)
-        );
-
-
-    if(duplicate){
-
-        alert(
-            "رقم الحجز مستخدم بالفعل."
-        );
-
-        return;
-
-    }
-
-
-    order.booking =
-        booking;
-
-
-    order.customer =
-        customer;
-
-
-    order.phone =
-        phone;
-
-
-    order.item =
-        item;
-
-
-    order.payment =
-        payment;
-
-
-    order.total =
-        total;
-
-
-    order.delivery =
-        delivery;
-
-
-    order.net =
-        Math.max(
-            total-delivery,
-            0
-        );
-
-
-    const saved =
-        await saveOrders();
-
-
-    if(saved){
-
-        closeEditModal();
-
-        prepareMonthlyYears();
-
-        renderOrders();
-
-        renderMonthlySales();
-
-        alert(
-            "تم تعديل الأوردر بنجاح ✅"
-        );
-
-    }
-
+if(!booking || !orderDate || !payment || total<0 || delivery<0){
+alert("من فضلك أكمل البيانات.");
+return;
 }
 
+const duplicate = onlineOrders.find(x =>
+x.id !== editingOrderId &&
+String(x.booking) === String(booking)
+);
 
-/* =========================
-   CANCEL
-========================= */
+if(duplicate){
+alert("رقم الحجز مستخدم بالفعل.");
+return;
+}
+
+order.booking = booking;
+order.orderDate = orderDate;
+order.payment = payment;
+order.total = total;
+order.delivery = delivery;
+order.net = Math.max(total-delivery,0);
+
+const saved = await saveOrders();
+
+if(saved){
+closeEditModal();
+prepareMonthlyYears();
+renderOrders();
+renderMonthlySales();
+alert("تم تعديل الأوردر بنجاح ✅");
+}
+}
 
 async function cancelOrder(id){
+const order = onlineOrders.find(item => item.id === id);
+if(!order) return;
 
-    const order =
-        onlineOrders.find(
-            item =>
-                item.id === id
-        );
+const confirmCancel = confirm(
+"هل أنت متأكد من إلغاء هذا الأوردر؟\n\n" +
+"رقم الحجز: " + order.booking
+);
 
+if(!confirmCancel) return;
 
-    if(!order){
+order.cancelled = true;
+order.cancelledAt = new Date().toISOString();
 
-        return;
+const saved = await saveOrders();
 
-    }
-
-
-    const confirmCancel =
-        confirm(
-            "هل أنت متأكد من إلغاء هذا الأوردر؟\n\n"
-            + "رقم الحجز: "
-            + order.booking
-            + "\nالعميل: "
-            + order.customer
-        );
-
-
-    if(!confirmCancel){
-
-        return;
-
-    }
-
-
-    order.cancelled =
-        true;
-
-
-    order.cancelledAt =
-        new Date().toISOString();
-
-
-    const saved =
-        await saveOrders();
-
-
-    if(saved){
-
-        renderOrders();
-
-        renderMonthlySales();
-
-    }
-
+if(saved){
+renderOrders();
+renderMonthlySales();
 }
-
-
-/* =========================
-   RESTORE
-========================= */
+}
 
 async function restoreOrder(id){
+const order = onlineOrders.find(item => item.id === id);
+if(!order) return;
 
-    const order =
-        onlineOrders.find(
-            item =>
-                item.id === id
-        );
+order.cancelled = false;
+order.cancelledAt = null;
 
+const saved = await saveOrders();
 
-    if(!order){
-
-        return;
-
-    }
-
-
-    order.cancelled =
-        false;
-
-
-    order.cancelledAt =
-        null;
-
-
-    const saved =
-        await saveOrders();
-
-
-    if(saved){
-
-        renderOrders();
-
-        renderMonthlySales();
-
-    }
-
+if(saved){
+renderOrders();
+renderMonthlySales();
 }
-
-
-/* =========================
-   DELETE
-========================= */
+}
 
 async function deleteOrder(id){
+const order = onlineOrders.find(item => item.id === id);
+if(!order) return;
 
-    const order =
-        onlineOrders.find(
-            item =>
-                item.id === id
-        );
+const confirmed = confirm(
+"⚠ هل تريد حذف الأوردر نهائياً؟\n\n" +
+"رقم الحجز: " + order.booking +
+"\n\nالحذف النهائي لا يمكن التراجع عنه."
+);
 
+if(!confirmed) return;
 
-    if(!order){
+onlineOrders = onlineOrders.filter(item => item.id !== id);
 
-        return;
+const saved = await saveOrders();
 
-    }
-
-
-    const confirmed =
-        confirm(
-            "⚠ هل تريد حذف الأوردر نهائياً؟\n\n"
-            + "رقم الحجز: "
-            + order.booking
-            + "\n"
-            + "اسم العميل: "
-            + order.customer
-            + "\n\n"
-            + "الحذف النهائي لا يمكن التراجع عنه."
-        );
-
-
-    if(!confirmed){
-
-        return;
-
-    }
-
-
-    onlineOrders =
-        onlineOrders.filter(
-            item =>
-                item.id !== id
-        );
-
-
-    const saved =
-        await saveOrders();
-
-
-    if(saved){
-
-        prepareMonthlyYears();
-
-        renderOrders();
-
-        renderMonthlySales();
-
-    }
-
+if(saved){
+prepareMonthlyYears();
+renderOrders();
+renderMonthlySales();
 }
-
-
-/* =========================
-   HELPERS
-========================= */
+}
 
 function money(value){
-
-    const number =
-        Number(value) || 0;
-
-
-    return number.toLocaleString(
-        "en-US",
-        {
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }
-    ) + " EGP";
-
+const number = Number(value) || 0;
+return number.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}) + " EGP";
 }
-
 
 function formatDate(value){
+if(!value) return "-";
 
-    if(!value){
+const date = new Date(value);
+if(isNaN(date.getTime())) return "-";
 
-        return "-";
-
-    }
-
-
-    const date =
-        new Date(value);
-
-
-    if(
-        isNaN(
-            date.getTime()
-        )
-    ){
-
-        return "-";
-
-    }
-
-
-    return date.toLocaleDateString(
-        "en-GB",
-        {
-            year:"numeric",
-            month:"2-digit",
-            day:"2-digit"
-        }
-    )
-    + " "
-    +
-    date.toLocaleTimeString(
-        "en-US",
-        {
-            hour:"2-digit",
-            minute:"2-digit"
-        }
-    );
-
+return date.toLocaleDateString("en-GB",{
+year:"numeric",
+month:"2-digit",
+day:"2-digit"
+}) + " " + date.toLocaleTimeString("en-US",{
+hour:"2-digit",
+minute:"2-digit"
+});
 }
-
 
 function escapeHtml(value){
-
-    return String(
-        value ?? ""
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-
+return String(value ?? "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 }
 
+["login-email","login-password"].forEach(id => {
+const input = document.getElementById(id);
+input.addEventListener("keydown",function(event){
+if(event.key === "Enter") loginUser();
+});
+});
 
-/* =========================
-   ENTER LOGIN
-========================= */
+auth.onAuthStateChanged(async function(user){
+if(!user){
+currentUser = null;
+document.getElementById("login-screen").style.display = "flex";
+return;
+}
 
-[
-    "login-email",
-    "login-password"
-]
-.forEach(
-    id => {
+const email = (user.email || "").trim().toLowerCase();
 
-        const input =
-            document.getElementById(
-                id
-            );
+if(!ADMIN_EMAILS.includes(email)){
+await auth.signOut();
+return;
+}
 
-
-        input.addEventListener(
-            "keydown",
-            function(event){
-
-                if(
-                    event.key ===
-                    "Enter"
-                ){
-
-                    loginUser();
-
-                }
-
-            }
-        );
-
-    }
-);
-
-
-/* =========================
-   AUTH STATE
-========================= */
-
-auth.onAuthStateChanged(
-    async function(user){
-
-        if(!user){
-
-            currentUser =
-                null;
-
-
-            document.getElementById(
-                "login-screen"
-            ).style.display =
-                "flex";
-
-
-            return;
-
-        }
-
-
-        const email =
-            (user.email || "")
-            .trim()
-            .toLowerCase();
-
-
-        if(
-            !ADMIN_EMAILS.includes(
-                email
-            )
-        ){
-
-            await auth.signOut();
-
-            return;
-
-        }
-
-
-        currentUser =
-            user;
-
-
-        document.getElementById(
-            "login-screen"
-        ).style.display =
-            "none";
-
-
-        await loadOrders();
-
-    }
-);
-
+currentUser = user;
+document.getElementById("login-screen").style.display = "none";
+await loadOrders();
+});
 </script>
-
 </body>
-
 </html>
-
