@@ -1113,6 +1113,172 @@ tbody tr:hover{
     font-weight:normal;
 }
 
+
+/* =========================
+   IMPORT
+========================= */
+
+.import-source{
+    display:grid;
+    gap:10px;
+}
+
+.import-file-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:54px;
+    border:2px dashed rgba(245,158,11,.35);
+    background:rgba(245,158,11,.05);
+    border-radius:12px;
+    color:var(--primary2);
+    font-weight:bold;
+    font-size:13px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.import-file-btn:hover{
+    background:rgba(245,158,11,.12);
+}
+
+.import-file-btn input{
+    display:none;
+}
+
+.import-or{
+    text-align:center;
+    color:var(--muted);
+    font-size:11px;
+}
+
+#import-paste{
+    width:100%;
+    min-height:110px;
+    background:#0a111d;
+    border:1px solid var(--border);
+    border-radius:10px;
+    color:white;
+    padding:11px;
+    font-size:12px;
+    font-family:inherit;
+    resize:vertical;
+    line-height:1.6;
+    outline:none;
+}
+
+#import-paste:focus{
+    border-color:var(--primary);
+}
+
+.import-hint{
+    color:var(--muted);
+    font-size:10px;
+    margin:10px 0 0;
+    line-height:1.7;
+}
+
+.mapping-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
+    gap:9px;
+    margin-bottom:14px;
+}
+
+.mapping-item label{
+    display:block;
+    color:#cbd5e1;
+    font-size:10px;
+    font-weight:bold;
+    margin-bottom:4px;
+}
+
+.mapping-item select{
+    width:100%;
+    height:38px;
+    background:#0a111d;
+    border:1px solid var(--border);
+    color:white;
+    border-radius:8px;
+    padding:0 9px;
+    font-size:11px;
+    font-family:inherit;
+    outline:none;
+}
+
+.mapping-item select:focus{
+    border-color:var(--primary);
+}
+
+.import-controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.import-controls select{
+    height:40px;
+    background:#0a111d;
+    border:1px solid var(--border);
+    color:white;
+    border-radius:8px;
+    padding:0 10px;
+    font-size:11px;
+    font-family:inherit;
+    outline:none;
+}
+
+.check-label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:#cbd5e1;
+    font-size:11px;
+    cursor:pointer;
+}
+
+.check-label input{
+    width:16px;
+    height:16px;
+    accent-color:var(--primary);
+}
+
+.city-detected{
+    color:#4ade80;
+    font-weight:bold;
+}
+
+.city-missing{
+    color:#f59e0b;
+    font-weight:bold;
+}
+
+@media(max-width:1100px){
+    .mapping-grid{
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+    }
+}
+
+@media(max-width:700px){
+    .mapping-grid{
+        grid-template-columns:1fr;
+    }
+    .import-controls{
+        flex-direction:column;
+        align-items:stretch;
+    }
+    .import-controls select,
+    .import-controls .btn{
+        width:100%;
+        min-height:44px;
+    }
+}
+
 /* =========================
    TABLET
 ========================= */
@@ -1494,12 +1660,6 @@ tbody tr:hover{
 <base target="_blank">
 </head>
 <body>
-<div id="login-screen" class="login-screen">
-<div class="login-card">
-<div class="login-logo"><img src="https://up6.cc/2026/08/178662434144331.jpg"></div>
-<h1 class="login-title">تمور الطحان</h1>
-<div class="login-subtitle">نظام إدارة أوردرات الأونلاين</div>
-<div class="login-field"><div class="login-icon">✉</div><div class="login-field-content"><label>البريد الإلكتروني</label><input type="email" id="login-email" placeholder="اكتب البريد الإلكتروني"></div></div>
 <div class="login-field"><div class="login-icon">🔒</div><div class="login-field-content"><label>كلمة المرور</label><input type="password" id="login-password" placeholder="اكتب كلمة المرور"></div></div>
 <button class="login-btn" onclick="loginUser()">تسجيل الدخول ←</button>
 <div id="login-error" class="login-error"></div>
@@ -1507,7 +1667,7 @@ tbody tr:hover{
 
 <header class="navbar">
 <div class="brand"><div class="brand-logo">🛒</div><div class="brand-text"><strong>تمور الطحان 🌴</strong><span>نظام أوردرات الأونلاين</span></div></div>
-<button class="logout" onclick="logoutUser()">خروج</button>
+
 </header>
 
 <main class="container">
@@ -1516,6 +1676,7 @@ tbody tr:hover{
 <div class="tabs">
 <button class="tab-btn active" id="tab-orders-btn" onclick="switchTab('orders')">🛒 الأوردرات والمبيعات</button>
 <button class="tab-btn" id="tab-tracking-btn" onclick="switchTab('tracking')">🚚 متابعة الأوردرات</button>
+<button class="tab-btn" id="tab-import-btn" onclick="switchTab('import')">📥 استيراد شيت</button>
 </div>
 
 <!-- ================= PAGE: ORDERS ================= -->
@@ -1535,7 +1696,7 @@ tbody tr:hover{
 <div class="field"><label>رقم الحجز *</label><input type="text" id="booking-number" placeholder="مثال: 12584" required></div>
 <div class="field"><label>رقم الهاتف *</label><input type="tel" id="customer-phone" placeholder="مثال: 01012345678" required></div>
 <div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="order-date" required></div>
-<div class="field"><label>المركز / الفرع *</label>
+<div class="field"><label>المدينة / المركز *</label>
 <div class="branch-row">
 <select id="order-branch" required></select>
 <button type="button" class="add-branch-btn" onclick="addBranch()" title="إضافة مركز جديد">＋</button>
@@ -1553,10 +1714,10 @@ tbody tr:hover{
 <div class="toolbar">
 <input type="text" id="search-input" placeholder="🔎 بحث برقم الحجز أو الهاتف..." oninput="renderOrders()">
 <select id="status-filter" onchange="renderOrders()"><option value="all">كل الحالات</option><option value="active">✅ غير ملغي</option><option value="cancelled">❌ ملغي</option></select>
-<select id="branch-filter" onchange="renderOrders()"><option value="all">كل المراكز</option></select>
+<select id="branch-filter" onchange="renderOrders()"><option value="all">كل المدن</option></select>
 </div>
 <div class="table-wrap">
-<table><thead><tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المركز</th><th>المبلغ الإجمالي</th><th>طريقة الدفع</th><th>مبلغ التوصيل</th><th>المبلغ بعد التوصيل</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+<table><thead><tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المدينة</th><th>المبلغ الإجمالي</th><th>طريقة الدفع</th><th>مبلغ التوصيل</th><th>المبلغ بعد التوصيل</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
 <tbody id="orders-body"></tbody></table>
 </div>
 <div class="table-footer">
@@ -1592,12 +1753,12 @@ tbody tr:hover{
 <div class="card-title"><h2>📋 لوحة متابعة الأوردرات</h2></div>
 <div class="toolbar">
 <input type="text" id="track-search" placeholder="🔎 بحث برقم الحجز أو الهاتف..." oninput="renderTracking()">
-<select id="track-branch-filter" onchange="renderTracking()"><option value="all">كل المراكز</option></select>
+<select id="track-branch-filter" onchange="renderTracking()"><option value="all">كل المدن</option></select>
 <select id="track-follow-filter" onchange="renderTracking()"><option value="all">كل حالات المتابعة</option><option value="جديد">🆕 جديد</option><option value="قيد التجهيز">⚙️ قيد التجهيز</option><option value="تم الشحن">🚚 تم الشحن</option><option value="تم التسليم">✅ تم التسليم</option></select>
 <select id="track-status-filter" onchange="renderTracking()"><option value="all">كل الحالات</option><option value="active">✅ غير ملغي</option><option value="cancelled">❌ ملغي</option></select>
 </div>
 <div class="table-wrap">
-<table><thead><tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المركز</th><th>مواصفات الأوردر</th><th>الصافي</th><th>التاريخ</th><th>حالة المتابعة</th><th>حالة الأوردر</th><th>الإجراءات</th></tr></thead>
+<table><thead><tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المدينة</th><th>مواصفات الأوردر</th><th>الصافي</th><th>التاريخ</th><th>حالة المتابعة</th><th>حالة الأوردر</th><th>الإجراءات</th></tr></thead>
 <tbody id="tracking-body"></tbody></table>
 </div>
 <div class="table-footer">
@@ -1605,6 +1766,37 @@ tbody tr:hover{
 <div class="footer-box"><span>قيد التنفيذ</span><strong id="track-footer-progress">0</strong></div>
 <div class="footer-box"><span>تم تسليمها</span><strong id="track-footer-done">0</strong></div>
 </div></div>
+</section>
+
+
+<!-- ================= PAGE: IMPORT ================= -->
+<section id="page-import" class="page-section">
+<div class="page-title"><div><h1>📥 استيراد الأوردرات من شيت</h1><p>ارفع ملف Excel / CSV أو الصق الجدول، وسيُسند كل أوردر لمدينته تلقائياً</p></div></div>
+
+<div class="card">
+<div class="card-title"><h2>1️⃣ مصدر البيانات</h2></div>
+<div class="import-source">
+<label class="import-file-btn">📁 اختيار ملف Excel / CSV<input type="file" id="import-file" accept=".xlsx,.xls,.csv" onchange="handleImportFile(event)"></label>
+<div class="import-or">— أو الصق الجدول مباشرة من Excel —</div>
+<textarea id="import-paste" placeholder="افتح الشيت، اضغط Ctrl+A ثم Ctrl+C، والصق هنا..."></textarea>
+<button type="button" class="btn btn-blue" onclick="parsePastedText()">🔍 تحليل البيانات</button>
+</div>
+<p class="import-hint">💡 الأعمدة المطلوبة: رقم الحجز + المبلغ الإجمالي + الهاتف — وباقي الأعمدة اختيارية (التوصيل، التاريخ، العنوان، المواصفات، طريقة الدفع). النظام يتعرف على الأعمدة تلقائياً من العناوين.</p>
+</div>
+
+<div class="card" id="import-preview-card" style="display:none">
+<div class="card-title"><h2>2️⃣ مطابقة الأعمدة والمعاينة</h2></div>
+<div class="mapping-grid" id="mapping-grid"></div>
+<div class="import-controls">
+<label class="check-label"><input type="checkbox" id="import-has-headers" checked onchange="renderImportPreview()"> الصف الأول عناوين أعمدة</label>
+<select id="import-city-default" title="تُسند للأوردرات التي تعذر تحديد مدينتها"></select>
+<button type="button" class="btn btn-primary" onclick="runImport()">🚀 استيراد الأوردرات</button>
+</div>
+<div id="import-summary" class="import-hint" style="margin-bottom:10px"></div>
+<div class="table-wrap">
+<table><thead id="import-preview-head"></thead><tbody id="import-preview-body"></tbody></table>
+</div>
+</div>
 </section>
 
 </main>
@@ -1616,7 +1808,7 @@ tbody tr:hover{
 <div class="field"><label>رقم الحجز</label><input id="edit-booking"></div>
 <div class="field"><label>رقم الهاتف</label><input type="tel" id="edit-phone"></div>
 <div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="edit-date"></div>
-<div class="field"><label>المركز / الفرع</label><select id="edit-branch"></select></div>
+<div class="field"><label>المدينة / المركز</label><select id="edit-branch"></select></div>
 <div class="field"><label>المبلغ الإجمالي</label><input type="number" id="edit-total" min="0" step="0.01" oninput="calculateEditNet()"></div>
 <div class="field"><label>طريقة الدفع</label><select id="edit-payment"><option value="كاش">💵 كاش</option><option value="فيزا">💳 فيزا</option></select></div>
 <div class="field"><label>مبلغ التوصيل</label><input type="number" id="edit-delivery" min="0" step="0.01" oninput="calculateEditNet()"></div>
@@ -1634,8 +1826,8 @@ tbody tr:hover{
 </div></div>
 
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const firebaseConfig = {
 apiKey:"AIzaSyBoGxX4SvH6dqvS1_D07GmHliTlrfaJTw8",
@@ -1648,22 +1840,16 @@ measurementId:"G-WRW47QYCJ4"
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
 const db = firebase.firestore();
 const storeRef = db.collection("store").doc("store_v_final_v4");
 
 let onlineOrders = [];
 let branchesList = [];
-let currentUser = null;
 let editingOrderId = null;
 
-const ADMIN_EMAILS = [
-"himamax31@gmail.com",
-"ahmedemad@gmail.com"
-];
 
 const FOLLOW_STATUSES = ["جديد","قيد التجهيز","تم الشحن","تم التسليم"];
-const DEFAULT_BRANCHES = ["القاهرة","الجيزة","الإسكندرية","المنصورة","طنطا"];
+const DEFAULT_BRANCHES = ["دمياط","رأس البر","جمصة","بورسعيد","المنصورة","طلخا","نبروه"];
 
 function showLoginError(message){
 document.getElementById("login-error").textContent = message || "";
@@ -1712,23 +1898,15 @@ renderMonthlySales();
 /* ================= TABS ================= */
 
 function switchTab(tab){
-const ordersBtn = document.getElementById("tab-orders-btn");
-const trackingBtn = document.getElementById("tab-tracking-btn");
-const ordersPage = document.getElementById("page-orders");
-const trackingPage = document.getElementById("page-tracking");
+["orders","tracking","import"].forEach(name => {
+const btn = document.getElementById("tab-"+name+"-btn");
+const page = document.getElementById("page-"+name);
+if(btn) btn.classList.toggle("active",name === tab);
+if(page) page.classList.toggle("active",name === tab);
+});
 
-if(tab === "tracking"){
-ordersBtn.classList.remove("active");
-trackingBtn.classList.add("active");
-ordersPage.classList.remove("active");
-trackingPage.classList.add("active");
-renderTracking();
-}else{
-trackingBtn.classList.remove("active");
-ordersBtn.classList.add("active");
-trackingPage.classList.remove("active");
-ordersPage.classList.add("active");
-}
+if(tab === "tracking") renderTracking();
+if(tab === "import" && importRows.length) renderImportPreview();
 }
 
 /* ================= LOAD / SAVE ================= */
@@ -1783,8 +1961,8 @@ function populateBranchSelects(){
 const selects = [
 {id:"order-branch", keep:true},
 {id:"edit-branch", keep:true},
-{id:"branch-filter", keep:true, allLabel:"كل المراكز"},
-{id:"track-branch-filter", keep:true, allLabel:"كل المراكز"}
+{id:"branch-filter", keep:true, allLabel:"كل المدن"},
+{id:"track-branch-filter", keep:true, allLabel:"كل المدن"}
 ];
 
 selects.forEach(cfg => {
@@ -1815,14 +1993,14 @@ select.value = oldValue;
 }
 
 async function addBranch(){
-const name = prompt("اكتب اسم المركز / الفرع الجديد:");
+const name = prompt("اكتب اسم المدينة / المركز الجديد:");
 if(!name) return;
 
 const clean = name.trim();
 if(!clean) return;
 
 if(branchesList.includes(clean)){
-alert("هذا المركز موجود بالفعل.");
+alert("هذه المدينة موجودة بالفعل.");
 return;
 }
 
@@ -2456,7 +2634,7 @@ const followStatus = order.followStatus || "جديد";
 document.getElementById("details-content").innerHTML = `
 <div class="detail-row"><span>🔢 رقم الحجز</span><strong>${escapeHtml(order.booking || "—")}</strong></div>
 <div class="detail-row"><span>📞 رقم الهاتف</span><strong dir="ltr">${escapeHtml(order.phone || "—")}</strong></div>
-<div class="detail-row"><span>🏪 المركز / الفرع</span><strong>${escapeHtml(order.branch || "—")}</strong></div>
+<div class="detail-row"><span>📍 المدينة</span><strong>${escapeHtml(order.branch || "—")}</strong></div>
 <div class="detail-row"><span>📅 تاريخ الأوردر</span><strong dir="ltr">${date}</strong></div>
 <div class="detail-row"><span>💰 المبلغ الإجمالي</span><strong>${money(order.total)}</strong></div>
 <div class="detail-row"><span>💳 طريقة الدفع</span><strong>${order.payment === "فيزا" ? "💳 فيزا" : order.payment === "كاش" ? "💵 كاش" : "—"}</strong></div>
@@ -2544,6 +2722,353 @@ renderTracking();
 renderMonthlySales();
 }
 }
+
+
+/* ================= IMPORT ================= */
+
+let importRows = [];
+let importHeaders = [];
+let importMapping = {};
+
+const IMPORT_FIELDS = [
+{key:"booking",label:"رقم الحجز *"},
+{key:"phone",label:"رقم الهاتف *"},
+{key:"total",label:"المبلغ الإجمالي *"},
+{key:"delivery",label:"مبلغ التوصيل"},
+{key:"payment",label:"طريقة الدفع"},
+{key:"orderDate",label:"تاريخ الأوردر"},
+{key:"cityText",label:"المدينة / العنوان"},
+{key:"specs",label:"مواصفات الأوردر"}
+];
+
+const HEADER_KEYWORDS = {
+booking:["حجز","booking","order no","order","رقم"],
+phone:["هاتف","phone","موبايل","mobile","جوال"],
+total:["اجمالي","إجمالي","total","مبلغ","قيمة","مبيعات"],
+delivery:["توصيل","delivery","شحن","shipping"],
+payment:["دفع","payment","كاش","cash","فيزا","visa","card"],
+orderDate:["تاريخ","date","وقت","time"],
+cityText:["مدينه","مدينة","عنوان","address","فرع","branch","منطقه","منطقة"],
+specs:["مواصفات","تفاصيل","details","وصف","منتجات","اصناف","أصناف","صنف","بيان","ملاحظات"]
+};
+
+function normalizeHeaderText(value){
+return String(value || "")
+.replace(/[ً-ْٰـ]/g,"")
+.replace(/[^\p{L}\p{N} ]/gu," ")
+.replace(/\s+/g," ")
+.trim()
+.toLowerCase();
+}
+
+function guessColumnKey(header){
+const h = normalizeHeaderText(header);
+if(!h) return null;
+for(const field of IMPORT_FIELDS){
+const keywords = HEADER_KEYWORDS[field.key] || [];
+for(const kw of keywords){
+if(h.includes(kw)) return field.key;
+}
+}
+return null;
+}
+
+function handleImportFile(event){
+const file = event.target.files[0];
+if(!file) return;
+
+const reader = new FileReader();
+reader.onload = function(e){
+try{
+const data = new Uint8Array(e.target.result);
+const workbook = XLSX.read(data,{type:"array"});
+const sheet = workbook.Sheets[workbook.SheetNames[0]];
+importRows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false});
+prepareImport();
+}catch(err){
+console.error(err);
+alert("تعذر قراءة الملف. تأكد أنه ملف Excel أو CSV صحيح.");
+}
+};
+reader.readAsArrayBuffer(file);
+}
+
+function parsePastedText(){
+const text = document.getElementById("import-paste").value.trim();
+if(!text){
+alert("الصق الجدول أولاً في المربع.");
+return;
+}
+try{
+const workbook = XLSX.read(text,{type:"string"});
+const sheet = workbook.Sheets[workbook.SheetNames[0]];
+importRows = XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false});
+prepareImport();
+}catch(err){
+console.error(err);
+alert("تعذر تحليل البيانات الملصوقة. جرب نسخها من Excel مرة أخرى.");
+}
+}
+
+function prepareImport(){
+importRows = importRows.filter(row => row.some(cell => String(cell).trim() !== ""));
+
+if(importRows.length < 2){
+alert("لم يتم العثور على بيانات كافية.");
+return;
+}
+
+importHeaders = importRows[0].map(cell => String(cell).trim());
+importMapping = {};
+
+importHeaders.forEach((header,index) => {
+if(header === "") return;
+const key = guessColumnKey(header);
+if(key && importMapping[key] === undefined){
+importMapping[key] = index;
+}
+});
+
+if(importMapping.booking === undefined) importMapping.booking = 0;
+if(importMapping.phone === undefined && importHeaders.length > 1) importMapping.phone = 1;
+if(importMapping.total === undefined && importHeaders.length > 2) importMapping.total = 2;
+
+const defaultCitySelect = document.getElementById("import-city-default");
+defaultCitySelect.innerHTML = '<option value="">بدون مدينة افتراضية</option>';
+branchesList.forEach(city => {
+const option = document.createElement("option");
+option.value = city;
+option.textContent = "📍 " + city + " (افتراضي)";
+defaultCitySelect.appendChild(option);
+});
+
+renderMappingGrid();
+renderImportPreview();
+document.getElementById("import-preview-card").style.display = "block";
+document.getElementById("import-preview-card").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function renderMappingGrid(){
+const grid = document.getElementById("mapping-grid");
+grid.innerHTML = "";
+
+IMPORT_FIELDS.forEach(field => {
+const item = document.createElement("div");
+item.className = "mapping-item";
+
+let options = '<option value="">— بدون —</option>';
+importHeaders.forEach((header,index) => {
+const selected = importMapping[field.key] === index ? "selected" : "";
+options += '<option value="'+index+'" '+selected+'>'+escapeHtml(header || ("عمود "+(index+1)))+'</option>';
+});
+
+item.innerHTML = '<label>'+field.label+'</label><select onchange="setImportMapping(\''+field.key+'\',this.value)">'+options+'</select>';
+grid.appendChild(item);
+});
+}
+
+function setImportMapping(key,value){
+if(value === ""){
+delete importMapping[key];
+}else{
+importMapping[key] = Number(value);
+}
+renderImportPreview();
+}
+
+function getRowValue(row,key){
+const index = importMapping[key];
+if(index === undefined || index === null) return "";
+return row[index] !== undefined ? String(row[index]).trim() : "";
+}
+
+function parseNumberValue(value){
+if(value === null || value === undefined) return 0;
+const clean = String(value).replace(/[,EGPegpجنيه]/g,"").replace(/[^0-9.\-]/g,"");
+const num = parseFloat(clean);
+return isNaN(num) ? 0 : num;
+}
+
+function parseAnyDate(value){
+if(!value) return null;
+if(value instanceof Date){
+return isNaN(value.getTime()) ? null : value;
+}
+const s = String(value).trim();
+if(/^[0-9]+(\.[0-9]+)?$/.test(s)){
+const serial = Number(s);
+if(serial > 20000 && serial < 100000){
+const date = new Date(Math.round((serial-25569)*86400*1000));
+return isNaN(date.getTime()) ? null : date;
+}
+}
+const date = new Date(s);
+return isNaN(date.getTime()) ? null : date;
+}
+
+function toDateTimeLocal(date){
+const offset = date.getTimezoneOffset();
+const local = new Date(date.getTime()-offset*60000);
+return local.toISOString().slice(0,16);
+}
+
+function autoDetectCity(text){
+if(!text) return "";
+const t = String(text).toLowerCase();
+for(const city of branchesList){
+if(t.includes(String(city).toLowerCase())) return city;
+}
+return "";
+}
+
+function hasHeadersRow(){
+const checkbox = document.getElementById("import-has-headers");
+return checkbox ? checkbox.checked : true;
+}
+
+function renderImportPreview(){
+const head = document.getElementById("import-preview-head");
+const body = document.getElementById("import-preview-body");
+if(!importRows.length) return;
+
+const startRow = hasHeadersRow() ? 1 : 0;
+
+head.innerHTML = "<tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المدينة المكتشفة</th><th>المبلغ</th><th>التوصيل</th><th>التاريخ</th><th>الحالة</th></tr>";
+body.innerHTML = "";
+
+const existingBookings = new Set(onlineOrders.map(o => String(o.booking).trim()));
+let shown = 0;
+let newCount = 0;
+let dupCount = 0;
+
+for(let i = startRow; i < importRows.length && shown < 50; i++){
+const row = importRows[i];
+const booking = getRowValue(row,"booking");
+if(!booking) continue;
+
+shown++;
+const city = autoDetectCity(getRowValue(row,"cityText") + " " + getRowValue(row,"specs"));
+const total = parseNumberValue(getRowValue(row,"total"));
+const delivery = parseNumberValue(getRowValue(row,"delivery"));
+const date = parseAnyDate(getRowValue(row,"orderDate"));
+
+let status;
+if(existingBookings.has(booking)){
+status = '<span class="badge cancelled">مكرر - سيتم تخطيه</span>';
+dupCount++;
+}else{
+status = '<span class="badge active-order">جديد</span>';
+newCount++;
+}
+
+body.innerHTML += "<tr>" +
+"<td>"+shown+"</td>" +
+"<td class='booking'>"+escapeHtml(booking)+"</td>" +
+"<td><span class='phone-cell'>"+escapeHtml(getRowValue(row,"phone"))+"</span></td>" +
+"<td>"+(city ? '<span class="city-detected">📍 '+escapeHtml(city)+'</span>' : '<span class="city-missing">غير محدد</span>')+"</td>" +
+"<td class='amount'>"+money(total)+"</td>" +
+"<td class='delivery'>"+money(delivery)+"</td>" +
+"<td dir='ltr'>"+(date ? formatDate(date.toISOString()) : "—")+"</td>" +
+"<td>"+status+"</td>" +
+"</tr>";
+}
+
+const totalRows = importRows.length - startRow;
+document.getElementById("import-summary").innerHTML =
+"إجمالي الصفوف: <strong style='color:#fbbf24'>"+Math.max(totalRows,0)+"</strong> &nbsp;|&nbsp; " +
+"جديد: <strong style='color:#4ade80'>"+newCount+"</strong> &nbsp;|&nbsp; " +
+"مكرر: <strong style='color:#f87171'>"+dupCount+"</strong>" +
+(shown < Math.max(totalRows,0) ? " &nbsp;(معاينة أول "+shown+" صف فقط)" : "");
+}
+
+async function runImport(){
+if(!importRows.length){
+alert("قم بتحميل ملف أو لصق بيانات أولاً.");
+return;
+}
+
+if(importMapping.booking === undefined || importMapping.total === undefined){
+alert("يجب تحديد عمود رقم الحجز وعمود المبلغ الإجمالي على الأقل.");
+return;
+}
+
+const startRow = hasHeadersRow() ? 1 : 0;
+const existingBookings = new Set(onlineOrders.map(o => String(o.booking).trim()));
+const batchBookings = new Set();
+const defaultCity = document.getElementById("import-city-default").value;
+
+let imported = 0;
+let duplicates = 0;
+let skipped = 0;
+const now = new Date();
+
+for(let i = startRow; i < importRows.length; i++){
+const row = importRows[i];
+
+const booking = getRowValue(row,"booking");
+if(!booking){
+skipped++;
+continue;
+}
+
+if(existingBookings.has(booking) || batchBookings.has(booking)){
+duplicates++;
+continue;
+}
+
+const phone = getRowValue(row,"phone");
+const total = parseNumberValue(getRowValue(row,"total"));
+const delivery = parseNumberValue(getRowValue(row,"delivery"));
+const paymentRaw = getRowValue(row,"payment").toLowerCase();
+const payment = (paymentRaw.includes("فيزا") || paymentRaw.includes("visa") || paymentRaw.includes("card")) ? "فيزا" : "كاش";
+const cityText = getRowValue(row,"cityText");
+let specs = getRowValue(row,"specs");
+if(!specs && cityText) specs = cityText;
+const city = autoDetectCity(cityText + " " + specs) || defaultCity;
+const parsedDate = parseAnyDate(getRowValue(row,"orderDate"));
+const orderDateObj = parsedDate || now;
+
+const order = {
+id:Date.now().toString()+"_"+Math.random().toString(36).substring(2,8),
+booking:booking,
+phone:phone,
+branch:city,
+specs:specs,
+payment:payment,
+total:total,
+delivery:delivery,
+net:Math.max(total-delivery,0),
+cancelled:false,
+followStatus:"جديد",
+orderDate:toDateTimeLocal(orderDateObj),
+createdAt:orderDateObj.toISOString(),
+createdTimestamp:orderDateObj.getTime()
+};
+
+onlineOrders.unshift(order);
+batchBookings.add(booking);
+imported++;
+}
+
+if(imported === 0){
+alert("لا توجد أوردرات جديدة للاستيراد.\n\nمكرر: "+duplicates+" | صفوف فارغة: "+skipped);
+return;
+}
+
+const saved = await saveOrders();
+
+if(saved){
+prepareMonthlyYears();
+populateBranchSelects();
+renderOrders();
+renderTracking();
+renderMonthlySales();
+document.getElementById("import-file").value = "";
+document.getElementById("import-paste").value = "";
+alert("تم الاستيراد بنجاح ✅\n\nأوردرات جديدة: "+imported+"\nمكررة تم تخطيها: "+duplicates+"\nصفوف فارغة: "+skipped);
+}
+}
+
 
 /* ================= AUTH ================= */
 
