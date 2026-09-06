@@ -1266,10 +1266,15 @@ tbody tr:hover{
 
 <header class="navbar">
 <div class="brand"><div class="brand-logo">🛒</div><div class="brand-text"><strong>تمور الطحان 🌴</strong><span>نظام أوردرات الأونلاين</span></div></div>
+<div class="nav-actions">
+<button id="nav-orders" class="nav-btn active" onclick="showPage('orders')">🛒 الأوردرات</button>
+<button id="nav-tracking" class="nav-btn" onclick="showPage('tracking')">📋 متابعة الأوردرات</button>
 <button class="logout" onclick="logoutUser()">خروج</button>
+</div>
 </header>
 
 <main class="container">
+<section id="orders-page" class="page-section">
 <div class="page-title"><div><h1>🛒 أوردرات الأونلاين</h1><p>إدارة ومتابعة جميع طلبات العملاء</p></div></div>
 
 <div class="stats">
@@ -1283,11 +1288,16 @@ tbody tr:hover{
 <div class="card-title"><h2>➕ إضافة أوردر جديد</h2></div>
 <form id="order-form" class="order-form">
 <div class="field"><label>رقم الحجز</label><input type="text" id="booking-number" placeholder="مثال: 12584" required></div>
+<div class="field"><label>رقم الهاتف</label><input type="tel" id="customer-phone" placeholder="01xxxxxxxxx"></div>
+<div class="field"><label>مركز / فرع الأوردر</label><select id="order-center" required><option value="">اختر المركز</option><option value="مبارك">فرع مبارك</option><option value="المشاية">فرع المشاية</option><option value="سمنود">فرع سمنود</option></select></div>
+<div class="field"><label>حالة الأوردر</label><select id="order-status"><option value="جديد">🆕 جديد</option><option value="قيد التجهيز">⚙ قيد التجهيز</option><option value="جاهز">📦 جاهز</option><option value="تم التسليم">✅ تم التسليم</option><option value="ملغي">❌ ملغي</option></select></div>
 <div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="order-date" required></div>
 <div class="field"><label>المبلغ الإجمالي</label><input type="number" id="total-amount" min="0" step="0.01" placeholder="0" required oninput="calculateNet()"></div>
 <div class="field"><label>طريقة الدفع</label><select id="payment-method" required><option value="">اختر طريقة الدفع</option><option value="كاش">💵 كاش</option><option value="فيزا">💳 فيزا</option></select></div>
 <div class="field"><label>مبلغ التوصيل</label><input type="number" id="delivery-price" min="0" step="0.01" value="0" placeholder="0" oninput="calculateNet()"></div>
 <div class="field"><label>المبلغ بعد التوصيل</label><input type="number" id="net-amount" readonly placeholder="0"></div>
+<div class="field full"><label>مواصفات الأوردر</label><textarea id="order-specs" placeholder="اكتب تفاصيل ومواصفات الأوردر بالكامل..."></textarea></div>
+<div class="field full"><label>ملاحظات</label><textarea id="order-notes" placeholder="أي ملاحظات خاصة بالأوردر أو العميل..."></textarea></div>
 <div class="form-actions"><button type="submit" class="btn btn-primary">💾 إضافة الأوردر</button><button type="button" class="btn btn-gray" onclick="clearOrderForm()">مسح البيانات</button></div>
 </form></div>
 
@@ -1317,17 +1327,89 @@ tbody tr:hover{
 <div class="month-summary-box"><span>إجمالي التوصيل</span><strong id="year-delivery">0 EGP</strong></div>
 <div class="month-summary-box"><span>صافي السنة</span><strong id="year-net">0 EGP</strong></div>
 </div></div>
-</main>
+</section>
 
-<div id="edit-modal" class="modal"><div class="modal-card">
+
+<div class="page-title">
+    <div>
+        <h1>📋 متابعة الأوردرات</h1>
+        <p>متابعة حالة كل أوردر ومعرفة رقم الحجز ورقم الهاتف ومواصفات الأوردر والمركز التابع له</p>
+    </div>
+</div>
+
+<div class="stats">
+    <div class="stat"><div class="stat-label">📦 إجمالي المتابعة</div><div class="stat-value" id="tracking-total">0</div></div>
+    <div class="stat"><div class="stat-label">🆕 أوردرات جديدة</div><div class="stat-value" id="tracking-new">0</div></div>
+    <div class="stat"><div class="stat-label">⚙ قيد التجهيز</div><div class="stat-value" id="tracking-preparing">0</div></div>
+    <div class="stat"><div class="stat-label">✅ تم التسليم</div><div class="stat-value" id="tracking-delivered">0</div></div>
+</div>
+
+<div class="card">
+    <div class="card-title">
+        <h2>🔎 البحث والتصفية</h2>
+    </div>
+    <div class="tracking-toolbar">
+        <input type="text" id="tracking-search" placeholder="🔎 رقم الحجز أو رقم الهاتف أو المواصفات..." oninput="renderTrackingOrders()">
+        <select id="tracking-center" onchange="renderTrackingOrders()">
+            <option value="all">كل المراكز</option>
+            <option value="مبارك">فرع مبارك</option>
+            <option value="المشاية">فرع المشاية</option>
+            <option value="سمنود">فرع سمنود</option>
+        </select>
+        <select id="tracking-status" onchange="renderTrackingOrders()">
+            <option value="all">كل الحالات</option>
+            <option value="جديد">🆕 جديد</option>
+            <option value="قيد التجهيز">⚙ قيد التجهيز</option>
+            <option value="جاهز">📦 جاهز</option>
+            <option value="تم التسليم">✅ تم التسليم</option>
+            <option value="ملغي">❌ ملغي</option>
+        </select>
+        <input type="date" id="tracking-date" onchange="renderTrackingOrders()" title="فلترة حسب التاريخ">
+    </div>
+
+    <div class="table-wrap">
+        <table class="tracking-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>رقم الحجز</th>
+                    <th>رقم الهاتف</th>
+                    <th>مركز / فرع</th>
+                    <th>مواصفات الأوردر</th>
+                    <th>المبلغ</th>
+                    <th>التاريخ</th>
+                    <th>الحالة</th>
+                    <th>ملاحظات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="tracking-orders-body"></tbody>
+        </table>
+    </div>
+
+    <div class="tracking-summary">
+        <div class="footer-box"><span>الأوردرات الظاهرة</span><strong id="tracking-visible">0</strong></div>
+        <div class="footer-box"><span>إجمالي المبيعات</span><strong id="tracking-sales">0 EGP</strong></div>
+        <div class="footer-box"><span>إجمالي التوصيل</span><strong id="tracking-delivery">0 EGP</strong></div>
+        <div class="footer-box"><span>الصافي</span><strong id="tracking-net">0 EGP</strong></div>
+    </div>
+</div>
+</section>
+
+ class="modal"><div class="modal-card">
 <div class="modal-header"><h3>✏ تعديل الأوردر</h3><button class="close" onclick="closeEditModal()">×</button></div>
 <div class="modal-grid">
 <div class="field"><label>رقم الحجز</label><input id="edit-booking"></div>
+<div class="field"><label>رقم الهاتف</label><input type="tel" id="edit-phone"></div>
+<div class="field"><label>مركز / فرع الأوردر</label><select id="edit-center"><option value="مبارك">فرع مبارك</option><option value="المشاية">فرع المشاية</option><option value="سمنود">فرع سمنود</option></select></div>
+<div class="field"><label>حالة الأوردر</label><select id="edit-status"><option value="جديد">🆕 جديد</option><option value="قيد التجهيز">⚙ قيد التجهيز</option><option value="جاهز">📦 جاهز</option><option value="تم التسليم">✅ تم التسليم</option><option value="ملغي">❌ ملغي</option></select></div>
 <div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="edit-date"></div>
 <div class="field"><label>المبلغ الإجمالي</label><input type="number" id="edit-total" min="0" step="0.01" oninput="calculateEditNet()"></div>
 <div class="field"><label>طريقة الدفع</label><select id="edit-payment"><option value="كاش">💵 كاش</option><option value="فيزا">💳 فيزا</option></select></div>
 <div class="field"><label>مبلغ التوصيل</label><input type="number" id="edit-delivery" min="0" step="0.01" oninput="calculateEditNet()"></div>
 <div class="field"><label>المبلغ بعد التوصيل</label><input type="number" id="edit-net" readonly></div>
+<div class="field full"><label>مواصفات الأوردر</label><textarea id="edit-specs" placeholder="تفاصيل الأوردر"></textarea></div>
+<div class="field full"><label>ملاحظات</label><textarea id="edit-notes" placeholder="ملاحظات"></textarea></div>
 </div>
 <div class="modal-actions"><button class="btn btn-primary" onclick="saveEditedOrder()">💾 حفظ التعديل</button><button class="btn btn-gray" onclick="closeEditModal()">إلغاء</button></div>
 </div></div>
@@ -1399,8 +1481,10 @@ await auth.signOut();
 currentUser = null;
 onlineOrders = [];
 document.getElementById("login-screen").style.display = "flex";
+showPage("orders");
 renderOrders();
 renderMonthlySales();
+renderTrackingOrders();
 }
 
 async function loadOrders(){
@@ -1418,6 +1502,7 @@ prepareMonthlyYears();
 setCurrentYear();
 renderOrders();
 renderMonthlySales();
+renderTrackingOrders();
 
 }catch(error){
 console.error("Firebase Load Error:",error);
@@ -1471,13 +1556,18 @@ document.getElementById("order-form").addEventListener("submit",async function(e
 event.preventDefault();
 
 const booking = document.getElementById("booking-number").value.trim();
+const phone = document.getElementById("customer-phone").value.trim();
+const center = document.getElementById("order-center").value;
+const status = document.getElementById("order-status").value || "جديد";
+const specs = document.getElementById("order-specs").value.trim();
+const notes = document.getElementById("order-notes").value.trim();
 const orderDate = document.getElementById("order-date").value;
 const total = parseFloat(document.getElementById("total-amount").value) || 0;
 const payment = document.getElementById("payment-method").value;
 const delivery = parseFloat(document.getElementById("delivery-price").value) || 0;
 
-if(!booking || !orderDate || !payment || total < 0 || delivery < 0){
-alert("من فضلك أكمل بيانات الأوردر.");
+if(!booking || !orderDate || !payment || !center || total < 0 || delivery < 0){
+alert("من فضلك أكمل بيانات الأوردر، وخاصة رقم الحجز والمركز وطريقة الدفع.");
 return;
 }
 
@@ -1493,11 +1583,16 @@ const now = new Date();
 const order = {
 id:Date.now().toString()+"_"+Math.random().toString(36).substring(2,8),
 booking:booking,
+phone:phone,
+center:center,
+status:status,
+specs:specs,
+notes:notes,
 payment:payment,
 total:total,
 delivery:delivery,
 net:Math.max(total-delivery,0),
-cancelled:false,
+cancelled:status === "ملغي",
 orderDate:orderDate,
 createdAt:now.toISOString(),
 createdTimestamp:Date.now()
@@ -1512,6 +1607,7 @@ clearOrderForm();
 prepareMonthlyYears();
 renderOrders();
 renderMonthlySales();
+renderTrackingOrders();
 alert("تم إضافة الأوردر بنجاح ✅");
 }
 });
@@ -1520,6 +1616,11 @@ function clearOrderForm(){
 document.getElementById("order-form").reset();
 document.getElementById("delivery-price").value = "0";
 document.getElementById("net-amount").value = "";
+document.getElementById("customer-phone").value = "";
+document.getElementById("order-center").value = "";
+document.getElementById("order-status").value = "جديد";
+document.getElementById("order-specs").value = "";
+document.getElementById("order-notes").value = "";
 document.getElementById("order-date").value = getCurrentDateTimeLocal();
 }
 
@@ -1732,6 +1833,167 @@ document.getElementById("year-delivery").textContent = money(yearDelivery);
 document.getElementById("year-net").textContent = money(yearNet);
 }
 
+
+function showPage(page){
+    const ordersPage = document.getElementById("orders-page");
+    const trackingPage = document.getElementById("tracking-page");
+    const navOrders = document.getElementById("nav-orders");
+    const navTracking = document.getElementById("nav-tracking");
+
+    if(page === "tracking"){
+        ordersPage.classList.add("hidden");
+        trackingPage.classList.remove("hidden");
+        navOrders.classList.remove("active");
+        navTracking.classList.add("active");
+        renderTrackingOrders();
+    }else{
+        trackingPage.classList.add("hidden");
+        ordersPage.classList.remove("hidden");
+        navTracking.classList.remove("active");
+        navOrders.classList.add("active");
+        renderOrders();
+        renderMonthlySales();
+    }
+}
+
+function statusBadge(status, cancelled){
+    const value = cancelled ? "ملغي" : (status || "جديد");
+    const map = {
+        "جديد":"<span class=\"badge active-order\">🆕 جديد</span>",
+        "قيد التجهيز":"<span class=\"badge\" style=\"background:rgba(245,158,11,.12);color:#fbbf24;\">⚙ قيد التجهيز</span>",
+        "جاهز":"<span class=\"badge visa\">📦 جاهز</span>",
+        "تم التسليم":"<span class=\"badge active-order\">✅ تم التسليم</span>",
+        "ملغي":"<span class=\"badge cancelled\">❌ ملغي</span>"
+    };
+    return map[value] || map["جديد"];
+}
+
+async function changeTrackingStatus(id, value){
+    const order = onlineOrders.find(item => item.id === id);
+    if(!order) return;
+
+    order.status = value;
+    order.cancelled = value === "ملغي";
+
+    if(order.cancelled){
+        order.cancelledAt = new Date().toISOString();
+    }else{
+        order.cancelledAt = null;
+    }
+
+    const saved = await saveOrders();
+    if(saved){
+        renderOrders();
+        renderMonthlySales();
+        renderTrackingOrders();
+    }
+}
+
+function renderTrackingOrders(){
+    const body = document.getElementById("tracking-orders-body");
+    if(!body) return;
+
+    const search = (document.getElementById("tracking-search")?.value || "").trim().toLowerCase();
+    const center = document.getElementById("tracking-center")?.value || "all";
+    const status = document.getElementById("tracking-status")?.value || "all";
+    const dateFilter = document.getElementById("tracking-date")?.value || "";
+
+    let filtered = [...onlineOrders];
+
+    if(search){
+        filtered = filtered.filter(order => {
+            const haystack = [
+                order.booking,
+                order.phone,
+                order.specs,
+                order.notes,
+                order.center
+            ].join(" ").toLowerCase();
+            return haystack.includes(search);
+        });
+    }
+
+    if(center !== "all"){
+        filtered = filtered.filter(order => (order.center || "") === center);
+    }
+
+    if(status !== "all"){
+        filtered = filtered.filter(order => {
+            const current = order.cancelled ? "ملغي" : (order.status || "جديد");
+            return current === status;
+        });
+    }
+
+    if(dateFilter){
+        filtered = filtered.filter(order => {
+            const date = getOrderDate(order);
+            if(!date) return false;
+            const y = date.getFullYear();
+            const m = String(date.getMonth()+1).padStart(2,"0");
+            const d = String(date.getDate()).padStart(2,"0");
+            return `${y}-${m}-${d}` === dateFilter;
+        });
+    }
+
+    filtered.sort((a,b) => {
+        const da = getOrderDate(a)?.getTime() || 0;
+        const db = getOrderDate(b)?.getTime() || 0;
+        return db-da;
+    });
+
+    body.innerHTML = "";
+
+    if(filtered.length === 0){
+        body.innerHTML = '<tr><td colspan="10" class="empty">📭 لا توجد أوردرات مطابقة</td></tr>';
+    }else{
+        filtered.forEach((order,index) => {
+            const date = formatDate(getOrderDateValue(order));
+            const netValue = order.net !== undefined
+                ? order.net
+                : Math.max(Number(order.total||0)-Number(order.delivery||0),0);
+
+            const safeId = String(order.id || "").replace(/'/g,"\\'");
+
+            body.innerHTML += `
+            <tr>
+                <td>${index+1}</td>
+                <td class="booking">${escapeHtml(order.booking || "—")}</td>
+                <td class="phone" dir="ltr">${escapeHtml(order.phone || "—")}</td>
+                <td><span class="center-badge">${escapeHtml(order.center || "—")}</span></td>
+                <td class="specs-cell">${escapeHtml(order.specs || "—").replace(/\n/g,"<br>")}</td>
+                <td class="amount">${money(netValue)}</td>
+                <td dir="ltr">${date}</td>
+                <td>
+                    <select class="status-select" onchange="changeTrackingStatus('${safeId}',this.value)">
+                        ${["جديد","قيد التجهيز","جاهز","تم التسليم","ملغي"].map(s =>
+                            `<option value="${s}" ${((order.cancelled ? "ملغي" : (order.status || "جديد")) === s) ? "selected" : ""}>${s}</option>`
+                        ).join("")}
+                    </select>
+                </td>
+                <td class="notes-cell">${escapeHtml(order.notes || "—").replace(/\n/g,"<br>")}</td>
+                <td>
+                    <button class="action-btn edit" onclick="editOrder('${safeId}')">تعديل</button>
+                </td>
+            </tr>`;
+        });
+    }
+
+    const sales = filtered.reduce((sum,o)=>sum+(Number(o.total)||0),0);
+    const delivery = filtered.reduce((sum,o)=>sum+(Number(o.delivery)||0),0);
+    const net = filtered.reduce((sum,o)=>sum+(Number(o.net !== undefined ? o.net : Math.max(Number(o.total||0)-Number(o.delivery||0),0))||0),0);
+
+    document.getElementById("tracking-visible").textContent = filtered.length;
+    document.getElementById("tracking-sales").textContent = money(sales);
+    document.getElementById("tracking-delivery").textContent = money(delivery);
+    document.getElementById("tracking-net").textContent = money(net);
+
+    const all = onlineOrders;
+    document.getElementById("tracking-total").textContent = all.length;
+    document.getElementById("tracking-new").textContent = all.filter(o => !o.cancelled && (o.status || "جديد") === "جديد").length;
+    document.getElementById("tracking-preparing").textContent = all.filter(o => !o.cancelled && (o.status || "جديد") === "قيد التجهيز").length;
+    document.getElementById("tracking-delivered").textContent = all.filter(o => !o.cancelled && (o.status || "جديد") === "تم التسليم").length;
+}
+
 function editOrder(id){
 const order = onlineOrders.find(item => item.id === id);
 if(!order) return;
@@ -1739,6 +2001,11 @@ if(!order) return;
 editingOrderId = id;
 
 document.getElementById("edit-booking").value = order.booking || "";
+document.getElementById("edit-phone").value = order.phone || "";
+document.getElementById("edit-center").value = order.center || "مبارك";
+document.getElementById("edit-status").value = order.status || (order.cancelled ? "ملغي" : "جديد");
+document.getElementById("edit-specs").value = order.specs || "";
+document.getElementById("edit-notes").value = order.notes || "";
 document.getElementById("edit-date").value = normalizeDateTimeLocal(getOrderDateValue(order));
 document.getElementById("edit-total").value = order.total || 0;
 document.getElementById("edit-payment").value = order.payment || "كاش";
@@ -1772,13 +2039,18 @@ const order = onlineOrders.find(item => item.id === editingOrderId);
 if(!order) return;
 
 const booking = document.getElementById("edit-booking").value.trim();
+const phone = document.getElementById("edit-phone").value.trim();
+const center = document.getElementById("edit-center").value;
+const status = document.getElementById("edit-status").value || "جديد";
+const specs = document.getElementById("edit-specs").value.trim();
+const notes = document.getElementById("edit-notes").value.trim();
 const orderDate = document.getElementById("edit-date").value;
 const total = parseFloat(document.getElementById("edit-total").value) || 0;
 const payment = document.getElementById("edit-payment").value;
 const delivery = parseFloat(document.getElementById("edit-delivery").value) || 0;
 
-if(!booking || !orderDate || !payment || total<0 || delivery<0){
-alert("من فضلك أكمل البيانات.");
+if(!booking || !orderDate || !payment || !center || total<0 || delivery<0){
+alert("من فضلك أكمل البيانات، وخاصة رقم الحجز والمركز وطريقة الدفع.");
 return;
 }
 
@@ -1793,6 +2065,12 @@ return;
 }
 
 order.booking = booking;
+order.phone = phone;
+order.center = center;
+order.status = status;
+order.specs = specs;
+order.notes = notes;
+order.cancelled = status === "ملغي";
 order.orderDate = orderDate;
 order.payment = payment;
 order.total = total;
@@ -1806,6 +2084,7 @@ closeEditModal();
 prepareMonthlyYears();
 renderOrders();
 renderMonthlySales();
+renderTrackingOrders();
 alert("تم تعديل الأوردر بنجاح ✅");
 }
 }
@@ -1822,6 +2101,7 @@ const confirmCancel = confirm(
 if(!confirmCancel) return;
 
 order.cancelled = true;
+order.status = "ملغي";
 order.cancelledAt = new Date().toISOString();
 
 const saved = await saveOrders();
@@ -1829,6 +2109,7 @@ const saved = await saveOrders();
 if(saved){
 renderOrders();
 renderMonthlySales();
+renderTrackingOrders();
 }
 }
 
@@ -1837,6 +2118,7 @@ const order = onlineOrders.find(item => item.id === id);
 if(!order) return;
 
 order.cancelled = false;
+order.status = "جديد";
 order.cancelledAt = null;
 
 const saved = await saveOrders();
@@ -1844,6 +2126,7 @@ const saved = await saveOrders();
 if(saved){
 renderOrders();
 renderMonthlySales();
+renderTrackingOrders();
 }
 }
 
@@ -1867,6 +2150,7 @@ if(saved){
 prepareMonthlyYears();
 renderOrders();
 renderMonthlySales();
+renderTrackingOrders();
 }
 }
 
