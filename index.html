@@ -1837,29 +1837,170 @@ tbody tr:hover{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const firebaseConfig = {
-apiKey:"AIzaSyBoGxX4SvH6dqvS1_D07GmHliTlrfaJTw8",
-authDomain:"store-754c5.firebaseapp.com",
-projectId:"store-754c5",
-storageBucket:"store-754c5.firebasestorage.app",
-messagingSenderId:"392118549414",
-appId:"1:392118549414:web:5abc5e61f041518f8ced67",
-measurementId:"G-WRW47QYCJ4"
+
+    apiKey:"AIzaSyBoGxX4SvH6dqvS1_D07GmHliTlrfaJTw8",
+
+    authDomain:"store-754c5.firebaseapp.com",
+
+    projectId:"store-754c5",
+
+    storageBucket:"store-754c5.firebasestorage.app",
+
+    messagingSenderId:"392118549414",
+
+    appId:"1:392118549414:web:5abc5e61f041518f8ced67",
+
+    measurementId:"G-WRW47QYCJ4"
+
 };
 
+
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storeRef = db.collection("store").doc("store_v_final_v4");
+
+
+const auth =
+    firebase.auth();
+
+
+const db =
+    firebase.firestore();
+
+
+const storeRef =
+    db.collection("store")
+      .doc("store_v_final_v4");
+
 
 let onlineOrders = [];
-let branchesList = [];
+
 let currentUser = null;
+
 let editingOrderId = null;
 
+
 const ADMIN_EMAILS = [
-"himamax31@gmail.com",
-"ahmedemad@gmail.com"
+
+    "himamax31@gmail.com",
+
+    "ahmedemad@gmail.com"
+
 ];
+
+
+/* =========================
+   LOGIN
+========================= */
+
+function showLoginError(message){
+
+    document.getElementById(
+        "login-error"
+    ).textContent =
+        message || "";
+
+}
+
+
+async function loginUser(){
+
+    const email =
+        document.getElementById(
+            "login-email"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const password =
+        document.getElementById(
+            "login-password"
+        ).value;
+
+
+    showLoginError("");
+
+
+    if(!email || !password){
+
+        showLoginError(
+            "من فضلك أدخل البريد الإلكتروني وكلمة المرور."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const result =
+            await auth.signInWithEmailAndPassword(
+                email,
+                password
+            );
+
+
+        const loggedEmail =
+            (result.user.email || "")
+            .trim()
+            .toLowerCase();
+
+
+        if(!ADMIN_EMAILS.includes(loggedEmail)){
+
+            await auth.signOut();
+
+            showLoginError(
+                "هذا الحساب ليس لديه صلاحية الدخول."
+            );
+
+            return;
+
+        }
+
+
+        currentUser =
+            result.user;
+
+
+        document.getElementById(
+            "login-screen"
+        ).style.display =
+            "none";
+
+
+        await loadOrders();
+
+    }catch(error){
+
+        console.error(error);
+
+        showLoginError(
+            "البريد الإلكتروني أو كلمة المرور غير صحيحة."
+        );
+
+    }
+
+}
+
+
+async function logoutUser(){
+
+    await auth.signOut();
+
+    currentUser = null;
+
+    onlineOrders = [];
+
+    document.getElementById(
+        "login-screen"
+    ).style.display =
+        "flex";
+
+    renderOrders();
+
+}
 
 const FOLLOW_STATUSES = ["جديد","قيد التجهيز","تم الشحن","تم التسليم"];
 const DEFAULT_BRANCHES = ["دمياط","رأس البر","جمصة","بورسعيد","المنصورة","طلخا","نبروه"];
