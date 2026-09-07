@@ -63,11 +63,12 @@
 <div class="card">
 <div class="card-title"><h2>📋 سجل الأوردرات</h2></div>
 <div class="toolbar">
-<input type="text" id="search-input" placeholder="🔎 بحث برقم الحجز..." oninput="renderOrders()">
+<input type="text" id="search-input" placeholder="🔎 بحث برقم الحجز أو الهاتف..." oninput="renderOrders()">
 <select id="status-filter" onchange="renderOrders()"><option value="all">كل الحالات</option><option value="active">✅ غير ملغي</option><option value="cancelled">❌ ملغي</option></select>
+<select id="branch-filter" onchange="renderOrders()"><option value="all">كل المدن</option></select>
 </div>
 <div class="table-wrap">
-<table><thead><tr><th>#</th><th>رقم الحجز</th><th>المبلغ الإجمالي</th><th>طريقة الدفع</th><th>مبلغ التوصيل</th><th>المبلغ بعد التوصيل</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+<table><thead><tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المدينة</th><th>المبلغ الإجمالي</th><th>طريقة الدفع</th><th>مبلغ التوصيل</th><th>المبلغ بعد التوصيل</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
 <tbody id="orders-body"></tbody></table>
 </div>
 <div class="table-footer">
@@ -102,12 +103,13 @@
 <div class="card">
 <div class="card-title"><h2>📋 لوحة متابعة الأوردرات</h2></div>
 <div class="toolbar">
-<input type="text" id="track-search" placeholder="🔎 بحث برقم الحجز..." oninput="renderTracking()">
+<input type="text" id="track-search" placeholder="🔎 بحث برقم الحجز أو الهاتف..." oninput="renderTracking()">
+<select id="track-branch-filter" onchange="renderTracking()"><option value="all">كل المدن</option></select>
 <select id="track-follow-filter" onchange="renderTracking()"><option value="all">كل حالات المتابعة</option><option value="جديد">🆕 جديد</option><option value="قيد التجهيز">⚙️ قيد التجهيز</option><option value="تم الشحن">🚚 تم الشحن</option><option value="تم التسليم">✅ تم التسليم</option></select>
 <select id="track-status-filter" onchange="renderTracking()"><option value="all">كل الحالات</option><option value="active">✅ غير ملغي</option><option value="cancelled">❌ ملغي</option></select>
 </div>
 <div class="table-wrap">
-<table><thead><tr><th>#</th><th>رقم الحجز</th><th>مواصفات الأوردر</th><th>الصافي</th><th>التاريخ</th><th>حالة المتابعة</th><th>حالة الأوردر</th><th>الإجراءات</th></tr></thead>
+<table><thead><tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المدينة</th><th>مواصفات الأوردر</th><th>الصافي</th><th>التاريخ</th><th>حالة المتابعة</th><th>حالة الأوردر</th><th>الإجراءات</th></tr></thead>
 <tbody id="tracking-body"></tbody></table>
 </div>
 <div class="table-footer">
@@ -120,7 +122,7 @@
 
 <!-- ================= PAGE: IMPORT ================= -->
 <section id="page-import" class="page-section">
-<div class="page-title"><div><h1>📥 استيراد الأوردرات من شيت</h1><p>ارفع ملف Excel / CSV أو الصق الجدول، وسيقوم النظام بتحليل البيانات تلقائياً</p></div></div>
+<div class="page-title"><div><h1>📥 استيراد الأوردرات من شيت</h1><p>ارفع ملف Excel / CSV أو الصق الجدول، وسيُسند كل أوردر لمدينته تلقائياً</p></div></div>
 
 <div class="card">
 <div class="card-title"><h2>1️⃣ مصدر البيانات</h2></div>
@@ -130,7 +132,7 @@
 <textarea id="import-paste" placeholder="افتح الشيت، اضغط Ctrl+A ثم Ctrl+C، والصق هنا..."></textarea>
 <button type="button" class="btn btn-blue" onclick="parsePastedText()">🔍 تحليل البيانات</button>
 </div>
-<p class="import-hint">💡 الأعمدة المطلوبة: رقم الحجز + المبلغ الإجمالي — وباقي الأعمدة اختيارية (التوصيل، التاريخ، المواصفات، طريقة الدفع).</p>
+<p class="import-hint">💡 الأعمدة المطلوبة: رقم الحجز + المبلغ الإجمالي + الهاتف — وباقي الأعمدة اختيارية (التوصيل، التاريخ، العنوان، المواصفات، طريقة الدفع). النظام يتعرف على الأعمدة تلقائياً من العناوين.</p>
 </div>
 
 <div class="card" id="import-preview-card" style="display:none">
@@ -138,6 +140,7 @@
 <div class="mapping-grid" id="mapping-grid"></div>
 <div class="import-controls">
 <label class="check-label"><input type="checkbox" id="import-has-headers" checked onchange="renderImportPreview()"> الصف الأول عناوين أعمدة</label>
+<select id="import-city-default" title="تُسند للأوردرات التي تعذر تحديد مدينتها"></select>
 <button type="button" class="btn btn-primary" onclick="runImport()">🚀 استيراد الأوردرات</button>
 </div>
 <div id="import-summary" class="import-hint" style="margin-bottom:10px"></div>
@@ -154,7 +157,9 @@
 <div class="modal-header"><h3>✏ تعديل الأوردر</h3><button class="close" onclick="closeEditModal()">×</button></div>
 <div class="modal-grid">
 <div class="field"><label>رقم الحجز</label><input id="edit-booking"></div>
+<div class="field"><label>رقم الهاتف</label><input type="tel" id="edit-phone"></div>
 <div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="edit-date"></div>
+<div class="field"><label>المدينة / المركز</label><select id="edit-branch"></select></div>
 <div class="field"><label>المبلغ الإجمالي</label><input type="number" id="edit-total" min="0" step="0.01" oninput="calculateEditNet()"></div>
 <div class="field"><label>طريقة الدفع</label><select id="edit-payment"><option value="كاش">💵 كاش</option><option value="فيزا">💳 فيزا</option></select></div>
 <div class="field"><label>مبلغ التوصيل</label><input type="number" id="edit-delivery" min="0" step="0.01" oninput="calculateEditNet()"></div>
@@ -178,3 +183,5 @@
 <script src="app.js"></script>
 </body>
 </html>
+انا عاوز الكود دا متقسم علي 3 ملفات وتبعتهملي 
+ملف php css js
