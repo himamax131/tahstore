@@ -1179,7 +1179,8 @@ async function runImport(){
         const specs = getRowValue(row, "specs");
         const dateObj = parseAnyDate(getRowValue(row, "orderDate")) || new Date();
 
-        let city = autoDetectCity(getRowValue(row, "cityText") + " " + specs);
+let city = autoDetectCity(getRowValue(row, "cityText"));
+if(!city) city = autoDetectCity(specs);
         if(!city) city = defaultCity || branchesList[0] || "دمياط";
 
         const order = {
