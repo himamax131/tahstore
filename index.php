@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080c14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>أوردرات الأونلاين - تمور الطحان</title>
+<link rel="stylesheet" href="style.css">
+<base target="_blank">
+</head>
+<body>
+<div id="login-screen" class="login-screen">
+<div class="login-card">
+<div class="login-logo"><img src="https://up6.cc/2026/08/178662434144331.jpg"></div>
+<h1 class="login-title">تمور الطحان</h1>
+<div class="login-subtitle">نظام إدارة أوردرات الأونلاين</div>
+<div class="login-field"><div class="login-icon">✉</div><div class="login-field-content"><label>البريد الإلكتروني</label><input type="email" id="login-email" placeholder="اكتب البريد الإلكتروني"></div></div>
+<div class="login-field"><div class="login-icon">🔒</div><div class="login-field-content"><label>كلمة المرور</label><input type="password" id="login-password" placeholder="اكتب كلمة المرور"></div></div>
+<button class="login-btn" onclick="loginUser()">تسجيل الدخول ←</button>
+<div id="login-error" class="login-error"></div>
+</div></div>
+
+<header class="navbar">
+<div class="brand"><div class="brand-logo">🛒</div><div class="brand-text"><strong>تمور الطحان 🌴</strong><span>نظام أوردرات الأونلاين</span></div></div>
+<button class="logout" onclick="logoutUser()">خروج</button>
+</header>
+
+<main class="container">
+
+<!-- ================= TABS ================= -->
+<div class="tabs">
+<button class="tab-btn active" id="tab-orders-btn" onclick="switchTab('orders')">🛒 الأوردرات والمبيعات</button>
+<button class="tab-btn" id="tab-tracking-btn" onclick="switchTab('tracking')">🚚 متابعة الأوردرات</button>
+<button class="tab-btn" id="tab-import-btn" onclick="switchTab('import')">📥 استيراد شيت</button>
+</div>
+
+<!-- ================= PAGE: ORDERS ================= -->
+<section id="page-orders" class="page-section active">
+<div class="page-title"><div><h1>🛒 أوردرات الأونلاين</h1><p>إدارة ومتابعة جميع طلبات العملاء</p></div></div>
+
+<div class="stats">
+<div class="stat"><div class="stat-label">📦 إجمالي الأوردرات</div><div class="stat-value" id="stat-orders">0</div></div>
+<div class="stat"><div class="stat-label">💰 إجمالي المبيعات</div><div class="stat-value" id="stat-total">0 EGP</div></div>
+<div class="stat"><div class="stat-label">🚚 إجمالي التوصيل</div><div class="stat-value" id="stat-delivery">0 EGP</div></div>
+<div class="stat"><div class="stat-label">💵 بعد خصم التوصيل</div><div class="stat-value" id="stat-net">0 EGP</div></div>
+</div>
+
+<div class="card">
+<div class="card-title"><h2>➕ إضافة أوردر جديد</h2></div>
+<form id="order-form" class="order-form">
+<div class="field"><label>رقم الحجز *</label><input type="text" id="booking-number" placeholder="مثال: 12584" required></div>
+<div class="field"><label>رقم الهاتف *</label><input type="tel" id="customer-phone" placeholder="مثال: 01012345678" required></div>
+<div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="order-date" required></div>
+<div class="field"><label>المدينة / المركز *</label>
+<div class="branch-row">
+<select id="order-branch" required></select>
+<button type="button" class="add-branch-btn" onclick="addBranch()" title="إضافة مركز جديد">＋</button>
+</div></div>
+<div class="field"><label>المبلغ الإجمالي</label><input type="number" id="total-amount" min="0" step="0.01" placeholder="0" required oninput="calculateNet()"></div>
+<div class="field"><label>طريقة الدفع</label><select id="payment-method" required><option value="">اختر طريقة الدفع</option><option value="كاش">💵 كاش</option><option value="فيزا">💳 فيزا</option></select></div>
+<div class="field"><label>مبلغ التوصيل</label><input type="number" id="delivery-price" min="0" step="0.01" value="0" placeholder="0" oninput="calculateNet()"></div>
+<div class="field"><label>المبلغ بعد التوصيل</label><input type="number" id="net-amount" readonly placeholder="0"></div>
+<div class="field span-all"><label>مواصفات الأوردر</label><textarea id="order-specs" placeholder="اكتب تفاصيل الأوردر: المنتجات، الكميات، العنوان، ملاحظات العميل..."></textarea></div>
+<div class="form-actions"><button type="submit" class="btn btn-primary">💾 إضافة الأوردر</button><button type="button" class="btn btn-gray" onclick="clearOrderForm()">مسح البيانات</button></div>
+</form></div>
+
+<div class="card">
+<div class="card-title"><h2>📋 سجل الأوردرات</h2></div>
+<div class="toolbar">
+<input type="text" id="search-input" placeholder="🔎 بحث برقم الحجز أو الهاتف..." oninput="renderOrders()">
+<select id="status-filter" onchange="renderOrders()"><option value="all">كل الحالات</option><option value="active">✅ غير ملغي</option><option value="cancelled">❌ ملغي</option></select>
+<select id="branch-filter" onchange="renderOrders()"><option value="all">كل المدن</option></select>
+</div>
+<div class="table-wrap">
+<table><thead><tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المدينة</th><th>المبلغ الإجمالي</th><th>طريقة الدفع</th><th>مبلغ التوصيل</th><th>المبلغ بعد التوصيل</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+<tbody id="orders-body"></tbody></table>
+</div>
+<div class="table-footer">
+<div class="footer-box"><span>الأوردرات الظاهرة</span><strong id="footer-orders">0</strong></div>
+<div class="footer-box"><span>إجمالي الظاهر</span><strong id="footer-total">0 EGP</strong></div>
+<div class="footer-box"><span>صافي الظاهر</span><strong id="footer-net">0 EGP</strong></div>
+</div></div>
+
+<div class="card monthly-card">
+<div class="monthly-header"><div class="monthly-title"><h2>📊 إحصائيات المبيعات الشهرية</h2><p>كل شهر له إحصائياته حسب تاريخ الأوردر</p></div>
+<div class="month-selects"><select id="monthly-year" class="year-select" onchange="renderMonthlySales()"></select></div></div>
+<div class="monthly-table-wrap"><table class="monthly-table"><thead><tr><th>الشهر</th><th>عدد الأوردرات</th><th>إجمالي المبيعات</th><th>إجمالي التوصيل</th><th>الصافي بعد التوصيل</th></tr></thead><tbody id="monthly-sales-body"></tbody></table></div>
+<div class="monthly-summary">
+<div class="month-summary-box"><span>إجمالي أوردرات السنة</span><strong id="year-orders">0</strong></div>
+<div class="month-summary-box"><span>إجمالي مبيعات السنة</span><strong id="year-total">0 EGP</strong></div>
+<div class="month-summary-box"><span>إجمالي التوصيل</span><strong id="year-delivery">0 EGP</strong></div>
+<div class="month-summary-box"><span>صافي السنة</span><strong id="year-net">0 EGP</strong></div>
+</div></div>
+</section>
+
+<!-- ================= PAGE: TRACKING ================= -->
+<section id="page-tracking" class="page-section">
+<div class="page-title"><div><h1>🚚 متابعة الأوردرات</h1><p>متابعة حالة كل أوردر من التجهيز حتى التسليم</p></div></div>
+
+<div class="stats">
+<div class="stat"><div class="stat-label">📦 إجمالي الأوردرات</div><div class="stat-value" id="track-stat-total">0</div></div>
+<div class="stat"><div class="stat-label">🆕 أوردرات جديدة</div><div class="stat-value" id="track-stat-new">0</div></div>
+<div class="stat"><div class="stat-label">⚙️ قيد التجهيز / الشحن</div><div class="stat-value" id="track-stat-progress">0</div></div>
+<div class="stat"><div class="stat-label">✅ تم التسليم</div><div class="stat-value" id="track-stat-done">0</div></div>
+</div>
+
+<div class="card">
+<div class="card-title"><h2>📋 لوحة متابعة الأوردرات</h2></div>
+<div class="toolbar">
+<input type="text" id="track-search" placeholder="🔎 بحث برقم الحجز أو الهاتف..." oninput="renderTracking()">
+<select id="track-branch-filter" onchange="renderTracking()"><option value="all">كل المدن</option></select>
+<select id="track-follow-filter" onchange="renderTracking()"><option value="all">كل حالات المتابعة</option><option value="جديد">🆕 جديد</option><option value="قيد التجهيز">⚙️ قيد التجهيز</option><option value="تم الشحن">🚚 تم الشحن</option><option value="تم التسليم">✅ تم التسليم</option></select>
+<select id="track-status-filter" onchange="renderTracking()"><option value="all">كل الحالات</option><option value="active">✅ غير ملغي</option><option value="cancelled">❌ ملغي</option></select>
+</div>
+<div class="table-wrap">
+<table><thead><tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المدينة</th><th>مواصفات الأوردر</th><th>الصافي</th><th>التاريخ</th><th>حالة المتابعة</th><th>حالة الأوردر</th><th>الإجراءات</th></tr></thead>
+<tbody id="tracking-body"></tbody></table>
+</div>
+<div class="table-footer">
+<div class="footer-box"><span>الأوردرات الظاهرة</span><strong id="track-footer-orders">0</strong></div>
+<div class="footer-box"><span>قيد التنفيذ</span><strong id="track-footer-progress">0</strong></div>
+<div class="footer-box"><span>تم تسليمها</span><strong id="track-footer-done">0</strong></div>
+</div></div>
+</section>
+
+
+<!-- ================= PAGE: IMPORT ================= -->
+<section id="page-import" class="page-section">
+<div class="page-title"><div><h1>📥 استيراد الأوردرات من شيت</h1><p>ارفع ملف Excel / CSV أو الصق الجدول، وسيُسند كل أوردر لمدينته تلقائياً</p></div></div>
+
+<div class="card">
+<div class="card-title"><h2>1️⃣ مصدر البيانات</h2></div>
+<div class="import-source">
+<label class="import-file-btn">📁 اختيار ملف Excel / CSV<input type="file" id="import-file" accept=".xlsx,.xls,.csv" onchange="handleImportFile(event)"></label>
+<div class="import-or">— أو الصق الجدول مباشرة من Excel —</div>
+<textarea id="import-paste" placeholder="افتح الشيت، اضغط Ctrl+A ثم Ctrl+C، والصق هنا..."></textarea>
+<button type="button" class="btn btn-blue" onclick="parsePastedText()">🔍 تحليل البيانات</button>
+</div>
+<p class="import-hint">💡 الأعمدة المطلوبة: رقم الحجز + المبلغ الإجمالي + الهاتف — وباقي الأعمدة اختيارية (التوصيل، التاريخ، العنوان، المواصفات، طريقة الدفع). النظام يتعرف على الأعمدة تلقائياً من العناوين.</p>
+</div>
+
+<div class="card" id="import-preview-card" style="display:none">
+<div class="card-title"><h2>2️⃣ مطابقة الأعمدة والمعاينة</h2></div>
+<div class="mapping-grid" id="mapping-grid"></div>
+<div class="import-controls">
+<label class="check-label"><input type="checkbox" id="import-has-headers" checked onchange="renderImportPreview()"> الصف الأول عناوين أعمدة</label>
+<select id="import-city-default" title="تُسند للأوردرات التي تعذر تحديد مدينتها"></select>
+<button type="button" class="btn btn-primary" onclick="runImport()">🚀 استيراد الأوردرات</button>
+</div>
+<div id="import-summary" class="import-hint" style="margin-bottom:10px"></div>
+<div class="table-wrap">
+<table><thead id="import-preview-head"></thead><tbody id="import-preview-body"></tbody></table>
+</div>
+</div>
+</section>
+
+</main>
+
+<!-- ================= EDIT MODAL ================= -->
+<div id="edit-modal" class="modal"><div class="modal-card">
+<div class="modal-header"><h3>✏ تعديل الأوردر</h3><button class="close" onclick="closeEditModal()">×</button></div>
+<div class="modal-grid">
+<div class="field"><label>رقم الحجز</label><input id="edit-booking"></div>
+<div class="field"><label>رقم الهاتف</label><input type="tel" id="edit-phone"></div>
+<div class="field"><label>تاريخ ووقت الأوردر</label><input type="datetime-local" id="edit-date"></div>
+<div class="field"><label>المدينة / المركز</label><select id="edit-branch"></select></div>
+<div class="field"><label>المبلغ الإجمالي</label><input type="number" id="edit-total" min="0" step="0.01" oninput="calculateEditNet()"></div>
+<div class="field"><label>طريقة الدفع</label><select id="edit-payment"><option value="كاش">💵 كاش</option><option value="فيزا">💳 فيزا</option></select></div>
+<div class="field"><label>مبلغ التوصيل</label><input type="number" id="edit-delivery" min="0" step="0.01" oninput="calculateEditNet()"></div>
+<div class="field"><label>المبلغ بعد التوصيل</label><input type="number" id="edit-net" readonly></div>
+<div class="field span-all"><label>مواصفات الأوردر</label><textarea id="edit-specs"></textarea></div>
+</div>
+<div class="modal-actions"><button class="btn btn-primary" onclick="saveEditedOrder()">💾 حفظ التعديل</button><button class="btn btn-gray" onclick="closeEditModal()">إلغاء</button></div>
+</div></div>
+
+<!-- ================= DETAILS MODAL ================= -->
+<div id="details-modal" class="modal"><div class="modal-card">
+<div class="modal-header"><h3>📄 تفاصيل الأوردر</h3><button class="close" onclick="closeDetailsModal()">×</button></div>
+<div class="details-grid" id="details-content"></div>
+<div class="modal-actions"><button class="btn btn-gray" onclick="closeDetailsModal()">إغلاق</button></div>
+</div></div>
+
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
+انا عاوز الكود دا متقسم علي 3 ملفات وتبعتهملي 
+ملف php css js
