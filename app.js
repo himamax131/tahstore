@@ -279,7 +279,12 @@ function normalizeDateTimeLocal(value){
     const localDate = new Date(date.getTime() - offset * 60000);
     return localDate.toISOString().slice(0, 16);
 }
-
+function toDateTimeLocal(date){
+    if(!date || isNaN(date.getTime())) return getCurrentDateTimeLocal();
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60000);
+    return localDate.toISOString().slice(0,16);
+}
 function followBadgeClass(status){
     if(status === "قيد التجهيز") return "fs-prep";
     if(status === "تم الشحن") return "fs-ship";
