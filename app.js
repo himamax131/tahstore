@@ -279,12 +279,7 @@ function normalizeDateTimeLocal(value){
     const localDate = new Date(date.getTime() - offset * 60000);
     return localDate.toISOString().slice(0, 16);
 }
-function toDateTimeLocal(date){
-    if(!date || isNaN(date.getTime())) return getCurrentDateTimeLocal();
-    const offset = date.getTimezoneOffset();
-    const localDate = new Date(date.getTime() - offset * 60000);
-    return localDate.toISOString().slice(0,16);
-}
+
 function followBadgeClass(status){
     if(status === "قيد التجهيز") return "fs-prep";
     if(status === "تم الشحن") return "fs-ship";
@@ -297,6 +292,13 @@ function followIcon(status){
     if(status === "تم الشحن") return "🚚";
     if(status === "تم التسليم") return "✅";
     return "🆕";
+}
+
+function toDateTimeLocal(dateObj){
+    if(!dateObj || isNaN(dateObj.getTime())) return getCurrentDateTimeLocal();
+    const offset = dateObj.getTimezoneOffset();
+    const localDate = new Date(dateObj.getTime() - offset * 60000);
+    return localDate.toISOString().slice(0, 16);
 }
 
 /* ================= ADD ORDER ================= */
@@ -943,11 +945,15 @@ function handleImportFile(event){
     if(!file) return;
 
     const reader = new FileReader();
+    
+    // استخدام ترميز النص المناسب لمنع اللغة الغريبة في ملفات CSV العادية
     reader.onload = function(e){
         try{
             const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, {type:"array"});
-            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            // قراءة الملف مع ضبط الترميز لمنع الرموز الغريبة
+            const workbook = XLSX.read(data, {type:"array", codepage: 65001});
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
             importRows = XLSX.utils.sheet_to_json(sheet, {header:1, defval:"", raw:false});
             prepareImport();
         }catch(err){
@@ -1179,8 +1185,7 @@ async function runImport(){
         const specs = getRowValue(row, "specs");
         const dateObj = parseAnyDate(getRowValue(row, "orderDate")) || new Date();
 
-let city = autoDetectCity(getRowValue(row, "cityText"));
-if(!city) city = autoDetectCity(specs);
+        let city = autoDetectCity(getRowValue(row, "cityText") + " " + specs);
         if(!city) city = defaultCity || branchesList[0] || "دمياط";
 
         const order = {
