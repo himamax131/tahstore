@@ -294,13 +294,6 @@ function followIcon(status){
     return "🆕";
 }
 
-function toDateTimeLocal(dateObj){
-    if(!dateObj || isNaN(dateObj.getTime())) return getCurrentDateTimeLocal();
-    const offset = dateObj.getTimezoneOffset();
-    const localDate = new Date(dateObj.getTime() - offset * 60000);
-    return localDate.toISOString().slice(0, 16);
-}
-
 /* ================= ADD ORDER ================= */
 
 document.getElementById("order-form").addEventListener("submit", async function(event){
@@ -945,15 +938,11 @@ function handleImportFile(event){
     if(!file) return;
 
     const reader = new FileReader();
-    
-    // استخدام ترميز النص المناسب لمنع اللغة الغريبة في ملفات CSV العادية
     reader.onload = function(e){
         try{
             const data = new Uint8Array(e.target.result);
-            // قراءة الملف مع ضبط الترميز لمنع الرموز الغريبة
-            const workbook = XLSX.read(data, {type:"array", codepage: 65001});
-            const sheetName = workbook.SheetNames[0];
-            const sheet = workbook.Sheets[sheetName];
+            const workbook = XLSX.read(data, {type:"array"});
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
             importRows = XLSX.utils.sheet_to_json(sheet, {header:1, defval:"", raw:false});
             prepareImport();
         }catch(err){
