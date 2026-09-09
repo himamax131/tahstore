@@ -86,7 +86,10 @@ function switchTab(tab){
     });
 
     if(tab === "tracking") renderTracking();
-    if(tab === "import" && typeof importRows !== 'undefined' && importRows.length) renderImportPreview();
+    if(tab === "import"){
+        if(importMode === "report" && reportOrders.length) renderReportPreview();
+        else if(typeof importRows !== 'undefined' && importRows.length) renderImportPreview();
+    }
 }
 
 /* ================= LOAD / SAVE ================= */
@@ -213,6 +216,13 @@ function getCurrentDateTimeLocal(){
     return localDate.toISOString().slice(0, 16);
 }
 
+function toDateTimeLocal(dateObj){
+    if(!(dateObj instanceof Date) || isNaN(dateObj.getTime())) return getCurrentDateTimeLocal();
+    const offset = dateObj.getTimezoneOffset();
+    const localDate = new Date(dateObj.getTime() - offset * 60000);
+    return localDate.toISOString().slice(0, 16);
+}
+
 function setCurrentYear(){
     const yearSelect = document.getElementById("monthly-year");
     if(yearSelect) yearSelect.value = new Date().getFullYear();
@@ -301,6 +311,8 @@ document.getElementById("order-form").addEventListener("submit", async function(
 
     const booking = document.getElementById("booking-number").value.trim();
     const phone = document.getElementById("customer-phone").value.trim();
+    const customer = document.getElementById("customer-name").value.trim();
+    const address = document.getElementById("order-address").value.trim();
     const branch = document.getElementById("order-branch").value;
     const specs = document.getElementById("order-specs").value.trim();
     const orderDate = document.getElementById("order-date").value;
@@ -308,12 +320,12 @@ document.getElementById("order-form").addEventListener("submit", async function(
     const payment = document.getElementById("payment-method").value;
     const delivery = parseFloat(document.getElementById("delivery-price").value) || 0;
 
-    if(!booking || !phone || !branch || !orderDate || !payment || total < 0 || delivery < 0){
-        alert("من فضلك أكمل بيانات الأوردر (رقم الحجز، الهاتف، المركز إلزامية).");
+    if(!booking || !branch || !orderDate || !payment || total < 0 || delivery < 0){
+        alert("من فضلك أكمل بيانات الأوردر (رقم الحجز، المركز، التاريخ، المبلغ، طريقة الدفع إلزامية).");
         return;
     }
 
-    if(!/^[0-9+\s-]{8,15}$/.test(phone)){
+    if(phone && !/^[0-9+\s\/-]{8,30}$/.test(phone)){
         alert("من فضلك أدخل رقم هاتف صحيح.");
         return;
     }
@@ -331,6 +343,8 @@ document.getElementById("order-form").addEventListener("submit", async function(
         id: Date.now().toString() + "_" + Math.random().toString(36).substring(2, 8),
         booking: booking,
         phone: phone,
+        customer: customer,
+        address: address,
         branch: branch,
         specs: specs,
         payment: payment,
@@ -405,13 +419,14 @@ function renderOrders(){
     body.innerHTML = "";
 
     if(filtered.length === 0){
-        body.innerHTML = '<tr><td colspan="11" class="empty">📭 لا توجد أوردرات مطابقة للبحث</td></tr>';
+        body.innerHTML = '<tr><td colspan="12" class="empty">📭 لا توجد أوردرات مطابقة للبحث</td></tr>';
     }else{
         filtered.forEach((order, index) => {
             const date = formatDate(getOrderDateValue(order));
             const netValue = getOrderNet(order);
             const branchBadge = order.branch ? '<span class="branch-badge">🏪 ' + escapeHtml(order.branch) + '</span>' : '<span style="color:#64748b">—</span>';
             const phoneCell = order.phone ? '<span class="phone-cell"><a href="tel:' + escapeHtml(order.phone) + '">' + escapeHtml(order.phone) + '</a></span>' : '<span style="color:#64748b">—</span>';
+            const customerCell = order.customer ? escapeHtml(order.customer) : '<span style="color:#64748b">—</span>';
 
             const status = order.cancelled
             ? '<span class="badge cancelled">❌ ملغي</span>'
@@ -425,6 +440,7 @@ function renderOrders(){
             <tr>
             <td>${index+1}</td>
             <td class="booking">${escapeHtml(order.booking)}</td>
+            <td>${customerCell}</td>
             <td>${phoneCell}</td>
             <td>${branchBadge}</td>
             <td class="amount">${money(order.total)}</td>
@@ -464,15 +480,21 @@ function updateStats(){
     let total = 0;
     let delivery = 0;
     let net = 0;
+    let cashTotal = 0;
+    let visaTotal = 0;
 
     active.forEach(order => {
         total += Number(order.total) || 0;
         delivery += Number(order.delivery) || 0;
         net += getOrderNet(order);
+        if(order.payment === "فيزا") visaTotal += Number(order.total) || 0;
+        else cashTotal += Number(order.total) || 0;
     });
 
     document.getElementById("stat-orders").textContent = active.length;
     document.getElementById("stat-total").textContent = money(total);
+    document.getElementById("stat-cash").textContent = money(cashTotal);
+    document.getElementById("stat-visa").textContent = money(visaTotal);
     document.getElementById("stat-delivery").textContent = money(delivery);
     document.getElementById("stat-net").textContent = money(net);
 }
@@ -543,13 +565,15 @@ function renderTracking(){
     body.innerHTML = "";
 
     if(filtered.length === 0){
-        body.innerHTML = '<tr><td colspan="10" class="empty">📭 لا توجد أوردرات مطابقة</td></tr>';
+        body.innerHTML = '<tr><td colspan="12" class="empty">📭 لا توجد أوردرات مطابقة</td></tr>';
     }else{
         filtered.forEach((order, index) => {
             const date = formatDate(getOrderDateValue(order));
             const netValue = getOrderNet(order);
             const branchBadge = order.branch ? '<span class="branch-badge">🏪 ' + escapeHtml(order.branch) + '</span>' : '<span style="color:#64748b">—</span>';
             const phoneCell = order.phone ? '<span class="phone-cell"><a href="tel:' + escapeHtml(order.phone) + '">' + escapeHtml(order.phone) + '</a></span>' : '<span style="color:#64748b">—</span>';
+            const customerCell = order.customer ? escapeHtml(order.customer) : '<span style="color:#64748b">—</span>';
+            const addressText = order.address ? escapeHtml(order.address) : '<span style="color:#64748b">—</span>';
             const specsText = order.specs ? escapeHtml(order.specs) : '<span style="color:#64748b">—</span>';
             const followStatus = order.followStatus || "جديد";
 
@@ -567,8 +591,10 @@ function renderTracking(){
             <tr>
             <td>${index+1}</td>
             <td class="booking">${escapeHtml(order.booking)}</td>
+            <td>${customerCell}</td>
             <td>${phoneCell}</td>
             <td>${branchBadge}</td>
+            <td><div class="spec-cell" title="${order.address ? escapeHtml(order.address) : ''}">${addressText}</div></td>
             <td><div class="spec-cell">${specsText}</div></td>
             <td class="net">${money(netValue)}</td>
             <td dir="ltr">${date}</td>
@@ -721,6 +747,8 @@ function editOrder(id){
 
     document.getElementById("edit-booking").value = order.booking || "";
     document.getElementById("edit-phone").value = order.phone || "";
+    document.getElementById("edit-customer").value = order.customer || "";
+    document.getElementById("edit-address").value = order.address || "";
     document.getElementById("edit-branch").value = order.branch || (branchesList[0] || "");
     document.getElementById("edit-date").value = normalizeDateTimeLocal(getOrderDateValue(order));
     document.getElementById("edit-total").value = order.total || 0;
@@ -745,6 +773,8 @@ async function saveEditedOrder(){
 
     const booking = document.getElementById("edit-booking").value.trim();
     const phone = document.getElementById("edit-phone").value.trim();
+    const customer = document.getElementById("edit-customer").value.trim();
+    const address = document.getElementById("edit-address").value.trim();
     const branch = document.getElementById("edit-branch").value;
     const specs = document.getElementById("edit-specs").value.trim();
     const orderDate = document.getElementById("edit-date").value;
@@ -752,12 +782,12 @@ async function saveEditedOrder(){
     const payment = document.getElementById("edit-payment").value;
     const delivery = parseFloat(document.getElementById("edit-delivery").value) || 0;
 
-    if(!booking || !phone || !branch || !orderDate || !payment || total < 0 || delivery < 0){
-        alert("من فضلك أكمل البيانات.");
+    if(!booking || !branch || !orderDate || !payment || total < 0 || delivery < 0){
+        alert("من فضلك أكمل البيانات (رقم الحجز، المركز، التاريخ، المبلغ، طريقة الدفع إلزامية).");
         return;
     }
 
-    if(!/^[0-9+\s-]{8,15}$/.test(phone)){
+    if(phone && !/^[0-9+\s\/-]{8,30}$/.test(phone)){
         alert("من فضلك أدخل رقم هاتف صحيح.");
         return;
     }
@@ -774,6 +804,8 @@ async function saveEditedOrder(){
 
     order.booking = booking;
     order.phone = phone;
+    order.customer = customer;
+    order.address = address;
     order.branch = branch;
     order.specs = specs;
     order.orderDate = orderDate;
@@ -807,6 +839,7 @@ function viewOrderDetails(id){
 
     document.getElementById("details-content").innerHTML = `
     <div class="detail-row"><span>🔢 رقم الحجز</span><strong>${escapeHtml(order.booking || "—")}</strong></div>
+    <div class="detail-row"><span>👤 اسم العميل</span><strong>${escapeHtml(order.customer || "—")}</strong></div>
     <div class="detail-row"><span>📞 رقم الهاتف</span><strong dir="ltr">${escapeHtml(order.phone || "—")}</strong></div>
     <div class="detail-row"><span>📍 المدينة</span><strong>${escapeHtml(order.branch || "—")}</strong></div>
     <div class="detail-row"><span>📅 تاريخ الأوردر</span><strong dir="ltr">${date}</strong></div>
@@ -816,7 +849,8 @@ function viewOrderDetails(id){
     <div class="detail-row"><span>💵 الصافي بعد التوصيل</span><strong>${money(netValue)}</strong></div>
     <div class="detail-row"><span>🚦 حالة المتابعة</span><strong><span class="badge ${followBadgeClass(followStatus)}">${followIcon(followStatus)} ${followStatus}</span></strong></div>
     <div class="detail-row"><span>📌 حالة الأوردر</span><strong>${order.cancelled ? '<span class="badge cancelled">❌ ملغي</span>' : '<span class="badge active-order">✅ مؤكد</span>'}</strong></div>
-    <div class="detail-row full-row"><span>📝 مواصفات الأوردر</span><div class="spec-text">${order.specs ? escapeHtml(order.specs) : "لا توجد مواصفات مسجلة"}</div></div>
+    <div class="detail-row full-row"><span>🏠 العنوان بالتفصيل</span><div class="spec-text">${order.address ? escapeHtml(order.address) : "لا يوجد عنوان مسجل"}</div></div>
+    <div class="detail-row full-row"><span>📝 اسم الصنف / مواصفات الأوردر</span><div class="spec-text">${order.specs ? escapeHtml(order.specs) : "لا توجد مواصفات مسجلة"}</div></div>
     `;
 
     document.getElementById("details-modal").classList.add("show");
@@ -889,27 +923,33 @@ async function deleteOrder(id){
 let importRows = [];
 let importHeaders = [];
 let importMapping = {};
+let importMode = "table"; // "table" (normal spreadsheet) | "report" (تقرير حجوزات)
+let reportOrders = [];
 
 const IMPORT_FIELDS = [
+    {key:"cityText", label:"المنطقة / المدينة"},
     {key:"booking", label:"رقم الحجز *"},
-    {key:"phone", label:"رقم الهاتف *"},
+    {key:"phone", label:"رقم الهاتف"},
+    {key:"address", label:"العنوان"},
     {key:"total", label:"المبلغ الإجمالي *"},
     {key:"delivery", label:"مبلغ التوصيل"},
     {key:"payment", label:"طريقة الدفع"},
     {key:"orderDate", label:"تاريخ الأوردر"},
-    {key:"cityText", label:"المدينة / العنوان"},
-    {key:"specs", label:"مواصفات الأوردر"}
+    {key:"specs", label:"اسم الصنف / مواصفات الأوردر"},
+    {key:"customerName", label:"اسم العميل"}
 ];
 
 const HEADER_KEYWORDS = {
     booking:["حجز","booking","order no","order","رقم"],
     phone:["هاتف","phone","موبايل","mobile","جوال"],
-    total:["اجمالي","إجمالي","total","مبلغ","قيمة","مبيعات"],
+    total:["اجمالي","إجمالي","total","قيمة","مبيعات"],
     delivery:["توصيل","delivery","شحن","shipping"],
     payment:["دفع","payment","كاش","cash","فيزا","visa","card"],
     orderDate:["تاريخ","date","وقت","time"],
-    cityText:["مدينه","مدينة","عنوان","address","فرع","branch","منطقه","منطقة"],
-    specs:["مواصفات","تفاصيل","details","وصف","منتجات","اصناف","أصناف","صنف","بيان","ملاحظات"]
+    cityText:["مدينه","مدينة","فرع","branch","منطقه","منطقة"],
+    address:["عنوان","address"],
+    specs:["مواصفات","تفاصيل","details","وصف","منتجات","اصناف","أصناف","صنف","بيان","ملاحظات"],
+    customerName:["اسم العميل","العميل","customer","اسم الزبون","الزبون"]
 };
 
 function normalizeHeaderText(value){
@@ -931,6 +971,341 @@ function guessColumnKey(header){
         }
     }
     return null;
+}
+
+/* ================= REPORT-STYLE IMPORT (تقرير بالحجوزات) ================= */
+/*
+   بعض شيتات الحجوزات المُصدَّرة من برنامج الكاشير/المحاسبة بتبقى "تقرير"
+   مش جدول عادي: كل صف فيه عشرات الخانات (تاريخ التقرير، بيانات الحجز،
+   بيانات الصنف، إجماليات اليوم...) بدل عمود واحد لكل بيانة. الكود ده
+   بيكتشف الشكل ده تلقائياً وبيسحب منه: رقم الحجز، اسم العميل، الهاتف،
+   المدينة، العنوان، الصنف والكمية والسعر، مصاريف الشحن، والإجمالي —
+   وبيبني منها "مواصفات الأوردر" بتنسيق كبير ومنظم بدل ما تتلخبط في خانة واحدة.
+*/
+
+const CITY_ALIASES = {
+    "mansoura":"المنصورة", "el mansoura":"المنصورة", "almansoura":"المنصورة", "al mansoura":"المنصورة",
+    "damietta":"دمياط", "dumyat":"دمياط", "dumiat":"دمياط", "damyat":"دمياط",
+    "ras el bar":"رأس البر", "ras al bar":"رأس البر", "raselbar":"رأس البر",
+    "gamsa":"جمصة", "gamasa":"جمصة",
+    "port said":"بورسعيد", "portsaid":"بورسعيد",
+    "talkha":"طلخا",
+    "nabaroh":"نبروه", "nabarouh":"نبروه", "nabarwa":"نبروه"
+};
+
+function findExactIndex(row, needle, fromIndex){
+    const start = fromIndex || 0;
+    for(let i = start; i < row.length; i++){
+        if(String(row[i] ?? "").trim() === needle) return i;
+    }
+    return -1;
+}
+
+function findIncludesIndex(row, needle, fromIndex){
+    const start = fromIndex || 0;
+    for(let i = start; i < row.length; i++){
+        if(String(row[i] ?? "").trim().includes(needle)) return i;
+    }
+    return -1;
+}
+
+function normalizeCityToken(text){
+    if(!text) return "";
+    const t = String(text).trim();
+    if(!t) return "";
+    const lower = t.toLowerCase();
+    if(CITY_ALIASES[lower]) return CITY_ALIASES[lower];
+    const noSpace = t.replace(/\s+/g, "");
+    for(const city of branchesList){
+        if(String(city).replace(/\s+/g, "") === noSpace) return city;
+    }
+    return "";
+}
+
+function detectCityFromTokens(tokens){
+    for(const tok of tokens){
+        const hit = normalizeCityToken(tok);
+        if(hit) return hit;
+    }
+    return autoDetectCity(tokens.filter(Boolean).join(" "));
+}
+
+const REPORT_DATE_REGEX = /^\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}:\d{2}\s*(AM|PM)$/i;
+
+function findReportOrderDate(row){
+    for(const cell of row){
+        const s = String(cell ?? "").trim();
+        if(REPORT_DATE_REGEX.test(s)) return parseAnyDate(s);
+    }
+    return null;
+}
+
+// يحاول يستخرج بيانات حجز واحد من صف "تقرير الحجوزات". يرجع null لو الصف مش من النوع ده.
+function parseBookingsReportRow(row){
+    if(!Array.isArray(row) || row.length < 25) return null;
+
+    const bookingLabelIdx = findExactIndex(row, "رقم الحجز");
+    if(bookingLabelIdx < 1) return null;
+    const booking = String(row[bookingLabelIdx - 1] ?? "").replace(/,/g, "").trim();
+    if(!booking) return null;
+
+    const customerLabelIdx = findExactIndex(row, "/ العميل", bookingLabelIdx);
+    if(customerLabelIdx < 2) return null;
+
+    const name = String(row[customerLabelIdx - 1] ?? "").trim();
+    const phone = String(row[customerLabelIdx - 2] ?? "").replace(/\D/g, "").trim();
+
+    const city1 = row[customerLabelIdx + 1];
+    const city2 = row[customerLabelIdx + 2];
+    const city3 = row[customerLabelIdx + 3];
+    const address = String(row[customerLabelIdx + 4] ?? "").trim();
+    const rep = String(row[customerLabelIdx + 6] ?? "").replace(/\s+/g, " ").trim();
+
+    const city = detectCityFromTokens([city3, city1, city2, address]);
+
+    let itemName = "", qty = "", price = "";
+    const itemLabelIdx = findExactIndex(row, "الصنف", customerLabelIdx);
+    if(itemLabelIdx > -1){
+        itemName = String(row[itemLabelIdx + 6] ?? "").trim();
+        qty = row[itemLabelIdx + 5];
+        price = row[itemLabelIdx + 3];
+    }
+
+    const anchorForTotals = itemLabelIdx > -1 ? itemLabelIdx : customerLabelIdx;
+    const shipIdx = findIncludesIndex(row, "مصاريف الشحن", anchorForTotals);
+    const delivery = shipIdx > 0 ? parseNumberValue(row[shipIdx - 1]) : 0;
+
+    const totalIdx = findIncludesIndex(row, "الإجمالى", shipIdx > -1 ? shipIdx : anchorForTotals);
+    const qtyNum = parseNumberValue(qty);
+    const priceNum = parseNumberValue(price);
+    const total = totalIdx > 0 ? parseNumberValue(row[totalIdx - 1]) : (qtyNum * priceNum);
+
+    const orderDate = findReportOrderDate(row) || new Date();
+
+    return {
+        booking, phone, name, city, address, rep,
+        itemName, qty: qtyNum, price: priceNum,
+        delivery, total, orderDate
+    };
+}
+
+// بيفحص أول شوية صفوف يشوف لو ده شكل "تقرير حجوزات" ولا شيت عادي بعناوين أعمدة.
+function detectReportMode(rows){
+    const sample = rows.slice(0, Math.min(rows.length, 15));
+    if(!sample.length) return false;
+    let hits = 0;
+    sample.forEach(row => {
+        if(findExactIndex(row, "رقم الحجز") > -1 && findExactIndex(row, "/ العميل") > -1){
+            hits++;
+        }
+    });
+    return (hits / sample.length) >= 0.5;
+}
+
+// نفس رقم الحجز ممكن يتكرر في أكتر من صف لو الأوردر فيه أكتر من صنف
+// (كل صنف بياخد صف كامل لكنه بيكرر بيانات العميل والإجمالي). الدالة دي
+// بتجمع كل الأصناف اللي ليها نفس رقم الحجز في أوردر واحد بدل ما تتكرر.
+function groupReportLines(lines){
+    const map = new Map();
+    const ordered = [];
+
+    lines.forEach(line => {
+        let group = map.get(line.booking);
+        if(!group){
+            group = {
+                booking: line.booking,
+                phone: line.phone,
+                name: line.name,
+                city: line.city,
+                address: line.address,
+                rep: line.rep,
+                orderDate: line.orderDate,
+                delivery: line.delivery,
+                total: line.total,
+                items: []
+            };
+            map.set(line.booking, group);
+            ordered.push(group);
+        }else{
+            if(!group.city && line.city) group.city = line.city;
+            if(!group.address && line.address) group.address = line.address;
+            if(!group.phone && line.phone) group.phone = line.phone;
+        }
+        if(line.itemName){
+            group.items.push({name: line.itemName, qty: line.qty, price: line.price});
+        }
+    });
+
+    return ordered;
+}
+
+function startReportModeImport(){
+    importMode = "report";
+
+    const parsedLines = [];
+    importRows.forEach(row => {
+        const parsed = parseBookingsReportRow(row);
+        if(parsed && parsed.booking) parsedLines.push(parsed);
+    });
+
+    reportOrders = groupReportLines(parsedLines);
+
+    const existingBookings = new Set(onlineOrders.map(o => String(o.booking).trim()));
+    reportOrders.forEach(o => { o.isDuplicate = existingBookings.has(o.booking); });
+
+    const headersRow = document.getElementById("import-headers-row");
+    if(headersRow) headersRow.style.display = "none";
+
+    document.getElementById("mapping-grid").innerHTML =
+        '<div class="import-hint" style="grid-column:1/-1;margin:0">📄 تم التعرف تلقائياً على أن هذا "تقرير حجوزات" — تم استخراج بيانات كل حجز (العميل، الهاتف، المدينة، الصنف، الإجمالي، التوصيل) تلقائياً بدون الحاجة لمطابقة الأعمدة يدوياً. مواصفات كل أوردر هتتضاف بشكل منظم يشمل اسم العميل والعنوان والصنف.</div>';
+
+    const defaultCitySelect = document.getElementById("import-city-default");
+    defaultCitySelect.innerHTML = '<option value="">بدون مدينة افتراضية</option>';
+    branchesList.forEach(city => {
+        const option = document.createElement("option");
+        option.value = city;
+        option.textContent = "📍 " + city + " (افتراضي)";
+        defaultCitySelect.appendChild(option);
+    });
+
+    renderReportPreview();
+    document.getElementById("import-preview-card").style.display = "block";
+    document.getElementById("import-preview-card").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function renderReportPreview(){
+    const head = document.getElementById("import-preview-head");
+    const body = document.getElementById("import-preview-body");
+
+    head.innerHTML = "<tr><th>#</th><th>رقم الحجز</th><th>العميل</th><th>الهاتف</th><th>المدينة</th><th>الأصناف</th><th>الإجمالي</th><th>التوصيل</th><th>التاريخ</th><th>الحالة</th></tr>";
+    body.innerHTML = "";
+
+    if(!reportOrders.length){
+        body.innerHTML = '<tr><td colspan="10" class="empty">📭 لم يتم العثور على حجوزات صالحة في الملف</td></tr>';
+        document.getElementById("import-summary").innerHTML = "";
+        return;
+    }
+
+    const shown = Math.min(reportOrders.length, 50);
+    let totalNew = 0, totalDup = 0;
+
+    reportOrders.forEach(o => { if(o.isDuplicate) totalDup++; else totalNew++; });
+
+    for(let i = 0; i < shown; i++){
+        const o = reportOrders[i];
+        const status = o.isDuplicate
+            ? '<span class="badge cancelled">مكرر - سيتم تخطيه</span>'
+            : '<span class="badge active-order">جديد</span>';
+
+        let itemsCell = "—";
+        if(o.items && o.items.length){
+            itemsCell = escapeHtml(o.items[0].name);
+            if(o.items.length > 1){
+                itemsCell += ' <span style="opacity:.7">+' + (o.items.length - 1) + ' صنف آخر</span>';
+            }
+        }
+
+        body.innerHTML += `<tr>
+        <td>${i+1}</td>
+        <td class="booking">${escapeHtml(o.booking)}</td>
+        <td>${escapeHtml(o.name || "—")}</td>
+        <td><span class="phone-cell">${escapeHtml(o.phone || "—")}</span></td>
+        <td>${o.city ? '<span class="city-detected">📍 '+escapeHtml(o.city)+'</span>' : '<span class="city-missing">غير محدد</span>'}</td>
+        <td>${itemsCell}</td>
+        <td class="amount">${money(o.total)}</td>
+        <td class="delivery">${money(o.delivery)}</td>
+        <td dir="ltr">${o.orderDate ? formatDate(o.orderDate.toISOString()) : "—"}</td>
+        <td>${status}</td>
+        </tr>`;
+    }
+
+    document.getElementById("import-summary").innerHTML =
+        "إجمالي الحجوزات المكتشفة: <strong style='color:#fbbf24'>" + reportOrders.length + "</strong> &nbsp;|&nbsp; " +
+        "جديد: <strong style='color:#4ade80'>" + totalNew + "</strong> &nbsp;|&nbsp; " +
+        "مكرر: <strong style='color:#f87171'>" + totalDup + "</strong>" +
+        (shown < reportOrders.length ? " &nbsp;(معاينة أول " + shown + " فقط)" : "");
+}
+
+async function runReportImport(){
+    if(!reportOrders.length){
+        alert("لم يتم العثور على حجوزات صالحة في الملف.");
+        return;
+    }
+
+    const defaultCity = document.getElementById("import-city-default").value;
+    let addedCount = 0;
+    let skippedCount = 0;
+
+    reportOrders.forEach((o, i) => {
+        if(o.isDuplicate){
+            skippedCount++;
+            return;
+        }
+
+        const city = o.city || defaultCity || branchesList[0] || "دمياط";
+
+        const specsLines = [];
+        if(o.items && o.items.length){
+            specsLines.push("📦 الأصناف:");
+            o.items.forEach(item => {
+                let line = "  • " + item.name;
+                const extras = [];
+                if(item.qty) extras.push("الكمية: " + item.qty);
+                if(item.price) extras.push("السعر: " + money(item.price));
+                if(extras.length) line += " (" + extras.join("، ") + ")";
+                specsLines.push(line);
+            });
+        }
+        if(o.rep) specsLines.push("🧑‍💼 المندوب: " + o.rep);
+
+        const order = {
+            id: Date.now().toString() + "_" + Math.random().toString(36).substring(2, 8) + "_" + i,
+            booking: o.booking,
+            phone: o.phone || "",
+            customer: o.name || "",
+            address: o.address || "",
+            branch: city,
+            specs: specsLines.join("\n"),
+            payment: detectImportPayment("", o.address),
+            total: o.total,
+            delivery: o.delivery,
+            net: Math.max(o.total - o.delivery, 0),
+            cancelled: false,
+            followStatus: "جديد",
+            orderDate: toDateTimeLocal(o.orderDate),
+            createdAt: new Date().toISOString(),
+            createdTimestamp: Date.now()
+        };
+
+        onlineOrders.unshift(order);
+        addedCount++;
+    });
+
+    if(addedCount > 0){
+        const saved = await saveOrders();
+        if(saved){
+            prepareMonthlyYears();
+            renderOrders();
+            renderTracking();
+            renderMonthlySales();
+            resetImportState();
+            alert(`تم استيراد ${addedCount} أوردر بنجاح ✅\n(تم تخطي ${skippedCount} أوردر مكرر)`);
+            switchTab("orders");
+        }
+    }else{
+        alert("لم يتم إضافة أي أوردر جديد (جميع الحجوزات مكررة).");
+    }
+}
+
+function resetImportState(){
+    document.getElementById("import-preview-card").style.display = "none";
+    importRows = [];
+    reportOrders = [];
+    importMode = "table";
+    const headersRow = document.getElementById("import-headers-row");
+    if(headersRow) headersRow.style.display = "";
+    document.getElementById("import-paste").value = "";
+    document.getElementById("import-file").value = "";
 }
 
 function handleImportFile(event){
@@ -972,6 +1347,20 @@ function parsePastedText(){
 
 function prepareImport(){
     importRows = importRows.filter(row => row.some(cell => String(cell).trim() !== ""));
+
+    if(importRows.length < 1){
+        alert("لم يتم العثور على بيانات كافية.");
+        return;
+    }
+
+    if(detectReportMode(importRows)){
+        startReportModeImport();
+        return;
+    }
+
+    importMode = "table";
+    const headersRowEl = document.getElementById("import-headers-row");
+    if(headersRowEl) headersRowEl.style.display = "";
 
     if(importRows.length < 2){
         alert("لم يتم العثور على بيانات كافية.");
@@ -1075,6 +1464,23 @@ function autoDetectCity(text){
     return "";
 }
 
+// بيحاول يحدد مدينة الأوردر من عمود "المنطقة/المدينة" أو من العنوان/المواصفات.
+// لو المدينة المكتشفة مش موجودة في قائمة المراكز الحالية، بيرجعها زي ما هي
+// عشان تتضاف تلقائياً كمركز جديد بدل ما الأوردر يضيع بدون مدينة صحيحة.
+function resolveImportCity(cityRaw, extraText){
+    const known = autoDetectCity((cityRaw || "") + " " + (extraText || ""));
+    if(known) return known;
+    let raw = String(cityRaw || "").trim();
+    // شيل كلمة "وقُراها" ونحوها من آخر اسم المنطقة عشان اسم المركز الجديد يطلع نضيف
+    raw = raw.replace(/[ً-ْٰ]/g, "").replace(/\s*(و\s*قراها)\s*$/, "").trim();
+    return raw;
+}
+
+function detectImportPayment(paymentRaw, extraText){
+    const t = (String(paymentRaw || "") + " " + String(extraText || "")).toLowerCase();
+    return (t.includes("فيزا") || t.includes("visa")) ? "فيزا" : "كاش";
+}
+
 function hasHeadersRow(){
     const checkbox = document.getElementById("import-has-headers");
     return checkbox ? checkbox.checked : true;
@@ -1087,7 +1493,7 @@ function renderImportPreview(){
 
     const startRow = hasHeadersRow() ? 1 : 0;
 
-    head.innerHTML = "<tr><th>#</th><th>رقم الحجز</th><th>الهاتف</th><th>المدينة المكتشفة</th><th>المبلغ</th><th>التوصيل</th><th>التاريخ</th><th>الحالة</th></tr>";
+    head.innerHTML = "<tr><th>#</th><th>رقم الحجز</th><th>العميل</th><th>الهاتف</th><th>المدينة</th><th>العنوان</th><th>المبلغ</th><th>التوصيل</th><th>التاريخ</th><th>الحالة</th></tr>";
     body.innerHTML = "";
 
     const existingBookings = new Set(onlineOrders.map(o => String(o.booking).trim()));
@@ -1101,7 +1507,10 @@ function renderImportPreview(){
         if(!booking) continue;
 
         shown++;
-        const city = autoDetectCity(getRowValue(row, "cityText") + " " + getRowValue(row, "specs"));
+        const cityRaw = getRowValue(row, "cityText");
+        const address = getRowValue(row, "address");
+        const city = resolveImportCity(cityRaw, address + " " + getRowValue(row, "specs"));
+        const isNewCity = city && !branchesList.includes(city);
         const total = parseNumberValue(getRowValue(row, "total"));
         const delivery = parseNumberValue(getRowValue(row, "delivery"));
         const date = parseAnyDate(getRowValue(row, "orderDate"));
@@ -1118,8 +1527,10 @@ function renderImportPreview(){
         body.innerHTML += `<tr>
         <td>${shown}</td>
         <td class="booking">${escapeHtml(booking)}</td>
+        <td>${escapeHtml(getRowValue(row, "customerName")) || "—"}</td>
         <td><span class="phone-cell">${escapeHtml(getRowValue(row, "phone"))}</span></td>
-        <td>${city ? '<span class="city-detected">📍 '+escapeHtml(city)+'</span>' : '<span class="city-missing">غير محدد</span>'}</td>
+        <td>${city ? '<span class="city-detected">📍 '+escapeHtml(city)+(isNewCity ? " 🆕" : "")+'</span>' : '<span class="city-missing">غير محدد</span>'}</td>
+        <td><div class="spec-cell" title="${escapeHtml(address)}">${escapeHtml(address) || "—"}</div></td>
         <td class="amount">${money(total)}</td>
         <td class="delivery">${money(delivery)}</td>
         <td dir="ltr">${date ? formatDate(date.toISOString()) : "—"}</td>
@@ -1136,6 +1547,11 @@ function renderImportPreview(){
 }
 
 async function runImport(){
+    if(importMode === "report"){
+        await runReportImport();
+        return;
+    }
+
     if(!importRows.length){
         alert("قم بتحميل ملف أو لصق بيانات أولاً.");
         return;
@@ -1150,6 +1566,7 @@ async function runImport(){
     const existingBookings = new Set(onlineOrders.map(o => String(o.booking).trim()));
     const batchBookings = new Set();
     const defaultCity = document.getElementById("import-city-default").value;
+    const newCitiesAdded = new Set();
 
     let addedCount = 0;
     let skippedCount = 0;
@@ -1166,21 +1583,29 @@ async function runImport(){
 
         batchBookings.add(booking);
 
-        const phone = getRowValue(row, "phone") || "01000000000";
+        const phone = getRowValue(row, "phone");
+        const customer = getRowValue(row, "customerName");
+        const address = getRowValue(row, "address");
         const total = parseNumberValue(getRowValue(row, "total"));
         const delivery = parseNumberValue(getRowValue(row, "delivery"));
-        const paymentInput = getRowValue(row, "payment").toLowerCase();
-        const payment = paymentInput.includes("فيزا") || paymentInput.includes("visa") ? "فيزا" : "كاش";
         const specs = getRowValue(row, "specs");
+        const payment = detectImportPayment(getRowValue(row, "payment"), address);
         const dateObj = parseAnyDate(getRowValue(row, "orderDate")) || new Date();
 
-        let city = autoDetectCity(getRowValue(row, "cityText") + " " + specs);
+        const cityRaw = getRowValue(row, "cityText");
+        let city = resolveImportCity(cityRaw, address + " " + specs);
         if(!city) city = defaultCity || branchesList[0] || "دمياط";
+        if(city && !branchesList.includes(city)){
+            branchesList.push(city);
+            newCitiesAdded.add(city);
+        }
 
         const order = {
             id: Date.now().toString() + "_" + Math.random().toString(36).substring(2, 8) + "_" + i,
             booking: booking,
             phone: phone,
+            customer: customer,
+            address: address,
             branch: city,
             specs: specs,
             payment: payment,
@@ -1202,14 +1627,13 @@ async function runImport(){
         const saved = await saveOrders();
         if(saved){
             prepareMonthlyYears();
+            populateBranchSelects();
             renderOrders();
             renderTracking();
             renderMonthlySales();
-            document.getElementById("import-preview-card").style.display = "none";
-            importRows = [];
-            document.getElementById("import-paste").value = "";
-            document.getElementById("import-file").value = "";
-            alert(`تم استيراد ${addedCount} أوردر بنجاح ✅\n(تم تخطي ${skippedCount} أوردر مكرر)`);
+            resetImportState();
+            const newCitiesMsg = newCitiesAdded.size ? `\n(تم إضافة ${newCitiesAdded.size} مركز جديد تلقائياً: ${[...newCitiesAdded].join("، ")})` : "";
+            alert(`تم استيراد ${addedCount} أوردر بنجاح ✅\n(تم تخطي ${skippedCount} أوردر مكرر)${newCitiesMsg}`);
             switchTab("orders");
         }
     }else{
