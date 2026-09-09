@@ -1474,4 +1474,173 @@ tbody tr:hover{
         grid-template-columns:1fr;
         gap:8px;
     }
+
+    .footer-box{
+        padding:11px;
+    }
+
+    /* MONTHLY MOBILE */
+
+    .monthly-header{
+        align-items:stretch;
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .monthly-title h2{
+        font-size:14px;
+    }
+
+    .month-selects{
+        width:100%;
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+    }
+
+    .month-select,
+    .year-select{
+        width:100%;
+        min-width:0;
+        height:44px;
+    }
+
+    .monthly-table{
+        min-width:650px;
+    }
+
+    .monthly-summary{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+    }
+
+    .month-summary-box{
+        padding:10px;
+    }
+
+    .month-summary-box strong{
+        font-size:13px;
+    }
+
+    .modal{
+        align-items:flex-start;
+        padding:10px;
+    }
+
+    .modal-card{
+        max-height:calc(100vh - 20px);
+        padding:15px;
+        border-radius:13px;
+        margin:auto 0;
+    }
+
+    .modal-grid{
+        grid-template-columns:1fr;
+        gap:9px;
+    }
+
+    .details-grid{
+        grid-template-columns:1fr;
+    }
+
+    .modal-actions{
+        flex-direction:column;
+    }
+
+    .modal-actions .btn{
+        width:100%;
+        min-height:44px;
+    }
+
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media(max-width:400px){
+
+    .container{
+        padding:9px;
+    }
+
+    .stats{
+        gap:6px;
+    }
+
+    .stat{
+        padding:10px;
+    }
+
+    .stat-label{
+        font-size:9px;
+    }
+
+    .stat-value{
+        font-size:14px;
+    }
+
+    .page-title h1{
+        font-size:18px;
+    }
+
+    .login-card{
+        padding:28px 18px 20px;
+        border-radius:18px;
+    }
+
+    .login-logo{
+        width:72px;
+        height:72px;
+    }
+
+    .login-title{
+        font-size:22px;
+    }
+
+}
+
+/* =========================
+   LANDSCAPE
+========================= */
+
+@media(max-width:900px) and (orientation:landscape){
+
+    .login-screen{
+        align-items:flex-start;
+        padding:15px;
+    }
+
+    .login-card{
+        margin:auto;
+    }
+
+    .modal{
+        align-items:flex-start;
+    }
+
+}
+
+/* =========================
+   TOUCH
+========================= */
+
+@media(pointer:coarse){
+
+    button,
+    select,
+    input,
+    textarea{
+        -webkit-tap-highlight-color:transparent;
+    }
+
+    .action-btn{
+        min-height:32px;
+        padding:6px 9px;
+    }
+
+    .btn{
+        min-height:44px;
+    }
+
 }
