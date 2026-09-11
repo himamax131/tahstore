@@ -89,6 +89,12 @@ function switchTab(tab){
     if(tab === "import"){
         if(importMode === "report" && reportOrders.length) renderReportPreview();
         else if(typeof importRows !== 'undefined' && importRows.length) renderImportPreview();
+        loadGsheetSettings();
+        const autosync = document.getElementById("gsheet-autosync");
+        const url = document.getElementById("gsheet-url");
+        if(autosync && autosync.checked && url && url.value.trim()){
+            syncFromGoogleSheet(true);
+        }
     }
 }
 
@@ -1342,6 +1348,97 @@ function parsePastedText(){
     }catch(err){
         console.error(err);
         alert("تعذر تحليل البيانات الملصوقة. جرب نسخها من Excel مرة أخرى.");
+    }
+}
+
+/* ================= GOOGLE SHEET SYNC ================= */
+
+const GSHEET_SETTINGS_KEY = "tahstore_gsheet_settings";
+
+function extractSheetIdAndGid(url){
+    if(!url) return null;
+    const idMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+    if(!idMatch) return null;
+    const gidMatch = url.match(/[?#&]gid=(\d+)/);
+    return { id: idMatch[1], gid: gidMatch ? gidMatch[1] : "0" };
+}
+
+function buildCsvExportUrl(id, gid){
+    return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
+}
+
+function saveGsheetSettings(){
+    const url = document.getElementById("gsheet-url").value.trim();
+    const autosync = document.getElementById("gsheet-autosync").checked;
+    try{
+        localStorage.setItem(GSHEET_SETTINGS_KEY, JSON.stringify({url, autosync}));
+    }catch(err){
+        console.warn("تعذر حفظ إعدادات المزامنة محلياً", err);
+    }
+}
+
+function loadGsheetSettings(){
+    try{
+        const raw = localStorage.getItem(GSHEET_SETTINGS_KEY);
+        if(!raw) return;
+        const settings = JSON.parse(raw);
+        const urlInput = document.getElementById("gsheet-url");
+        const autosyncInput = document.getElementById("gsheet-autosync");
+        if(urlInput && settings.url && !urlInput.value) urlInput.value = settings.url;
+        if(autosyncInput) autosyncInput.checked = !!settings.autosync;
+    }catch(err){
+        console.warn("تعذر تحميل إعدادات المزامنة", err);
+    }
+}
+
+async function syncFromGoogleSheet(silent){
+    const urlInput = document.getElementById("gsheet-url");
+    const statusBox = document.getElementById("gsheet-status");
+    const url = urlInput.value.trim();
+
+    if(!url){
+        if(!silent) alert("الصق رابط شيت جوجل أولاً.");
+        return;
+    }
+
+    const parsed = extractSheetIdAndGid(url);
+    if(!parsed){
+        statusBox.textContent = "❌ الرابط مش شكله رابط جوجل شيت صحيح.";
+        statusBox.style.color = "#ef4444";
+        return;
+    }
+
+    saveGsheetSettings();
+
+    const csvUrl = buildCsvExportUrl(parsed.id, parsed.gid);
+    statusBox.textContent = "⏳ جاري السحب من جوجل شيت...";
+    statusBox.style.color = "";
+
+    try{
+        const response = await fetch(csvUrl);
+        if(!response.ok) throw new Error("HTTP " + response.status);
+        const csvText = await response.text();
+
+        if(csvText.trim().startsWith("<") || csvText.includes("<!DOCTYPE html")){
+            throw new Error("NOT_PUBLIC");
+        }
+
+        const workbook = XLSX.read(csvText, {type:"string"});
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        importRows = XLSX.utils.sheet_to_json(sheet, {header:1, defval:"", raw:false});
+        prepareImport();
+
+        const now = new Date();
+        statusBox.textContent = "✅ تمت المزامنة بنجاح - آخر تحديث: " + now.toLocaleString("ar-EG");
+        statusBox.style.color = "#16a34a";
+    }catch(err){
+        console.error(err);
+        if(String(err.message).includes("NOT_PUBLIC")){
+            statusBox.textContent = "❌ الشيت مش متاح للعرض العام. من جوجل شيت: مشاركة ← Anyone with the link ← Viewer، وجرب تاني.";
+        }else{
+            statusBox.textContent = "❌ تعذرت المزامنة (مشكلة اتصال أو صلاحيات). جرب تتأكد من مشاركة الشيت أو جرب تاني بعد شوية.";
+        }
+        statusBox.style.color = "#ef4444";
     }
 }
 

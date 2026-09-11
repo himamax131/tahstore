@@ -145,6 +145,22 @@
 <p class="import-hint">💡 الأعمدة المطلوبة فقط: رقم الحجز + المبلغ الإجمالي — وباقي الأعمدة اختيارية (المنطقة، الهاتف، العنوان، اسم العميل، التوصيل، التاريخ، الصنف/المواصفات، طريقة الدفع). النظام يتعرف على الأعمدة تلقائياً من العناوين، ولو المنطقة مش موجودة كمركز حالي هيتم إضافتها تلقائياً.</p>
 </div>
 
+<div class="card">
+<div class="card-title"><h2>🔗 مزامنة مباشرة من جوجل شيت (اختياري)</h2></div>
+<div class="import-source">
+<div class="field" style="margin-bottom:10px">
+<label>رابط الشيت (لازم يكون مشارك "Anyone with the link" على الأقل Viewer)</label>
+<input type="text" id="gsheet-url" placeholder="الصق رابط الشيت هنا (نفس رابط المتصفح)">
+</div>
+<div class="form-actions" style="margin-bottom:6px">
+<button type="button" class="btn btn-blue" onclick="syncFromGoogleSheet()">🔄 مزامنة الآن</button>
+<label class="check-label"><input type="checkbox" id="gsheet-autosync" onchange="saveGsheetSettings()"> مزامنة تلقائية أول ما أفتح صفحة الاستيراد</label>
+</div>
+<div id="gsheet-status" class="import-hint" style="margin-bottom:0"></div>
+</div>
+<p class="import-hint">💡 دي بتسحب آخر نسخة من الشيت وقت ما تضغط "مزامنة الآن" أو أول ما تفتح صفحة الاستيراد (لو فعّلت المزامنة التلقائية) — مش تحديث لحظي أثناء ما الشيت مفتوح، لأن ده محتاج سيرفر خلفي. الإعداد ده بيتحفظ على المتصفح/الجهاز ده بس.</p>
+</div>
+
 <div class="card" id="import-preview-card" style="display:none">
 <div class="card-title"><h2>2️⃣ مطابقة الأعمدة والمعاينة</h2></div>
 <div class="mapping-grid" id="mapping-grid"></div>
