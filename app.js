@@ -1192,7 +1192,7 @@ function renderReportPreview(){
         return;
     }
 
-    const shown = Math.min(reportOrders.length, 50);
+    const shown = reportOrders.length;
     let totalNew = 0, totalDup = 0;
 
     reportOrders.forEach(o => { if(o.isDuplicate) totalDup++; else totalNew++; });
@@ -1228,8 +1228,7 @@ function renderReportPreview(){
     document.getElementById("import-summary").innerHTML =
         "إجمالي الحجوزات المكتشفة: <strong style='color:#fbbf24'>" + reportOrders.length + "</strong> &nbsp;|&nbsp; " +
         "جديد: <strong style='color:#4ade80'>" + totalNew + "</strong> &nbsp;|&nbsp; " +
-        "مكرر: <strong style='color:#f87171'>" + totalDup + "</strong>" +
-        (shown < reportOrders.length ? " &nbsp;(معاينة أول " + shown + " فقط)" : "");
+        "مكرر: <strong style='color:#f87171'>" + totalDup + "</strong>";
 }
 
 async function runReportImport(){
@@ -1598,7 +1597,7 @@ function renderImportPreview(){
     let newCount = 0;
     let dupCount = 0;
 
-    for(let i = startRow; i < importRows.length && shown < 50; i++){
+    for(let i = startRow; i < importRows.length; i++){
         const row = importRows[i];
         const booking = getRowValue(row, "booking");
         if(!booking) continue;
@@ -1639,8 +1638,7 @@ function renderImportPreview(){
     document.getElementById("import-summary").innerHTML =
     "إجمالي الصفوف: <strong style='color:#fbbf24'>" + Math.max(totalRows, 0) + "</strong> &nbsp;|&nbsp; " +
     "جديد: <strong style='color:#4ade80'>" + newCount + "</strong> &nbsp;|&nbsp; " +
-    "مكرر: <strong style='color:#f87171'>" + dupCount + "</strong>" +
-    (shown < Math.max(totalRows, 0) ? " &nbsp;(معاينة أول " + shown + " صف فقط)" : "");
+    "مكرر: <strong style='color:#f87171'>" + dupCount + "</strong>";
 }
 
 async function runImport(){
