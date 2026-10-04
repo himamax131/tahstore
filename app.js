@@ -56,6 +56,7 @@ async function loginUser(){
         }
 
         currentUser = result.user;
+        setUserBox(currentUser);
         document.getElementById("login-screen").style.display = "none";
         await loadOrders();
 
@@ -77,6 +78,12 @@ async function logoutUser(){
 
 /* ================= TABS ================= */
 
+const PAGE_TITLES = {
+    orders:   {title:"الأوردرات والمبيعات", sub:"إدارة ومتابعة جميع طلبات العملاء"},
+    tracking: {title:"متابعة الأوردرات",    sub:"متابعة حالة كل أوردر من التجهيز حتى التسليم"},
+    import:   {title:"استيراد شيت",         sub:"ارفع ملف Excel / CSV أو الصق الجدول، وسيُسند كل أوردر لمدينته تلقائياً"}
+};
+
 function switchTab(tab){
     ["orders","tracking","import"].forEach(name => {
         const btn = document.getElementById("tab-"+name+"-btn");
@@ -84,6 +91,16 @@ function switchTab(tab){
         if(btn) btn.classList.toggle("active", name === tab);
         if(page) page.classList.toggle("active", name === tab);
     });
+
+    const info = PAGE_TITLES[tab];
+    if(info){
+        const h = document.getElementById("page-heading");
+        const s = document.getElementById("page-subheading");
+        if(h) h.textContent = info.title;
+        if(s) s.textContent = info.sub;
+    }
+    closeSidebar();
+    window.scrollTo({top:0});
 
     if(tab === "tracking") renderTracking();
     if(tab === "import"){
@@ -97,6 +114,129 @@ function switchTab(tab){
         }
     }
 }
+
+
+/* ================= PAGINATION (50 أوردر في الصفحة) ================= */
+
+const PAGE_SIZE = 50;
+let ordersPage = 1;
+let trackingPage = 1;
+
+function buildPager(containerId, current, totalItems, goFn){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+
+    if(totalItems === 0){
+        el.innerHTML = "";
+        return;
+    }
+
+    const totalPages = Math.ceil(totalItems / PAGE_SIZE);
+    const from = (current - 1) * PAGE_SIZE + 1;
+    const to = Math.min(current * PAGE_SIZE, totalItems);
+    const info = `<div class="pager-info">عرض <b>${from}</b> – <b>${to}</b> من <b>${totalItems}</b> أوردر</div>`;
+
+    if(totalPages <= 1){
+        el.innerHTML = info;
+        return;
+    }
+
+    const items = [];
+    for(let p = 1; p <= totalPages; p++){
+        if(p === 1 || p === totalPages || Math.abs(p - current) <= 1){
+            items.push(p);
+        }else if(items[items.length - 1] !== "…"){
+            items.push("…");
+        }
+    }
+
+    let nav = `<button class="pager-btn" ${current <= 1 ? "disabled" : ""} onclick="${goFn}(${current - 1})">→ السابق</button>`;
+    items.forEach(p => {
+        if(p === "…") nav += '<span class="pager-dots">…</span>';
+        else nav += `<button class="pager-btn ${p === current ? "active" : ""}" onclick="${goFn}(${p})">${p}</button>`;
+    });
+    nav += `<button class="pager-btn" ${current >= totalPages ? "disabled" : ""} onclick="${goFn}(${current + 1})">التالي ←</button>`;
+
+    el.innerHTML = info + `<div class="pager-nav">${nav}</div>`;
+}
+
+function scrollToTable(wrapId){
+    const wrap = document.getElementById(wrapId);
+    if(!wrap) return;
+    wrap.scrollTop = 0;
+    wrap.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function goOrdersPage(page){
+    ordersPage = page;
+    renderOrders();
+    scrollToTable("orders-table-wrap");
+}
+
+function goTrackingPage(page){
+    trackingPage = page;
+    renderTracking();
+    scrollToTable("tracking-table-wrap");
+}
+
+// أي تغيير في البحث أو الفلاتر يرجّع للصفحة الأولى
+function filterOrders(){
+    ordersPage = 1;
+    renderOrders();
+}
+
+function filterTracking(){
+    trackingPage = 1;
+    renderTracking();
+}
+
+/* ================= SIDEBAR / UI ================= */
+
+function openSidebar(){
+    document.getElementById("sidebar").classList.add("open");
+    document.getElementById("sidebar-overlay").classList.add("show");
+}
+
+function closeSidebar(){
+    const sb = document.getElementById("sidebar");
+    const ov = document.getElementById("sidebar-overlay");
+    if(sb) sb.classList.remove("open");
+    if(ov) ov.classList.remove("show");
+}
+
+function setUserBox(user){
+    const email = (user && user.email) ? user.email : "—";
+    const emailEl = document.getElementById("user-email");
+    const avatar = document.getElementById("user-avatar");
+    if(emailEl) emailEl.textContent = email;
+    if(avatar) avatar.textContent = email !== "—" ? email.charAt(0).toUpperCase() : "ت";
+}
+
+function toggleCard(cardId, btnId){
+    const card = document.getElementById(cardId);
+    const btn = document.getElementById(btnId);
+    if(!card) return;
+    const collapsed = card.classList.toggle("collapsed");
+    if(btn) btn.textContent = collapsed ? "إظهار النموذج" : "إخفاء النموذج";
+}
+
+function showTopbarDate(){
+    const el = document.getElementById("topbar-date");
+    if(!el) return;
+    try{
+        el.textContent = new Date().toLocaleDateString("ar-EG", {weekday:"long", day:"numeric", month:"long", year:"numeric"});
+    }catch(e){ el.textContent = ""; }
+}
+
+document.addEventListener("DOMContentLoaded", showTopbarDate);
+
+document.addEventListener("keydown", e => {
+    if(e.key === "Escape") closeSidebar();
+    if(e.key === "Enter" && document.getElementById("login-screen").style.display !== "none"){
+        const t = e.target;
+        if(t && (t.id === "login-email" || t.id === "login-password")) loginUser();
+    }
+});
 
 /* ================= LOAD / SAVE ================= */
 
@@ -422,12 +562,19 @@ function renderOrders(){
         return timeB - timeA;
     });
 
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if(ordersPage > totalPages) ordersPage = totalPages;
+    if(ordersPage < 1) ordersPage = 1;
+    const pageStart = (ordersPage - 1) * PAGE_SIZE;
+    const pageRows = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+
     body.innerHTML = "";
 
     if(filtered.length === 0){
         body.innerHTML = '<tr><td colspan="12" class="empty">📭 لا توجد أوردرات مطابقة للبحث</td></tr>';
     }else{
-        filtered.forEach((order, index) => {
+        pageRows.forEach((order, i) => {
+            const index = pageStart + i;
             const date = formatDate(getOrderDateValue(order));
             const netValue = getOrderNet(order);
             const branchBadge = order.branch ? '<span class="branch-badge">🏪 ' + escapeHtml(order.branch) + '</span>' : '<span style="color:#64748b">—</span>';
@@ -476,6 +623,10 @@ function renderOrders(){
         visibleNet += getOrderNet(order);
     });
 
+    buildPager("orders-pager", ordersPage, filtered.length, "goOrdersPage");
+    const pill = document.getElementById("orders-count-pill");
+    if(pill) pill.textContent = filtered.length + " أوردر";
+
     document.getElementById("footer-orders").textContent = filtered.length;
     document.getElementById("footer-total").textContent = money(filtered.length ? visibleTotal : 0);
     document.getElementById("footer-net").textContent = money(filtered.length ? visibleNet : 0);
@@ -498,6 +649,8 @@ function updateStats(){
     });
 
     document.getElementById("stat-orders").textContent = active.length;
+    const navOrders = document.getElementById("nav-count-orders");
+    if(navOrders) navOrders.textContent = active.length;
     document.getElementById("stat-total").textContent = money(total);
     document.getElementById("stat-cash").textContent = money(cashTotal);
     document.getElementById("stat-visa").textContent = money(visaTotal);
@@ -568,12 +721,19 @@ function renderTracking(){
     document.getElementById("track-stat-progress").textContent = progressCount;
     document.getElementById("track-stat-done").textContent = doneCount;
 
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if(trackingPage > totalPages) trackingPage = totalPages;
+    if(trackingPage < 1) trackingPage = 1;
+    const pageStart = (trackingPage - 1) * PAGE_SIZE;
+    const pageRows = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+
     body.innerHTML = "";
 
     if(filtered.length === 0){
         body.innerHTML = '<tr><td colspan="12" class="empty">📭 لا توجد أوردرات مطابقة</td></tr>';
     }else{
-        filtered.forEach((order, index) => {
+        pageRows.forEach((order, i) => {
+            const index = pageStart + i;
             const date = formatDate(getOrderDateValue(order));
             const netValue = getOrderNet(order);
             const branchBadge = order.branch ? '<span class="branch-badge">🏪 ' + escapeHtml(order.branch) + '</span>' : '<span style="color:#64748b">—</span>';
@@ -625,6 +785,12 @@ function renderTracking(){
         if(fs === "تم التسليم") visibleDone++;
         else if(fs !== "جديد") visibleProgress++;
     });
+
+    buildPager("tracking-pager", trackingPage, filtered.length, "goTrackingPage");
+    const pill = document.getElementById("tracking-count-pill");
+    if(pill) pill.textContent = filtered.length + " أوردر";
+    const navTrack = document.getElementById("nav-count-tracking");
+    if(navTrack) navTrack.textContent = totalCount - doneCount;
 
     document.getElementById("track-footer-orders").textContent = visibleCount;
     document.getElementById("track-footer-progress").textContent = visibleProgress;
