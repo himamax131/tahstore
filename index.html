@@ -143,12 +143,12 @@ $v_js  = @filemtime(__DIR__ . '/app.js') ?: 1;
 <div class="card monthly-card">
 <div class="monthly-header"><div class="monthly-title"><h2>📊 إحصائيات المبيعات الشهرية</h2><p>كل شهر له إحصائياته حسب تاريخ الأوردر</p></div>
 <div class="month-selects"><select id="monthly-year" class="year-select" onchange="renderMonthlySales()"></select></div></div>
-<div class="monthly-table-wrap"><table class="monthly-table"><thead><tr><th>الشهر</th><th>عدد الأوردرات</th><th>مبيعات الأونلاين</th><th>مبيعات الفرع</th><th>صافي الأونلاين (بعد خصم الفرع)</th><th>إجمالي التوصيل</th><th>الصافي بعد التوصيل</th></tr></thead><tbody id="monthly-sales-body"></tbody></table></div>
+<div class="monthly-table-wrap"><table class="monthly-table"><thead><tr><th>الشهر</th><th>عدد الأوردرات</th><th>مبيعات الأونلاين</th><th>مبيعات الفرع (كامل)</th><th>عملاء الفرع فقط</th><th>إجمالي التوصيل</th><th>الصافي بعد التوصيل</th></tr></thead><tbody id="monthly-sales-body"></tbody></table></div>
 <div class="monthly-summary">
 <div class="month-summary-box"><span>إجمالي أوردرات السنة</span><strong id="year-orders">0</strong></div>
 <div class="month-summary-box"><span>مبيعات الأونلاين</span><strong id="year-total">0 EGP</strong></div>
-<div class="month-summary-box"><span>مبيعات الفرع</span><strong id="year-branch">0 EGP</strong></div>
-<div class="month-summary-box"><span>صافي الأونلاين (بعد خصم الفرع)</span><strong id="year-pure-online">0 EGP</strong></div>
+<div class="month-summary-box"><span>مبيعات الفرع (كامل)</span><strong id="year-branch">0 EGP</strong></div>
+<div class="month-summary-box"><span>عملاء الفرع فقط</span><strong id="year-pure-online">0 EGP</strong></div>
 <div class="month-summary-box"><span>إجمالي التوصيل</span><strong id="year-delivery">0 EGP</strong></div>
 <div class="month-summary-box"><span>الصافي بعد التوصيل</span><strong id="year-net">0 EGP</strong></div>
 </div></div>
@@ -203,7 +203,7 @@ $v_js  = @filemtime(__DIR__ . '/app.js') ?: 1;
 </div>
 </form>
 </div>
-<p class="import-hint">💡 أدخل إجمالي مبيعات فرع مبارك لكل شهر يدوياً من الشيت. النظام هيخصمها من مبيعات الأونلاين في نفس الشهر عشان يظهر صافي مبيعات الأونلاين فقط.</p>
+<p class="import-hint">💡 أدخل إجمالي مبيعات فرع مبارك الكاملة لكل شهر من الشيت. النظام هيخصم منها مبيعات الأونلاين في نفس الشهر عشان يظهر مبيعات عملاء الفرع فقط (من غير الأونلاين).</p>
 </div>
 
 <div class="card">
@@ -226,12 +226,12 @@ $v_js  = @filemtime(__DIR__ . '/app.js') ?: 1;
 <select id="comparison-year" class="year-select" onchange="renderMonthlyComparison()"></select>
 </div>
 <div class="monthly-table-wrap"><table class="monthly-table"><thead><tr>
-<th>الشهر</th><th>مبيعات الأونلاين</th><th>مبيعات الفرع</th><th>صافي الأونلاين</th><th>نسبة الفرع من الأونلاين</th>
+<th>الشهر</th><th>مبيعات الأونلاين</th><th>مبيعات الفرع (كامل)</th><th>عملاء الفرع فقط</th><th>نسبة عملاء الفرع</th>
 </tr></thead><tbody id="comparison-body"></tbody></table></div>
 <div class="monthly-summary">
 <div class="month-summary-box"><span>إجمالي الأونلاين</span><strong id="cmp-year-online">0 EGP</strong></div>
-<div class="month-summary-box"><span>إجمالي الفرع</span><strong id="cmp-year-branch">0 EGP</strong></div>
-<div class="month-summary-box"><span>صافي الأونلاين (بعد الخصم)</span><strong id="cmp-year-pure">0 EGP</strong></div>
+<div class="month-summary-box"><span>مبيعات الفرع (كامل)</span><strong id="cmp-year-branch">0 EGP</strong></div>
+<div class="month-summary-box"><span>عملاء الفرع فقط</span><strong id="cmp-year-pure">0 EGP</strong></div>
 </div>
 </div>
 

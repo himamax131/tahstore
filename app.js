@@ -889,7 +889,7 @@ function renderMonthlySales(){
     let yearDelivery = 0;
     let yearNet = 0;
     let yearBranch = 0;
-    let yearPureOnline = 0;
+    let yearPureBranch = 0;
     let rows = "";
 
     for(let month=0; month<12; month++){
@@ -912,15 +912,17 @@ function renderMonthlySales(){
             net += getOrderNet(order);
         });
 
+        // مبيعات الفرع المدخلة = الإجمالي الكامل للفرع
+        // صافي عملاء الفرع فقط = مبيعات الفرع − مبيعات الأونلاين
         const branchAmt = getBranchSaleForMonth(selectedYear, month);
-        const pureOnline = Math.max(total - branchAmt, 0);
+        const pureBranch = Math.max(branchAmt - total, 0);
 
         yearOrders += orders;
         yearTotal += total;
         yearDelivery += delivery;
         yearNet += net;
         yearBranch += branchAmt;
-        yearPureOnline += pureOnline;
+        yearPureBranch += pureBranch;
 
         const hasData = orders > 0 || branchAmt > 0;
 
@@ -930,7 +932,7 @@ function renderMonthlySales(){
         <td class="${orders > 0 ? "month-orders" : "month-zero"}">${orders}</td>
         <td class="${total > 0 ? "month-total" : "month-zero"}">${money(total)}</td>
         <td class="${branchAmt > 0 ? "month-branch" : "month-zero"}">${money(branchAmt)}</td>
-        <td class="${pureOnline > 0 ? "month-pure" : "month-zero"}">${money(pureOnline)}</td>
+        <td class="${pureBranch > 0 ? "month-pure" : "month-zero"}">${money(pureBranch)}</td>
         <td class="${delivery > 0 ? "month-delivery" : "month-zero"}">${money(delivery)}</td>
         <td class="${net > 0 ? "month-net" : "month-zero"}">${money(net)}</td>
         </tr>
@@ -946,7 +948,7 @@ function renderMonthlySales(){
     const yearBranchEl = document.getElementById("year-branch");
     const yearPureEl = document.getElementById("year-pure-online");
     if(yearBranchEl) yearBranchEl.textContent = money(yearBranch);
-    if(yearPureEl) yearPureEl.textContent = money(yearPureOnline);
+    if(yearPureEl) yearPureEl.textContent = money(yearPureBranch);
 }
 
 /* ================= EDIT ================= */
@@ -2151,21 +2153,23 @@ function renderMonthlyComparison(){
             onlineTotal += Number(order.total) || 0;
         });
 
+        // مبيعات الفرع الكاملة − الأونلاين = عملاء الفرع فقط
         const branchAmt = getBranchSaleForMonth(selectedYear, month);
-        const pure = Math.max(onlineTotal - branchAmt, 0);
+        const pureBranch = Math.max(branchAmt - onlineTotal, 0);
 
         yearOnline += onlineTotal;
         yearBranch += branchAmt;
-        yearPure += pure;
+        yearPure += pureBranch;
 
         const hasData = onlineTotal > 0 || branchAmt > 0;
+        const ratio = branchAmt > 0 ? ((pureBranch / branchAmt) * 100).toFixed(1) + "%" : "—";
         rows += `
         <tr>
         <td class="${hasData ? "month-name" : "month-zero"}">${monthNames[month]}</td>
         <td class="${onlineTotal > 0 ? "month-total" : "month-zero"}">${money(onlineTotal)}</td>
         <td class="${branchAmt > 0 ? "month-branch" : "month-zero"}">${money(branchAmt)}</td>
-        <td class="${pure > 0 ? "month-pure" : "month-zero"}">${money(pure)}</td>
-        <td class="${hasData ? "" : "month-zero"}">${branchAmt > 0 && onlineTotal > 0 ? ((branchAmt / onlineTotal) * 100).toFixed(1) + "%" : "—"}</td>
+        <td class="${pureBranch > 0 ? "month-pure" : "month-zero"}">${money(pureBranch)}</td>
+        <td class="${hasData ? "" : "month-zero"}">${ratio}</td>
         </tr>`;
     }
 
