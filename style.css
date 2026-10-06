@@ -584,3 +584,7 @@ table{min-width:1180px}
 #orders-table-wrap tbody tr:hover td:last-child,
 #tracking-table-wrap tbody tr:hover td:last-child{background:#171f2d}
 td.empty{white-space:normal}
+
+/* ---------- branch sales extras ---------- */
+.month-branch{color:var(--purple);font-weight:800}
+.month-pure{color:var(--blue);font-weight:800}

@@ -58,6 +58,10 @@ $v_js  = @filemtime(__DIR__ . '/app.js') ?: 1;
             <span class="nav-text">متابعة الأوردرات</span>
             <span class="nav-count" id="nav-count-tracking">0</span>
         </button>
+        <button class="nav-item" id="tab-branch-btn" onclick="switchTab('branch')">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="nav-text">مبيعات الفرع</span>
+        </button>
         <button class="nav-item" id="tab-import-btn" onclick="switchTab('import')">
             <svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
             <span class="nav-text">استيراد شيت</span>
@@ -139,12 +143,14 @@ $v_js  = @filemtime(__DIR__ . '/app.js') ?: 1;
 <div class="card monthly-card">
 <div class="monthly-header"><div class="monthly-title"><h2>📊 إحصائيات المبيعات الشهرية</h2><p>كل شهر له إحصائياته حسب تاريخ الأوردر</p></div>
 <div class="month-selects"><select id="monthly-year" class="year-select" onchange="renderMonthlySales()"></select></div></div>
-<div class="monthly-table-wrap"><table class="monthly-table"><thead><tr><th>الشهر</th><th>عدد الأوردرات</th><th>إجمالي المبيعات</th><th>إجمالي التوصيل</th><th>الصافي بعد التوصيل</th></tr></thead><tbody id="monthly-sales-body"></tbody></table></div>
+<div class="monthly-table-wrap"><table class="monthly-table"><thead><tr><th>الشهر</th><th>عدد الأوردرات</th><th>مبيعات الأونلاين</th><th>مبيعات الفرع</th><th>صافي الأونلاين (بعد خصم الفرع)</th><th>إجمالي التوصيل</th><th>الصافي بعد التوصيل</th></tr></thead><tbody id="monthly-sales-body"></tbody></table></div>
 <div class="monthly-summary">
 <div class="month-summary-box"><span>إجمالي أوردرات السنة</span><strong id="year-orders">0</strong></div>
-<div class="month-summary-box"><span>إجمالي مبيعات السنة</span><strong id="year-total">0 EGP</strong></div>
+<div class="month-summary-box"><span>مبيعات الأونلاين</span><strong id="year-total">0 EGP</strong></div>
+<div class="month-summary-box"><span>مبيعات الفرع</span><strong id="year-branch">0 EGP</strong></div>
+<div class="month-summary-box"><span>صافي الأونلاين (بعد خصم الفرع)</span><strong id="year-pure-online">0 EGP</strong></div>
 <div class="month-summary-box"><span>إجمالي التوصيل</span><strong id="year-delivery">0 EGP</strong></div>
-<div class="month-summary-box"><span>صافي السنة</span><strong id="year-net">0 EGP</strong></div>
+<div class="month-summary-box"><span>الصافي بعد التوصيل</span><strong id="year-net">0 EGP</strong></div>
 </div></div>
 </section>
 
@@ -176,6 +182,59 @@ $v_js  = @filemtime(__DIR__ . '/app.js') ?: 1;
 <div class="footer-box"><span>قيد التنفيذ</span><strong id="track-footer-progress">0</strong></div>
 <div class="footer-box"><span>تم تسليمها</span><strong id="track-footer-done">0</strong></div>
 </div></div>
+</section>
+
+
+<!-- ================= PAGE: BRANCH SALES ================= -->
+<section id="page-branch" class="page-section">
+
+<div class="card" id="add-branch-sale-card">
+<div class="card-title"><h2>إضافة / تعديل مبيعات الفرع</h2></div>
+<div class="card-body">
+<form id="branch-sale-form" class="order-form" onsubmit="saveBranchSale(event)">
+<div class="field"><label>اسم الفرع</label><input type="text" id="branch-sale-branch-name" value="مبارك" placeholder="مثال: مبارك"></div>
+<div class="field"><label>السنة *</label><select id="branch-sale-form-year" required></select></div>
+<div class="field"><label>الشهر *</label><select id="branch-sale-month" required></select></div>
+<div class="field"><label>إجمالي مبيعات الفرع *</label><input type="number" id="branch-sale-amount" min="0" step="0.01" placeholder="0" required></div>
+<div class="field span-all"><label>ملاحظات (اختياري)</label><textarea id="branch-sale-note" placeholder="ملاحظات عن مبيعات الشهر..."></textarea></div>
+<div class="form-actions">
+<button type="submit" class="btn btn-primary" id="branch-sale-submit-btn">💾 إضافة مبيعات الفرع</button>
+<button type="button" class="btn btn-gray" onclick="clearBranchSaleForm()">مسح / إلغاء التعديل</button>
+</div>
+</form>
+</div>
+<p class="import-hint">💡 أدخل إجمالي مبيعات فرع مبارك لكل شهر يدوياً من الشيت. النظام هيخصمها من مبيعات الأونلاين في نفس الشهر عشان يظهر صافي مبيعات الأونلاين فقط.</p>
+</div>
+
+<div class="card">
+<div class="card-title"><h2>سجل مبيعات الفرع</h2>
+<div style="display:flex;align-items:center;gap:12px">
+<select id="branch-sale-year" class="year-select" onchange="renderBranchSales()"></select>
+<span class="count-pill" id="branch-sales-count-pill">0 سجل</span>
+</div></div>
+<div class="table-wrap">
+<table><thead><tr><th>#</th><th>الشهر / السنة</th><th>الفرع</th><th>المبلغ</th><th>ملاحظات</th><th>الإجراءات</th></tr></thead>
+<tbody id="branch-sales-body"></tbody></table>
+</div>
+<div class="table-footer">
+<div class="footer-box"><span>إجمالي مبيعات الفرع (السنة المختارة)</span><strong id="branch-sales-year-total">0 EGP</strong></div>
+</div>
+</div>
+
+<div class="card">
+<div class="card-title"><h2>📊 مقارنة الأونلاين × الفرع</h2>
+<select id="comparison-year" class="year-select" onchange="renderMonthlyComparison()"></select>
+</div>
+<div class="monthly-table-wrap"><table class="monthly-table"><thead><tr>
+<th>الشهر</th><th>مبيعات الأونلاين</th><th>مبيعات الفرع</th><th>صافي الأونلاين</th><th>نسبة الفرع من الأونلاين</th>
+</tr></thead><tbody id="comparison-body"></tbody></table></div>
+<div class="monthly-summary">
+<div class="month-summary-box"><span>إجمالي الأونلاين</span><strong id="cmp-year-online">0 EGP</strong></div>
+<div class="month-summary-box"><span>إجمالي الفرع</span><strong id="cmp-year-branch">0 EGP</strong></div>
+<div class="month-summary-box"><span>صافي الأونلاين (بعد الخصم)</span><strong id="cmp-year-pure">0 EGP</strong></div>
+</div>
+</div>
+
 </section>
 
 <!-- ================= PAGE: IMPORT ================= -->

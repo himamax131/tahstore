@@ -15,8 +15,10 @@ const db = firebase.firestore();
 const storeRef = db.collection("store").doc("store_v_final_v4");
 
 let onlineOrders = [];
+let branchSales = []; // مبيعات الفرع الشهرية: {id, year, month, amount, note, branchName, createdAt}
 let currentUser = null;
 let editingOrderId = null;
+let editingBranchSaleId = null;
 let branchesList = [];
 
 const ADMIN_EMAILS = [
@@ -26,6 +28,7 @@ const ADMIN_EMAILS = [
 
 const FOLLOW_STATUSES = ["جديد","قيد التجهيز","تم الشحن","تم التسليم"];
 const DEFAULT_BRANCHES = ["دمياط","رأس البر","جمصة","بورسعيد","المنصورة","طلخا","نبروه"];
+const DEFAULT_BRANCH_SALE_NAME = "مبارك";
 
 /* =========================
    LOGIN
@@ -70,10 +73,13 @@ async function logoutUser(){
     await auth.signOut();
     currentUser = null;
     onlineOrders = [];
+    branchSales = [];
     document.getElementById("login-screen").style.display = "flex";
     renderOrders();
     renderTracking();
     renderMonthlySales();
+    renderBranchSales();
+    renderMonthlyComparison();
 }
 
 /* ================= TABS ================= */
@@ -81,11 +87,12 @@ async function logoutUser(){
 const PAGE_TITLES = {
     orders:   {title:"الأوردرات والمبيعات", sub:"إدارة ومتابعة جميع طلبات العملاء"},
     tracking: {title:"متابعة الأوردرات",    sub:"متابعة حالة كل أوردر من التجهيز حتى التسليم"},
+    branch:   {title:"مبيعات الفرع",        sub:"تسجيل مبيعات فرع مبارك الشهرية ومقارنتها بالأونلاين"},
     import:   {title:"استيراد شيت",         sub:"ارفع ملف Excel / CSV أو الصق الجدول، وسيُسند كل أوردر لمدينته تلقائياً"}
 };
 
 function switchTab(tab){
-    ["orders","tracking","import"].forEach(name => {
+    ["orders","tracking","branch","import"].forEach(name => {
         const btn = document.getElementById("tab-"+name+"-btn");
         const page = document.getElementById("page-"+name);
         if(btn) btn.classList.toggle("active", name === tab);
@@ -103,6 +110,11 @@ function switchTab(tab){
     window.scrollTo({top:0});
 
     if(tab === "tracking") renderTracking();
+    if(tab === "branch"){
+        prepareBranchSaleYears();
+        renderBranchSales();
+        renderMonthlyComparison();
+    }
     if(tab === "import"){
         if(importMode === "report" && reportOrders.length) renderReportPreview();
         else if(typeof importRows !== 'undefined' && importRows.length) renderImportPreview();
@@ -248,9 +260,11 @@ async function loadOrders(){
             const data = doc.data() || {};
             onlineOrders = Array.isArray(data.onlineOrders) ? data.onlineOrders : [];
             branchesList = Array.isArray(data.branches) && data.branches.length ? data.branches : [...DEFAULT_BRANCHES];
+            branchSales = Array.isArray(data.branchSales) ? data.branchSales : [];
         }else{
             onlineOrders = [];
             branchesList = [...DEFAULT_BRANCHES];
+            branchSales = [];
         }
 
         prepareMonthlyYears();
@@ -259,6 +273,9 @@ async function loadOrders(){
         renderOrders();
         renderTracking();
         renderMonthlySales();
+        prepareBranchSaleYears();
+        renderBranchSales();
+        renderMonthlyComparison();
 
     }catch(error){
         console.error("Firebase Load Error:", error);
@@ -273,7 +290,11 @@ async function saveOrders(){
     }
 
     try{
-        await storeRef.set({onlineOrders: onlineOrders, branches: branchesList}, {merge: true});
+        await storeRef.set({
+            onlineOrders: onlineOrders,
+            branches: branchesList,
+            branchSales: branchSales
+        }, {merge: true});
         return true;
     }catch(error){
         console.error("Firebase Save Error:", error);
@@ -849,6 +870,11 @@ function prepareMonthlyYears(){
     }
 }
 
+function getBranchSaleForMonth(year, month){
+    const entry = branchSales.find(s => Number(s.year) === Number(year) && Number(s.month) === Number(month));
+    return entry ? (Number(entry.amount) || 0) : 0;
+}
+
 function renderMonthlySales(){
     const body = document.getElementById("monthly-sales-body");
     const yearSelect = document.getElementById("monthly-year");
@@ -862,6 +888,8 @@ function renderMonthlySales(){
     let yearTotal = 0;
     let yearDelivery = 0;
     let yearNet = 0;
+    let yearBranch = 0;
+    let yearPureOnline = 0;
     let rows = "";
 
     for(let month=0; month<12; month++){
@@ -884,18 +912,27 @@ function renderMonthlySales(){
             net += getOrderNet(order);
         });
 
+        const branchAmt = getBranchSaleForMonth(selectedYear, month);
+        const pureOnline = Math.max(total - branchAmt, 0);
+
         yearOrders += orders;
         yearTotal += total;
         yearDelivery += delivery;
         yearNet += net;
+        yearBranch += branchAmt;
+        yearPureOnline += pureOnline;
+
+        const hasData = orders > 0 || branchAmt > 0;
 
         rows += `
         <tr>
-        <td class="${orders > 0 ? "month-name" : "month-zero"}">${monthNames[month]}</td>
+        <td class="${hasData ? "month-name" : "month-zero"}">${monthNames[month]}</td>
         <td class="${orders > 0 ? "month-orders" : "month-zero"}">${orders}</td>
-        <td class="${orders > 0 ? "month-total" : "month-zero"}">${money(total)}</td>
-        <td class="${orders > 0 ? "month-delivery" : "month-zero"}">${money(delivery)}</td>
-        <td class="${orders > 0 ? "month-net" : "month-zero"}">${money(net)}</td>
+        <td class="${total > 0 ? "month-total" : "month-zero"}">${money(total)}</td>
+        <td class="${branchAmt > 0 ? "month-branch" : "month-zero"}">${money(branchAmt)}</td>
+        <td class="${pureOnline > 0 ? "month-pure" : "month-zero"}">${money(pureOnline)}</td>
+        <td class="${delivery > 0 ? "month-delivery" : "month-zero"}">${money(delivery)}</td>
+        <td class="${net > 0 ? "month-net" : "month-zero"}">${money(net)}</td>
         </tr>
         `;
     }
@@ -905,6 +942,11 @@ function renderMonthlySales(){
     document.getElementById("year-total").textContent = money(yearTotal);
     document.getElementById("year-delivery").textContent = money(yearDelivery);
     document.getElementById("year-net").textContent = money(yearNet);
+
+    const yearBranchEl = document.getElementById("year-branch");
+    const yearPureEl = document.getElementById("year-pure-online");
+    if(yearBranchEl) yearBranchEl.textContent = money(yearBranch);
+    if(yearPureEl) yearPureEl.textContent = money(yearPureOnline);
 }
 
 /* ================= EDIT ================= */
@@ -1903,3 +1945,260 @@ async function runImport(){
         alert("لم يتم إضافة أي أوردر جديد (جميع الأوردرات مكررة أو غير صالحة).");
     }
 }
+
+/* ================= BRANCH SALES (مبيعات الفرع) ================= */
+
+function prepareBranchSaleYears(){
+    const select = document.getElementById("branch-sale-year");
+    if(!select) return;
+
+    const years = new Set();
+    branchSales.forEach(s => { if(s.year) years.add(Number(s.year)); });
+    onlineOrders.forEach(order => {
+        const date = getOrderDate(order);
+        if(date) years.add(date.getFullYear());
+    });
+    const currentYear = new Date().getFullYear();
+    years.add(currentYear);
+
+    const sorted = [...years].sort((a, b) => b - a);
+    const old = select.value;
+    select.innerHTML = "";
+    sorted.forEach(y => {
+        const opt = document.createElement("option");
+        opt.value = y;
+        opt.textContent = y;
+        select.appendChild(opt);
+    });
+    if(sorted.includes(Number(old))) select.value = old;
+    else select.value = currentYear;
+
+    // also for comparison year
+    const cmpSelect = document.getElementById("comparison-year");
+    if(cmpSelect){
+        const oldCmp = cmpSelect.value;
+        cmpSelect.innerHTML = "";
+        sorted.forEach(y => {
+            const opt = document.createElement("option");
+            opt.value = y;
+            opt.textContent = y;
+            cmpSelect.appendChild(opt);
+        });
+        if(sorted.includes(Number(oldCmp))) cmpSelect.value = oldCmp;
+        else cmpSelect.value = currentYear;
+    }
+}
+
+function renderBranchSales(){
+    const body = document.getElementById("branch-sales-body");
+    if(!body) return;
+
+    const yearFilter = document.getElementById("branch-sale-year")?.value;
+    let list = [...branchSales];
+    if(yearFilter){
+        list = list.filter(s => Number(s.year) === Number(yearFilter));
+    }
+    list.sort((a, b) => {
+        if(a.year !== b.year) return b.year - a.year;
+        return b.month - a.month;
+    });
+
+    body.innerHTML = "";
+    if(!list.length){
+        body.innerHTML = '<tr><td colspan="6" class="empty">📭 لا توجد مبيعات فرع مسجّلة لهذه السنة</td></tr>';
+    }else{
+        list.forEach((s, i) => {
+            body.innerHTML += `
+            <tr>
+            <td>${i+1}</td>
+            <td class="month-name">${monthNames[s.month] || s.month} ${s.year}</td>
+            <td>${escapeHtml(s.branchName || DEFAULT_BRANCH_SALE_NAME)}</td>
+            <td class="amount">${money(s.amount)}</td>
+            <td>${escapeHtml(s.note || "—")}</td>
+            <td>
+            <button class="action-btn edit" onclick="editBranchSale('${s.id}')">تعديل</button>
+            <button class="action-btn delete" onclick="deleteBranchSale('${s.id}')">حذف</button>
+            </td>
+            </tr>`;
+        });
+    }
+
+    let yearTotal = 0;
+    list.forEach(s => yearTotal += Number(s.amount) || 0);
+    const pill = document.getElementById("branch-sales-count-pill");
+    if(pill) pill.textContent = list.length + " سجل";
+    const footer = document.getElementById("branch-sales-year-total");
+    if(footer) footer.textContent = money(yearTotal);
+}
+
+function clearBranchSaleForm(){
+    editingBranchSaleId = null;
+    document.getElementById("branch-sale-amount").value = "";
+    document.getElementById("branch-sale-note").value = "";
+    document.getElementById("branch-sale-branch-name").value = DEFAULT_BRANCH_SALE_NAME;
+    const now = new Date();
+    document.getElementById("branch-sale-month").value = now.getMonth();
+    const yearSel = document.getElementById("branch-sale-form-year");
+    if(yearSel) yearSel.value = now.getFullYear();
+    const btn = document.getElementById("branch-sale-submit-btn");
+    if(btn) btn.textContent = "💾 إضافة مبيعات الفرع";
+}
+
+function editBranchSale(id){
+    const s = branchSales.find(x => x.id === id);
+    if(!s) return;
+    editingBranchSaleId = id;
+    document.getElementById("branch-sale-amount").value = s.amount || 0;
+    document.getElementById("branch-sale-note").value = s.note || "";
+    document.getElementById("branch-sale-branch-name").value = s.branchName || DEFAULT_BRANCH_SALE_NAME;
+    document.getElementById("branch-sale-month").value = s.month;
+    const yearSel = document.getElementById("branch-sale-form-year");
+    if(yearSel) yearSel.value = s.year;
+    const btn = document.getElementById("branch-sale-submit-btn");
+    if(btn) btn.textContent = "💾 حفظ التعديل";
+    document.getElementById("add-branch-sale-card")?.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+async function saveBranchSale(event){
+    if(event) event.preventDefault();
+
+    const amount = parseFloat(document.getElementById("branch-sale-amount").value) || 0;
+    const note = document.getElementById("branch-sale-note").value.trim();
+    const branchName = (document.getElementById("branch-sale-branch-name").value || DEFAULT_BRANCH_SALE_NAME).trim();
+    const month = Number(document.getElementById("branch-sale-month").value);
+    const year = Number(document.getElementById("branch-sale-form-year").value);
+
+    if(!year || isNaN(month) || month < 0 || month > 11 || amount < 0){
+        alert("من فضلك أدخل السنة والشهر والمبلغ بشكل صحيح.");
+        return;
+    }
+
+    // منع التكرار لنفس الشهر/السنة (إلا لو بنعدّل)
+    const dup = branchSales.find(s =>
+        s.id !== editingBranchSaleId &&
+        Number(s.year) === year &&
+        Number(s.month) === month &&
+        String(s.branchName || DEFAULT_BRANCH_SALE_NAME) === branchName
+    );
+    if(dup){
+        alert("يوجد بالفعل سجل لمبيعات هذا الفرع في نفس الشهر والسنة.\nعدّله من القائمة أو احذفه أولاً.");
+        return;
+    }
+
+    if(editingBranchSaleId){
+        const s = branchSales.find(x => x.id === editingBranchSaleId);
+        if(s){
+            s.amount = amount;
+            s.note = note;
+            s.branchName = branchName;
+            s.month = month;
+            s.year = year;
+            s.updatedAt = new Date().toISOString();
+        }
+    }else{
+        branchSales.push({
+            id: Date.now().toString() + "_" + Math.random().toString(36).substring(2, 8),
+            year, month, amount, note, branchName,
+            createdAt: new Date().toISOString()
+        });
+    }
+
+    const saved = await saveOrders();
+    if(saved){
+        clearBranchSaleForm();
+        prepareBranchSaleYears();
+        renderBranchSales();
+        renderMonthlySales();
+        renderMonthlyComparison();
+        alert(editingBranchSaleId ? "تم تعديل مبيعات الفرع ✅" : "تم إضافة مبيعات الفرع بنجاح ✅");
+        editingBranchSaleId = null;
+    }
+}
+
+async function deleteBranchSale(id){
+    const s = branchSales.find(x => x.id === id);
+    if(!s) return;
+    if(!confirm("هل تريد حذف مبيعات " + (monthNames[s.month] || "") + " " + s.year + "؟")) return;
+
+    branchSales = branchSales.filter(x => x.id !== id);
+    const saved = await saveOrders();
+    if(saved){
+        renderBranchSales();
+        renderMonthlySales();
+        renderMonthlyComparison();
+    }
+}
+
+function renderMonthlyComparison(){
+    const body = document.getElementById("comparison-body");
+    const yearSelect = document.getElementById("comparison-year");
+    if(!body || !yearSelect) return;
+
+    const selectedYear = Number(yearSelect.value);
+    if(!selectedYear) return;
+
+    let yearOnline = 0, yearBranch = 0, yearPure = 0;
+    let rows = "";
+
+    for(let month = 0; month < 12; month++){
+        let onlineTotal = 0;
+        onlineOrders.forEach(order => {
+            if(order.cancelled) return;
+            const date = getOrderDate(order);
+            if(!date) return;
+            if(date.getFullYear() !== selectedYear) return;
+            if(date.getMonth() !== month) return;
+            onlineTotal += Number(order.total) || 0;
+        });
+
+        const branchAmt = getBranchSaleForMonth(selectedYear, month);
+        const pure = Math.max(onlineTotal - branchAmt, 0);
+
+        yearOnline += onlineTotal;
+        yearBranch += branchAmt;
+        yearPure += pure;
+
+        const hasData = onlineTotal > 0 || branchAmt > 0;
+        rows += `
+        <tr>
+        <td class="${hasData ? "month-name" : "month-zero"}">${monthNames[month]}</td>
+        <td class="${onlineTotal > 0 ? "month-total" : "month-zero"}">${money(onlineTotal)}</td>
+        <td class="${branchAmt > 0 ? "month-branch" : "month-zero"}">${money(branchAmt)}</td>
+        <td class="${pure > 0 ? "month-pure" : "month-zero"}">${money(pure)}</td>
+        <td class="${hasData ? "" : "month-zero"}">${branchAmt > 0 && onlineTotal > 0 ? ((branchAmt / onlineTotal) * 100).toFixed(1) + "%" : "—"}</td>
+        </tr>`;
+    }
+
+    body.innerHTML = rows;
+    document.getElementById("cmp-year-online").textContent = money(yearOnline);
+    document.getElementById("cmp-year-branch").textContent = money(yearBranch);
+    document.getElementById("cmp-year-pure").textContent = money(yearPure);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    // تهيئة نموذج مبيعات الفرع
+    const monthSel = document.getElementById("branch-sale-month");
+    if(monthSel && !monthSel.options.length){
+        monthNames.forEach((name, i) => {
+            const opt = document.createElement("option");
+            opt.value = i;
+            opt.textContent = name;
+            monthSel.appendChild(opt);
+        });
+        monthSel.value = new Date().getMonth();
+    }
+    const yearForm = document.getElementById("branch-sale-form-year");
+    if(yearForm){
+        const cy = new Date().getFullYear();
+        yearForm.innerHTML = "";
+        for(let y = cy; y >= cy - 5; y--){
+            const opt = document.createElement("option");
+            opt.value = y;
+            opt.textContent = y;
+            yearForm.appendChild(opt);
+        }
+        yearForm.value = cy;
+    }
+    const nameInput = document.getElementById("branch-sale-branch-name");
+    if(nameInput && !nameInput.value) nameInput.value = DEFAULT_BRANCH_SALE_NAME;
+});
