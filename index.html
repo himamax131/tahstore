@@ -123,7 +123,12 @@ $v_js  = @filemtime(__DIR__ . '/app.js') ?: 1;
 </form></div></div>
 
 <div class="card">
-<div class="card-title"><h2>سجل الأوردرات</h2><span class="count-pill" id="orders-count-pill">0 أوردر</span></div>
+<div class="card-title"><h2>سجل الأوردرات</h2>
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+<span class="count-pill" id="orders-count-pill">0 أوردر</span>
+<button type="button" onclick="deleteAllOrders()" title="حذف كل الأوردرات نهائياً" style="background:#dc2626;color:#fff;border:none;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:Cairo,sans-serif;font-weight:700;font-size:13px">🗑 حذف كل الأوردرات</button>
+</div>
+</div>
 <div class="toolbar">
 <input type="text" id="search-input" placeholder="🔎 بحث برقم الحجز أو الهاتف..." oninput="filterOrders()">
 <select id="status-filter" onchange="filterOrders()"><option value="all">كل الحالات</option><option value="active">✅ غير ملغي</option><option value="cancelled">❌ ملغي</option></select>
