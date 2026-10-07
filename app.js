@@ -1410,7 +1410,7 @@ function renderReportPreview(){
     for(let i = 0; i < shown; i++){
         const o = reportOrders[i];
         const status = o.isDuplicate
-            ? '<span class="badge cancelled">مكرر - سيتم تخطيه</span>'
+            ? '<span class="badge" style="background:#f59e0b;color:#000">مكرر - سيتم تحديثه</span>'
             : '<span class="badge active-order">جديد</span>';
 
         let itemsCell = "—";
@@ -1438,7 +1438,7 @@ function renderReportPreview(){
     document.getElementById("import-summary").innerHTML =
         "إجمالي الحجوزات المكتشفة: <strong style='color:#fbbf24'>" + reportOrders.length + "</strong> &nbsp;|&nbsp; " +
         "جديد: <strong style='color:#4ade80'>" + totalNew + "</strong> &nbsp;|&nbsp; " +
-        "مكرر: <strong style='color:#f87171'>" + totalDup + "</strong>" +
+        "تحديث: <strong style='color:#f59e0b'>" + totalDup + "</strong>" +
         (shown < reportOrders.length ? " &nbsp;(معاينة أول " + shown + " فقط)" : "");
 }
 
@@ -1450,14 +1450,9 @@ async function runReportImport(){
 
     const defaultCity = document.getElementById("import-city-default").value;
     let addedCount = 0;
-    let skippedCount = 0;
+    let updatedCount = 0;
 
     reportOrders.forEach((o, i) => {
-        if(o.isDuplicate){
-            skippedCount++;
-            return;
-        }
-
         const city = o.city || defaultCity || branchesList[0] || "دمياط";
 
         const specsLines = [];
@@ -1474,30 +1469,54 @@ async function runReportImport(){
         }
         if(o.rep) specsLines.push("🧑‍💼 المندوب: " + o.rep);
 
-        const order = {
-            id: Date.now().toString() + "_" + Math.random().toString(36).substring(2, 8) + "_" + i,
-            booking: o.booking,
-            phone: o.phone || "",
-            customer: o.name || "",
-            address: o.address || "",
-            branch: city,
-            specs: specsLines.join("\n"),
-            payment: detectImportPayment("", o.address),
-            total: o.total,
-            delivery: o.delivery,
-            net: Math.max(o.total - o.delivery, 0),
-            cancelled: false,
-            followStatus: "جديد",
-            orderDate: toDateTimeLocal(o.orderDate),
-            createdAt: new Date().toISOString(),
-            createdTimestamp: Date.now()
-        };
+        const specsText = specsLines.join("\n");
+        const payment = detectImportPayment("", o.address);
+        const orderDate = toDateTimeLocal(o.orderDate);
+        const total = o.total;
+        const delivery = o.delivery;
+        const net = Math.max(total - delivery, 0);
 
-        onlineOrders.unshift(order);
-        addedCount++;
+        const existing = onlineOrders.find(item => String(item.booking).trim() === String(o.booking).trim());
+
+        if(existing){
+            // تحديث الأوردر الموجود بنفس رقم الحجز (التواريخ والبيانات)
+            if(o.phone) existing.phone = o.phone;
+            if(o.name) existing.customer = o.name;
+            if(o.address) existing.address = o.address;
+            if(city) existing.branch = city;
+            if(specsText) existing.specs = specsText;
+            existing.payment = payment;
+            existing.total = total;
+            existing.delivery = delivery;
+            existing.net = net;
+            if(o.orderDate) existing.orderDate = orderDate;
+            existing.updatedAt = new Date().toISOString();
+            updatedCount++;
+        }else{
+            const order = {
+                id: Date.now().toString() + "_" + Math.random().toString(36).substring(2, 8) + "_" + i,
+                booking: o.booking,
+                phone: o.phone || "",
+                customer: o.name || "",
+                address: o.address || "",
+                branch: city,
+                specs: specsText,
+                payment: payment,
+                total: total,
+                delivery: delivery,
+                net: net,
+                cancelled: false,
+                followStatus: "جديد",
+                orderDate: orderDate,
+                createdAt: new Date().toISOString(),
+                createdTimestamp: Date.now()
+            };
+            onlineOrders.unshift(order);
+            addedCount++;
+        }
     });
 
-    if(addedCount > 0){
+    if(addedCount > 0 || updatedCount > 0){
         const saved = await saveOrders();
         if(saved){
             prepareMonthlyYears();
@@ -1505,11 +1524,11 @@ async function runReportImport(){
             renderTracking();
             renderMonthlySales();
             resetImportState();
-            alert(`تم استيراد ${addedCount} أوردر بنجاح ✅\n(تم تخطي ${skippedCount} أوردر مكرر)`);
+            alert(`تم الاستيراد بنجاح ✅\nجديد: ${addedCount}\nتم تحديثه: ${updatedCount}`);
             switchTab("orders");
         }
     }else{
-        alert("لم يتم إضافة أي أوردر جديد (جميع الحجوزات مكررة).");
+        alert("لم يتم إضافة أو تحديث أي أوردر.");
     }
 }
 
@@ -1824,7 +1843,7 @@ function renderImportPreview(){
 
         let status;
         if(existingBookings.has(booking)){
-            status = '<span class="badge cancelled">مكرر - سيتم تخطيه</span>';
+            status = '<span class="badge" style="background:#f59e0b;color:#000">مكرر - سيتم تحديثه</span>';
             dupCount++;
         }else{
             status = '<span class="badge active-order">جديد</span>';
@@ -1849,7 +1868,7 @@ function renderImportPreview(){
     document.getElementById("import-summary").innerHTML =
     "إجمالي الصفوف: <strong style='color:#fbbf24'>" + Math.max(totalRows, 0) + "</strong> &nbsp;|&nbsp; " +
     "جديد: <strong style='color:#4ade80'>" + newCount + "</strong> &nbsp;|&nbsp; " +
-    "مكرر: <strong style='color:#f87171'>" + dupCount + "</strong>" +
+    "تحديث: <strong style='color:#f59e0b'>" + dupCount + "</strong>" +
     (shown < Math.max(totalRows, 0) ? " &nbsp;(معاينة أول " + shown + " صف فقط)" : "");
 }
 
@@ -1870,24 +1889,20 @@ async function runImport(){
     }
 
     const startRow = hasHeadersRow() ? 1 : 0;
-    const existingBookings = new Set(onlineOrders.map(o => String(o.booking).trim()));
     const batchBookings = new Set();
     const defaultCity = document.getElementById("import-city-default").value;
     const newCitiesAdded = new Set();
 
     let addedCount = 0;
-    let skippedCount = 0;
+    let updatedCount = 0;
 
     for(let i = startRow; i < importRows.length; i++){
         const row = importRows[i];
         const booking = getRowValue(row, "booking");
         if(!booking) continue;
 
-        if(existingBookings.has(booking) || batchBookings.has(booking)){
-            skippedCount++;
-            continue;
-        }
-
+        // تخطي التكرار داخل نفس الملف فقط (آخر صف لنفس الرقم هو اللي يتطبّق)
+        if(batchBookings.has(booking)) continue;
         batchBookings.add(booking);
 
         const phone = getRowValue(row, "phone");
@@ -1897,7 +1912,7 @@ async function runImport(){
         const delivery = parseNumberValue(getRowValue(row, "delivery"));
         const specs = getRowValue(row, "specs");
         const payment = detectImportPayment(getRowValue(row, "payment"), address);
-        const dateObj = parseAnyDate(getRowValue(row, "orderDate")) || new Date();
+        const dateObj = parseAnyDate(getRowValue(row, "orderDate"));
 
         const cityRaw = getRowValue(row, "cityText");
         let city = resolveImportCity(cityRaw, address + " " + specs);
@@ -1907,30 +1922,47 @@ async function runImport(){
             newCitiesAdded.add(city);
         }
 
-        const order = {
-            id: Date.now().toString() + "_" + Math.random().toString(36).substring(2, 8) + "_" + i,
-            booking: booking,
-            phone: phone,
-            customer: customer,
-            address: address,
-            branch: city,
-            specs: specs,
-            payment: payment,
-            total: total,
-            delivery: delivery,
-            net: Math.max(total - delivery, 0),
-            cancelled: false,
-            followStatus: "جديد",
-            orderDate: toDateTimeLocal(dateObj),
-            createdAt: new Date().toISOString(),
-            createdTimestamp: Date.now()
-        };
+        const existing = onlineOrders.find(item => String(item.booking).trim() === String(booking).trim());
 
-        onlineOrders.unshift(order);
-        addedCount++;
+        if(existing){
+            // تحديث الأوردر الموجود بنفس رقم الحجز (التواريخ والبيانات من الشيت)
+            if(phone) existing.phone = phone;
+            if(customer) existing.customer = customer;
+            if(address) existing.address = address;
+            if(city) existing.branch = city;
+            if(specs) existing.specs = specs;
+            existing.payment = payment;
+            existing.total = total;
+            existing.delivery = delivery;
+            existing.net = Math.max(total - delivery, 0);
+            if(dateObj) existing.orderDate = toDateTimeLocal(dateObj);
+            existing.updatedAt = new Date().toISOString();
+            updatedCount++;
+        }else{
+            const order = {
+                id: Date.now().toString() + "_" + Math.random().toString(36).substring(2, 8) + "_" + i,
+                booking: booking,
+                phone: phone,
+                customer: customer,
+                address: address,
+                branch: city,
+                specs: specs,
+                payment: payment,
+                total: total,
+                delivery: delivery,
+                net: Math.max(total - delivery, 0),
+                cancelled: false,
+                followStatus: "جديد",
+                orderDate: toDateTimeLocal(dateObj || new Date()),
+                createdAt: new Date().toISOString(),
+                createdTimestamp: Date.now()
+            };
+            onlineOrders.unshift(order);
+            addedCount++;
+        }
     }
 
-    if(addedCount > 0){
+    if(addedCount > 0 || updatedCount > 0){
         const saved = await saveOrders();
         if(saved){
             prepareMonthlyYears();
@@ -1940,11 +1972,11 @@ async function runImport(){
             renderMonthlySales();
             resetImportState();
             const newCitiesMsg = newCitiesAdded.size ? `\n(تم إضافة ${newCitiesAdded.size} مركز جديد تلقائياً: ${[...newCitiesAdded].join("، ")})` : "";
-            alert(`تم استيراد ${addedCount} أوردر بنجاح ✅\n(تم تخطي ${skippedCount} أوردر مكرر)${newCitiesMsg}`);
+            alert(`تم الاستيراد بنجاح ✅\nجديد: ${addedCount}\nتم تحديثه: ${updatedCount}${newCitiesMsg}`);
             switchTab("orders");
         }
     }else{
-        alert("لم يتم إضافة أي أوردر جديد (جميع الأوردرات مكررة أو غير صالحة).");
+        alert("لم يتم إضافة أو تحديث أي أوردر.");
     }
 }
 
