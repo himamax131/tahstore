@@ -1134,6 +1134,48 @@ async function deleteOrder(id){
     }
 }
 
+async function deleteAllOrders(){
+    if(!currentUser){
+        alert("يجب تسجيل الدخول أولاً.");
+        return;
+    }
+
+    const count = onlineOrders.length;
+    if(count === 0){
+        alert("لا توجد أوردرات لحذفها.");
+        return;
+    }
+
+    const step1 = confirm(
+        "⚠ تحذير خطير\n\n" +
+        "هتحذف كل الأوردرات نهائياً (" + count + " أوردر).\n" +
+        "مبيعات الفرع مش هتتأثر.\n\n" +
+        "هل أنت متأكد؟"
+    );
+    if(!step1) return;
+
+    const step2 = confirm(
+        "تأكيد أخير:\n\n" +
+        "العملية لا يمكن التراجع عنها.\n" +
+        "اضغط OK لحذف الـ " + count + " أوردر كلها الآن."
+    );
+    if(!step2) return;
+
+    onlineOrders = [];
+    ordersPage = 1;
+    trackingPage = 1;
+
+    const saved = await saveOrders();
+    if(saved){
+        prepareMonthlyYears();
+        renderOrders();
+        renderTracking();
+        renderMonthlySales();
+        renderMonthlyComparison();
+        alert("تم حذف كل الأوردرات بنجاح ✅\n(" + count + " أوردر)");
+    }
+}
+
 /* ================= IMPORT ================= */
 
 let importRows = [];
