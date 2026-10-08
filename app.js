@@ -15,7 +15,8 @@ const db = firebase.firestore();
 const storeRef = db.collection("store").doc("store_v_final_v4");
 
 let onlineOrders = [];
-let branchSales = []; // مبيعات الفرع الشهرية: {id, year, month, amount, note, branchName, createdAt}
+let branchSales = []; // مبيعات الفرع الشهرية
+let salesSummaries = []; // ملخصات المبيعات: {id, date, branch, orderCount, total, delivery, net, note, createdAt}
 let currentUser = null;
 let editingOrderId = null;
 let editingBranchSaleId = null;
@@ -74,6 +75,7 @@ async function logoutUser(){
     currentUser = null;
     onlineOrders = [];
     branchSales = [];
+    salesSummaries = [];
     document.getElementById("login-screen").style.display = "flex";
     renderOrders();
     renderTracking();
@@ -261,10 +263,12 @@ async function loadOrders(){
             onlineOrders = Array.isArray(data.onlineOrders) ? data.onlineOrders : [];
             branchesList = Array.isArray(data.branches) && data.branches.length ? data.branches : [...DEFAULT_BRANCHES];
             branchSales = Array.isArray(data.branchSales) ? data.branchSales : [];
+            salesSummaries = Array.isArray(data.salesSummaries) ? data.salesSummaries : [];
         }else{
             onlineOrders = [];
             branchesList = [...DEFAULT_BRANCHES];
             branchSales = [];
+            salesSummaries = [];
         }
 
         prepareMonthlyYears();
@@ -276,6 +280,7 @@ async function loadOrders(){
         prepareBranchSaleYears();
         renderBranchSales();
         renderMonthlyComparison();
+        renderSalesSummaries();
 
     }catch(error){
         console.error("Firebase Load Error:", error);
@@ -293,7 +298,8 @@ async function saveOrders(){
         await storeRef.set({
             onlineOrders: onlineOrders,
             branches: branchesList,
-            branchSales: branchSales
+            branchSales: branchSales,
+            salesSummaries: salesSummaries
         }, {merge: true});
         return true;
     }catch(error){
@@ -446,6 +452,36 @@ function getOrderDate(order){
 
 function getOrderNet(order){
     return Number(order.net !== undefined ? order.net : Math.max(Number(order.total || 0) - Number(order.delivery || 0), 0)) || 0;
+}
+
+function getSummaryNet(summary){
+    const total = Number(summary.total) || 0;
+    const delivery = Number(summary.delivery) || 0;
+    return Number(summary.net !== undefined ? summary.net : Math.max(total - delivery, 0)) || 0;
+}
+
+function getSummaryDate(summary){
+    if(!summary || !summary.date) return null;
+    const date = new Date(summary.date);
+    return isNaN(date.getTime()) ? null : date;
+}
+
+function getSalesSummaryForMonth(year, month){
+    return salesSummaries.filter(summary => {
+        const date = getSummaryDate(summary);
+        return date && date.getFullYear() === Number(year) && date.getMonth() === Number(month);
+    });
+}
+
+function getSalesSummaryTotals(year, month){
+    let orders = 0, total = 0, delivery = 0, net = 0;
+    getSalesSummaryForMonth(year, month).forEach(summary => {
+        orders += Number(summary.orderCount) || 0;
+        total += Number(summary.total) || 0;
+        delivery += Number(summary.delivery) || 0;
+        net += getSummaryNet(summary);
+    });
+    return {orders, total, delivery, net};
 }
 
 function normalizeDateTimeLocal(value){
@@ -669,9 +705,18 @@ function updateStats(){
         else cashTotal += Number(order.total) || 0;
     });
 
-    document.getElementById("stat-orders").textContent = active.length;
+    salesSummaries.forEach(summary => {
+        total += Number(summary.total) || 0;
+        delivery += Number(summary.delivery) || 0;
+        net += getSummaryNet(summary);
+    });
+
+    const summaryOrders = salesSummaries.reduce((sum, summary) => sum + (Number(summary.orderCount) || 0), 0);
+    const totalOrders = active.length + summaryOrders;
+
+    document.getElementById("stat-orders").textContent = totalOrders;
     const navOrders = document.getElementById("nav-count-orders");
-    if(navOrders) navOrders.textContent = active.length;
+    if(navOrders) navOrders.textContent = totalOrders;
     document.getElementById("stat-total").textContent = money(total);
     document.getElementById("stat-cash").textContent = money(cashTotal);
     document.getElementById("stat-visa").textContent = money(visaTotal);
@@ -911,6 +956,12 @@ function renderMonthlySales(){
             delivery += Number(order.delivery) || 0;
             net += getOrderNet(order);
         });
+
+        const summaryTotals = getSalesSummaryTotals(selectedYear, month);
+        orders += summaryTotals.orders;
+        total += summaryTotals.total;
+        delivery += summaryTotals.delivery;
+        net += summaryTotals.net;
 
         // مبيعات الفرع المدخلة = الإجمالي الكامل للفرع
         // صافي عملاء الفرع فقط = مبيعات الفرع − مبيعات الأونلاين
@@ -2022,6 +2073,98 @@ async function runImport(){
     }
 }
 
+/* ================= SALES SUMMARIES ================= */
+
+function calculateSummaryNet(){
+    const total = parseFloat(document.getElementById("summary-total").value) || 0;
+    const delivery = parseFloat(document.getElementById("summary-delivery").value) || 0;
+    document.getElementById("summary-net").value = Math.max(total - delivery, 0).toFixed(2);
+}
+
+function clearSummaryForm(){
+    const form = document.getElementById("sales-summary-form");
+    if(form) form.reset();
+    const date = document.getElementById("summary-date");
+    if(date) date.value = new Date().toISOString().slice(0,10);
+    const delivery = document.getElementById("summary-delivery");
+    if(delivery) delivery.value = "0";
+    const net = document.getElementById("summary-net");
+    if(net) net.value = "0.00";
+}
+
+async function saveSalesSummary(event){
+    if(event) event.preventDefault();
+    const date = document.getElementById("summary-date").value;
+    const branch = document.getElementById("summary-branch").value.trim();
+    const orderCount = Number(document.getElementById("summary-order-count").value) || 0;
+    const total = Number(document.getElementById("summary-total").value) || 0;
+    const delivery = Number(document.getElementById("summary-delivery").value) || 0;
+    const note = document.getElementById("summary-note").value.trim();
+    if(!date || orderCount <= 0 || total < 0 || delivery < 0){
+        alert("من فضلك أدخل التاريخ وعدد الأوردرات وإجمالي المبيعات والتوصيل بشكل صحيح.");
+        return;
+    }
+    salesSummaries.push({
+        id: Date.now().toString() + "_" + Math.random().toString(36).substring(2,8),
+        date, branch, orderCount, total, delivery, net: Math.max(total-delivery,0), note,
+        createdAt: new Date().toISOString()
+    });
+    const saved = await saveOrders();
+    if(saved){
+        clearSummaryForm();
+        prepareMonthlyYears();
+        renderSalesSummaries();
+        renderOrders();
+        renderMonthlySales();
+        renderMonthlyComparison();
+        alert("تم حفظ ملخص المبيعات بنجاح ✅");
+    }
+}
+
+async function deleteSalesSummary(id){
+    const summary = salesSummaries.find(x => x.id === id);
+    if(!summary) return;
+    if(!confirm("هل تريد حذف ملخص المبيعات؟\n\nعدد الأوردرات: " + summary.orderCount + "\nالإجمالي: " + money(summary.total))) return;
+    salesSummaries = salesSummaries.filter(x => x.id !== id);
+    const saved = await saveOrders();
+    if(saved){
+        prepareMonthlyYears();
+        renderSalesSummaries();
+        renderOrders();
+        renderMonthlySales();
+        renderMonthlyComparison();
+    }
+}
+
+function renderSalesSummaries(){
+    const body = document.getElementById("sales-summaries-body");
+    if(!body) return;
+    const rows = [...salesSummaries].sort((a,b) => String(b.date).localeCompare(String(a.date)));
+    const count = document.getElementById("sales-summaries-count");
+    if(count) count.textContent = rows.length + " ملخص";
+    if(!rows.length){
+        body.innerHTML = '<tr><td colspan="8" class="empty">📭 لا توجد ملخصات مبيعات حتى الآن</td></tr>';
+        return;
+    }
+    body.innerHTML = rows.map((summary,index) => `
+        <tr>
+        <td>${index+1}</td>
+        <td dir="ltr">${escapeHtml(summary.date || "-")}</td>
+        <td>${escapeHtml(summary.branch || "كل الفروع")}</td>
+        <td class="month-orders">${Number(summary.orderCount)||0}</td>
+        <td class="amount">${money(summary.total)}</td>
+        <td class="delivery">${money(summary.delivery)}</td>
+        <td class="net">${money(getSummaryNet(summary))}</td>
+        <td>${summary.note ? escapeHtml(summary.note) : "—"}<br><button class="action-btn delete" onclick="deleteSalesSummary('${summary.id}')">حذف</button></td>
+        </tr>`).join("");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const date = document.getElementById("summary-date");
+    if(date) date.value = new Date().toISOString().slice(0,10);
+    renderSalesSummaries();
+});
+
 /* ================= BRANCH SALES (مبيعات الفرع) ================= */
 
 function prepareBranchSaleYears(){
@@ -2226,6 +2369,8 @@ function renderMonthlyComparison(){
             if(date.getMonth() !== month) return;
             onlineTotal += Number(order.total) || 0;
         });
+
+        onlineTotal += getSalesSummaryTotals(selectedYear, month).total;
 
         // مبيعات الفرع الكاملة − الأونلاين = عملاء الفرع فقط
         const branchAmt = getBranchSaleForMonth(selectedYear, month);
