@@ -122,6 +122,28 @@ $v_js  = @filemtime(__DIR__ . '/app.js') ?: 1;
 <div class="form-actions"><button type="submit" class="btn btn-primary">💾 إضافة الأوردر</button><button type="button" class="btn btn-gray" onclick="clearOrderForm()">مسح البيانات</button></div>
 </form></div></div>
 
+<div class="card" id="sales-summary-card">
+<div class="card-title"><h2>📊 إضافة ملخص مبيعات</h2><span class="count-pill">بدون تسجيل الأوردرات واحد واحد</span></div>
+<div class="card-body">
+<form id="sales-summary-form" class="order-form" onsubmit="saveSalesSummary(event)">
+<div class="field"><label>تاريخ المبيعات *</label><input type="date" id="summary-date" required></div>
+<div class="field"><label>الفرع / المنطقة</label><input type="text" id="summary-branch" placeholder="مثال: دمياط - رأس البر أو اتركه فارغًا"></div>
+<div class="field"><label>عدد الأوردرات *</label><input type="number" id="summary-order-count" min="1" step="1" placeholder="0" required></div>
+<div class="field"><label>إجمالي المبيعات *</label><input type="number" id="summary-total" min="0" step="0.01" placeholder="0" required oninput="calculateSummaryNet()"></div>
+<div class="field"><label>إجمالي التوصيل</label><input type="number" id="summary-delivery" min="0" step="0.01" value="0" placeholder="0" oninput="calculateSummaryNet()"></div>
+<div class="field"><label>الصافي بعد خصم التوصيل</label><input type="number" id="summary-net" readonly value="0.00"></div>
+<div class="field span-all"><label>ملاحظات</label><textarea id="summary-note" placeholder="مثال: ملخص أوردرات دمياط ليوم 8 أكتوبر"></textarea></div>
+<div class="form-actions"><button type="submit" class="btn btn-primary">💾 حفظ ملخص المبيعات</button><button type="button" class="btn btn-gray" onclick="clearSummaryForm()">مسح البيانات</button></div>
+</form>
+</div>
+<p class="import-hint">💡 استخدم النموذج ده لما يكون عندك إجمالي اليوم/الفترة فقط. النظام هيضيف عدد الأوردرات والمبيعات والتوصيل والصافي تلقائيًا إلى إحصائيات المبيعات الشهرية والسنوية.</p>
+</div>
+
+<div class="card">
+<div class="card-title"><h2>📋 سجل ملخصات المبيعات</h2><span class="count-pill" id="sales-summaries-count">0 ملخص</span></div>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>التاريخ</th><th>الفرع / المنطقة</th><th>عدد الأوردرات</th><th>إجمالي المبيعات</th><th>التوصيل</th><th>الصافي</th><th>ملاحظات / حذف</th></tr></thead><tbody id="sales-summaries-body"></tbody></table></div>
+</div>
+
 <div class="card">
 <div class="card-title"><h2>سجل الأوردرات</h2>
 <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
